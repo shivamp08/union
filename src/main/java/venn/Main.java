@@ -13,7 +13,7 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		primaryStage.setTitle("Venn!");
+		primaryStage.setTitle("Venn");
 		
 		Group root = new Group(); 
 		Scene scene = new Scene(root, 1000, 500);
