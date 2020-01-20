@@ -5,6 +5,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.shape.*;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 
 public class Main extends Application {
@@ -30,6 +31,9 @@ public class Main extends Application {
 		double intersectionWidth = radius / 2;
 		int strokeWidth = 3;
 		
+		Color leftColor = Color.BLUE;
+		Color rightColor = Color.RED;
+		
 		left.setCenterX((width / 2) - intersectionWidth);
 		left.setCenterY(height / 2);
 		
@@ -52,15 +56,20 @@ public class Main extends Application {
 		
 		Shape intersect = Shape.intersect(left, right);
 		
-		intersect.setFill(Color.LAWNGREEN);
+		Color mix = new Color(
+			0.5 * leftColor.getRed() + 0.5 * rightColor.getRed(),
+			0.5 * leftColor.getGreen() + 0.5 * rightColor.getGreen(),
+			0.5 * leftColor.getBlue() + 0.5 * rightColor.getBlue(),
+			1
+		);
+		
+		intersect.setFill(mix);
 		intersect.setStroke(Color.WHITE);
 		intersect.setStrokeWidth(strokeWidth);
 		
 		this.vennGroup.getChildren().clear();
 		
-		this.vennGroup.getChildren().add(left);
-		this.vennGroup.getChildren().add(right);
-		this.vennGroup.getChildren().add(intersect);
+		this.vennGroup.getChildren().addAll(left, right, intersect);
 	}
 
 
@@ -72,6 +81,11 @@ public class Main extends Application {
 		this.vennGroup = new Group();
 		
 		this.root.getChildren().add(this.vennGroup);
+		
+		Button button = new Button("Hover Over Me");
+		button.setTooltip(new Tooltip("Tooltip for Button"));
+		
+		this.root.getChildren().add(button);
 		
 		this.scene = new Scene(root, Main.width, Main.height);
 		
