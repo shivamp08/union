@@ -8,9 +8,12 @@ import javafx.stage.Stage;
 import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.event.*;
 import javafx.scene.input.*;
+import javafx.scene.layout.StackPane;
 
 public class Main extends Application {
 	
@@ -200,6 +203,49 @@ public class Main extends Application {
 		});
 
 		this.root.getChildren().add(button);
+		
+		Text e1 = new Text("This is thsefse fsfs efsfs  s test test test test");
+		Rectangle entry = new Rectangle(50, 50, e1.getLayoutBounds().getWidth() + 10, e1.getLayoutBounds().getHeight() + 10);
+		System.out.println(e1.getWrappingWidth());
+		entry.setFill(javafx.scene.paint.Color.WHITE);
+		entry.setStroke(javafx.scene.paint.Color.BLACK);
+		StackPane stack = new StackPane(); 
+		stack.getChildren().addAll(entry, e1); 
+		stack.setTranslateX(100);
+		stack.setTranslateY(100);
+		
+		ImageView edit = new ImageView(getClass().getResource("editicon.png").toExternalForm());
+		edit.setFitHeight(25);
+		edit.setFitWidth(25);
+		edit.setTranslateX(entry.getTranslateX() + entry.getWidth()/2);
+		edit.setTranslateY(edit.getTranslateY() - 15);
+		edit.setVisible(false);
+		stack.getChildren().add(edit); 
+		
+		stack.setOnMouseEntered(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				// TODO Auto-generated method stub
+				entry.setWidth(entry.getWidth() + 10);
+				entry.setHeight(entry.getHeight() + 10);
+				edit.setVisible(true);
+				
+			}
+		});
+		
+		stack.setOnMouseExited(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				// TODO Auto-generated method stub
+				entry.setWidth(entry.getWidth() - 10);
+				entry.setHeight(entry.getHeight() - 10);
+				edit.setVisible(false);
+			}
+		});
+		
+		
+		this.root.getChildren().add(stack);
 		
 		this.scene = new Scene(root, Main.width, Main.height);
 		
