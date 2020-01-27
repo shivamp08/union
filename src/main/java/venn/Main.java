@@ -204,7 +204,7 @@ public class Main extends Application {
 
 		this.root.getChildren().add(button);
 		
-		Text e1 = new Text("This is thsefse fsfs efsfs  s test test test test");
+		Text e1 = new Text("This is thsefse fsfs eeifjsioefsiefjsoeijf osifjseofisjefos \n ifjsoiefjsefsfs  s test test test test");
 		Rectangle entry = new Rectangle(50, 50, e1.getLayoutBounds().getWidth() + 10, e1.getLayoutBounds().getHeight() + 10);
 		System.out.println(e1.getWrappingWidth());
 		entry.setFill(javafx.scene.paint.Color.WHITE);
