@@ -11,149 +11,30 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.event.*;
 import javafx.scene.input.*;
+import javafx.scene.layout.StackPane;
 
 public class Main extends Application {
 	
 	private static final int width = 1000;
 	private static final int height = 500;
 	
-	private Group root;
-	private Group vennGroup;
+	private Group layout;
 	private Scene scene;
 
 	public static void main(String[] args) {
 		launch(args);
 	}
 	
-	private void drawVenn() {
-		Circle left = new Circle();
-		
-		double width = 1000;
-		double height = 500;
-		
-		double radius = (height / 2) - (height / 10);
-		double intersectionWidth = radius / 2;
-		int strokeWidth = 3;
-		
-		Color leftColor = Color.BLUE;
-		Color rightColor = Color.RED;
-		
-		left.setCenterX((width / 2) - intersectionWidth);
-		left.setCenterY(height / 2);
-		
-		left.setRadius(radius);
-		
-		left.setFill(Color.BLUE);
-		left.setStroke(Color.BLACK);
-		left.setStrokeWidth(strokeWidth);
-		
-		Circle right = new Circle();
-		
-		right.setCenterX((width / 2) + intersectionWidth);
-		right.setCenterY(height / 2);
-		
-		right.setRadius(radius);
-		
-		right.setFill(Color.RED);
-		right.setStroke(Color.BLACK);
-		right.setStrokeWidth(strokeWidth);
-		
-		Shape intersect = Shape.intersect(left, right);
-		
-		intersect.setFill(Color.LIGHTGREEN);
-		intersect.setStroke(Color.WHITE);
-		intersect.setStrokeWidth(strokeWidth);
-		
-		intersect.setOnDragEntered(new EventHandler<DragEvent>() {
-		    public void handle(DragEvent event) {
-		    /* the drag-and-drop gesture entered the target */
-		    /* show to the user that it is an actual gesture target */
-		         if (event.getGestureSource() != intersect &&
-		                 event.getDragboard().hasString()) {
-		             intersect.setFill(Color.GREEN);
-		         }
-		                
-		         event.consume();
-		    }
-		});
-		
-		left.setOnDragEntered(new EventHandler<DragEvent>() {
-		    public void handle(DragEvent event) {
-		    /* the drag-and-drop gesture entered the target */
-		    /* show to the user that it is an actual gesture target */
-		         if (event.getGestureSource() != left &&
-		                 event.getDragboard().hasString()) {
-		             left.setFill(Color.DARKBLUE);
-		         }
-		                
-		         event.consume();
-		    }
-		});
-		
-		right.setOnDragEntered(new EventHandler<DragEvent>() {
-		    public void handle(DragEvent event) {
-		    /* the drag-and-drop gesture entered the target */
-		    /* show to the user that it is an actual gesture target */
-		         if (event.getGestureSource() != right &&
-		                 event.getDragboard().hasString()) {
-		             right.setFill(Color.DARKRED);
-		         }
-		                
-		         event.consume();
-		    }
-		});
-		
-		intersect.setOnDragExited(new EventHandler<DragEvent>() {
-		    public void handle(DragEvent event) {
-		        /* mouse moved away, remove the graphical cues */
-		        intersect.setFill(Color.LIGHTGREEN);
-
-		        event.consume();
-		    }
-		});
-		
-		left.setOnDragExited(new EventHandler<DragEvent>() {
-		    public void handle(DragEvent event) {
-		        /* mouse moved away, remove the graphical cues */
-		        left.setFill(Color.BLUE);
-
-		        event.consume();
-		    }
-		});
-
-		right.setOnDragExited(new EventHandler<DragEvent>() {
-		    public void handle(DragEvent event) {
-		        /* mouse moved away, remove the graphical cues */
-		        right.setFill(Color.RED);
-
-		        event.consume();
-		    }
-		});
-		
-		intersect.setOnDragDropped(new EventHandler<DragEvent>() {
-			public void handle(DragEvent event) {
-				event.setDropCompleted(true);
-				
-				event.consume();
-			}
-		});
-
-		this.vennGroup.getChildren().clear();
-		
-		this.vennGroup.getChildren().addAll(left, right, intersect);
-	}
-
 
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("Venn");
 		
-		this.root = new Group(); 
-		this.vennGroup = new Group();
+		this.layout = new Group(); 
 		
-		this.root.getChildren().add(this.vennGroup);
 		
-		Button button = new Button("Hover Over Me");
+		
+		final Button button = new Button("Hover Over Me");
 		button.setTooltip(new Tooltip("Tooltip for Button"));
 		
 		button.setOnDragDetected(new EventHandler<MouseEvent>() {
@@ -199,14 +80,16 @@ public class Main extends Application {
 			}
 		});
 
-		this.root.getChildren().add(button);
+		this.layout.getChildren().add(button);
 		
-		this.scene = new Scene(root, Main.width, Main.height);
+		DrawVenn draw = new DrawVenn();
+		this.layout.getChildren().addAll(draw.left(),draw.right(),draw.intersect());
+
+		this.scene = new Scene(layout, Main.width, Main.height);
 		
-		this.drawVenn();
 		
 		stage.setScene(scene);
-		stage.setResizable(false);
+		stage.setResizable(true);
 		stage.show(); 
 	}
 
