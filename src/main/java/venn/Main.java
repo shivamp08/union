@@ -32,7 +32,7 @@ public class Main extends Application {
 		this.mainLayout.setCenter(layout);
 		
 		Button add = new Button("Add Data");
-		add.setOnAction(e -> AlertBox.display("Add", "Add the Data"));
+		add.setOnAction(e -> AddData.display());
 		this.mainLayout.setTop(add);
 		
 		
