@@ -218,7 +218,7 @@ public class Main extends Application {
 		edit.setFitHeight(25);
 		edit.setFitWidth(25);
 		edit.setTranslateX(entry.getTranslateX() + entry.getWidth()/2);
-		edit.setTranslateY(edit.getTranslateY() - 15);
+		edit.setTranslateY(edit.getTranslateY() - entry.getHeight()/2);
 		edit.setVisible(false);
 		stack.getChildren().add(edit); 
 		
@@ -244,8 +244,16 @@ public class Main extends Application {
 			}
 		});
 		
+		ScrollPane sp = new ScrollPane(); 
+		sp.setContent(stack);
+		stack.setTranslateX(0);
+		stack.setTranslateY(0);
+		
+		
+		
 		
 		this.root.getChildren().add(stack);
+		this.root.getChildren().add(sp);
 		
 		this.scene = new Scene(root, Main.width, Main.height);
 		
