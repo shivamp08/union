@@ -204,56 +204,12 @@ public class Main extends Application {
 
 		this.root.getChildren().add(button);
 		
-		Text e1 = new Text("This is thsefse fsfs eeifjsioefsiefjsoeijf osifjseofisjefos \n ifjsoiefjsefsfs  s test test test test");
-		Rectangle entry = new Rectangle(50, 50, e1.getLayoutBounds().getWidth() + 10, e1.getLayoutBounds().getHeight() + 10);
-		System.out.println(e1.getWrappingWidth());
-		entry.setFill(javafx.scene.paint.Color.WHITE);
-		entry.setStroke(javafx.scene.paint.Color.BLACK);
-		StackPane stack = new StackPane(); 
-		stack.getChildren().addAll(entry, e1); 
-		stack.setTranslateX(100);
-		stack.setTranslateY(100);
-		
-		ImageView edit = new ImageView(getClass().getResource("editicon.png").toExternalForm());
-		edit.setFitHeight(25);
-		edit.setFitWidth(25);
-		edit.setTranslateX(entry.getTranslateX() + entry.getWidth()/2);
-		edit.setTranslateY(edit.getTranslateY() - entry.getHeight()/2);
-		edit.setVisible(false);
-		stack.getChildren().add(edit); 
-		
-		stack.setOnMouseEntered(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				// TODO Auto-generated method stub
-				entry.setWidth(entry.getWidth() + 10);
-				entry.setHeight(entry.getHeight() + 10);
-				edit.setVisible(true);
-				
-			}
-		});
-		
-		stack.setOnMouseExited(new EventHandler<MouseEvent>() {
-
-			@Override
-			public void handle(MouseEvent event) {
-				// TODO Auto-generated method stub
-				entry.setWidth(entry.getWidth() - 10);
-				entry.setHeight(entry.getHeight() - 10);
-				edit.setVisible(false);
-			}
-		});
-		
-		ScrollPane sp = new ScrollPane(); 
-		sp.setContent(stack);
-		stack.setTranslateX(0);
-		stack.setTranslateY(0);
-		
-		
-		
-		
-		this.root.getChildren().add(stack);
-		this.root.getChildren().add(sp);
+		Entry e1 = new Entry("this is the text", root); 
+		Entry e2 = new Entry("This is the hte test oaidwja adw", root); 
+		Entry e34 = new Entry("This is theoiefjesoe hte test oaidwja adw", root); 
+		Entry e223 = new Entry("This is the hteiofjsoifejsofijseoijtest oaidwja adw", root); 
+		Entry e7 = new Entry("This w", root); 
+		Entry e10 = new Entry("This is tsoefijhe hte test oaidwja adw", root); 
 		
 		this.scene = new Scene(root, Main.width, Main.height);
 		
