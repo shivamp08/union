@@ -198,7 +198,12 @@ public class Main extends Application {
 				event.consume();
 			}
 		});
-
+		
+		Entry e1 = new Entry("test", root); 
+		Entry e2 = new Entry("testtesttesttesttesttesttesttesttesttesttesttest", root);
+		Entry e3 = new Entry("testtesttesttest", root);
+		
+		
 		this.root.getChildren().add(button);
 		
 		this.scene = new Scene(root, Main.width, Main.height);
