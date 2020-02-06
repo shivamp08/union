@@ -9,13 +9,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class AddData {
 	
-	public static void display()
+	public static Text display()
 	{
+		Text message = new Text();
 		
 		Stage window = new Stage();
 		window.setTitle("Add data");
@@ -38,6 +40,11 @@ public class AddData {
 		
 		//Add button.
 		Button addButton = new Button("Add");
+		addButton.setOnAction( e->{
+			message.setText(data.getText());
+			window.close();
+			
+		});
 		
 		
 		
@@ -56,6 +63,8 @@ public class AddData {
 		Scene secene = new Scene(layout,100,100);
 		window.setScene(secene);
 		window.showAndWait();
+		
+		return message;
 	}
 
 }

@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -43,40 +44,25 @@ public class Main extends Application {
 		VBox vbox = new VBox();
 	    vbox.setPadding(new Insets(10));
 		
-//		Label la1 = new Label("hi there1");
-//		Label la2 = new Label("hi there2");
-//		Label la3 = new Label("hi there3");
-//		Label la4 = new Label("hi there4");
-//		Label la5 = new Label("hi there5");
-//		
-//		//List of data
-//		ListView<Label> list = new ListView<>();
-//		ObservableList<Label> items =FXCollections.observableArrayList (la1,la2,la3,la4,la5);
-//		list.setItems(items);
+
+		//List of data
+		ListView<Text> list = new ListView<>();
+		list.setOrientation(Orientation.HORIZONTAL);
+		list.setMaxHeight(50);
 		
 
-		Text t1 = new Text("This is a text sample,");
-		Text t2 = new Text("This is a text sample");
-		Text t3 = new Text("This is a text sample");
-		Text t4 = new Text("This is a text sample");
-		Text t5 = new Text("This is a text sample");
-		Text t6 = new Text("This is a text sample");
 
-		
-		 HBox hbox = new HBox();
-		 //hbox.setPadding(new Insets(15, 12, 15, 12));
-		 hbox.setSpacing(100);
-		 hbox.setPrefHeight(100);
-		 hbox.setMaxWidth(1);
-		 hbox.getChildren().addAll(t1,t2,t3);
-		 //hbox.minWidthProperty().bind(mainLayout.widthProperty());
 		
 		
 		// Button to add new data.
 		Button add = new Button("Add Data");
-		add.setOnAction(e -> AddData.display());
+		add.setOnAction(e -> {
+			Text data = AddData.display();
+			list.getItems().add(data);
+			
+		});
 		
-		vbox.getChildren().addAll(hbox,add);
+		vbox.getChildren().addAll(list,add);
 		this.mainLayout.setTop(vbox);
 		
 		
