@@ -1,19 +1,22 @@
 package venn;
 
 import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 public class VennSectionLeft extends VennSection {
-    public VennSectionLeft (Scene scene) {
-        super(scene);
+    public VennSectionLeft (Scene scene, VennEntryHandler handler) {
+        super(scene, handler);
 
-        this.sectionName = "left";
+        this.section = EntryLocations.Left;
 
         this.color = Color.BLUE;
         this.hoverColor = Color.DARKBLUE;
 
         shape = new Circle();
+        pane = new VBox(5);
+        pane.setUserData(this);
 
         this.draw();
         this.initDropHandlers();

@@ -1,19 +1,24 @@
 package venn;
 
+import javafx.collections.ListChangeListener;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 public class VennSectionRight extends VennSection {
-    public VennSectionRight (Scene scene) {
-        super(scene);
+    public VennSectionRight (Scene scene, VennEntryHandler handler) {
+        super(scene, handler);
 
-        this.sectionName = "right";
+        this.section = EntryLocations.Right;
 
         this.color = Color.RED;
         this.hoverColor = Color.DARKRED;
 
         shape = new Circle();
+        pane = new VBox(5);
+        pane.setUserData(this);
 
         this.draw();
         this.initDropHandlers();

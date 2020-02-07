@@ -12,11 +12,13 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class AddData {
+public class VennAddEntry {
 
     public static Text display()
     {
-        Text message = new Text();
+//        VennEntry entry = new VennEntry("");
+
+        Text text = new Text();
 
         Stage window = new Stage();
         window.setTitle("Add data");
@@ -40,7 +42,9 @@ public class AddData {
         //Add button.
         Button addButton = new Button("Add");
         addButton.setOnAction( e->{
-            message.setText(data.getText());
+//            message.setText(data.getText());
+//            entry.setData(data.getText());
+            text.setText(data.getText());
             window.close();
         });
 
@@ -54,11 +58,11 @@ public class AddData {
         layout.getChildren().addAll(label, data, allButtons);
         layout.setAlignment(Pos.CENTER);
 
-        Scene secene = new Scene(layout,100,100);
-        window.setScene(secene);
+        Scene scene = new Scene(layout,100,100);
+        window.setScene(scene);
         window.showAndWait();
 
-        return message;
+        return text;
     }
 
 }
