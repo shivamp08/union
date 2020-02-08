@@ -4,20 +4,16 @@ package venn;
 
 
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
@@ -100,6 +96,7 @@ public class Main extends Application {
 	    
 	    
 	    
+	    
 	    Text t = new Text("Trial");
 	    t.setOnDragDetected(e-> {
 	    	 Dragboard db = t.startDragAndDrop(TransferMode.ANY);
@@ -110,6 +107,9 @@ public class Main extends Application {
 	         
 	         e.consume();
 	    });
+	    
+	    
+	    
 	    
 	    
 	    //List of data
@@ -145,6 +145,39 @@ public class Main extends Application {
 		Shape i = inter.intersect;
 		
 		this.layout.getChildren().addAll(l,r,i);
+		
+		i.setOnDragDone(event ->{
+	    	if (event.getGestureSource() != i &&
+	                event.getDragboard().hasString()) {
+	            /* allow for both copying and moving, whatever user chooses */
+	            event.acceptTransferModes(TransferMode.ANY);
+	        }
+	        
+	        event.consume();
+	    
+	    });
+		
+		i.setOnDragDropped(event->{
+			Dragboard db = event.getDragboard();
+	        boolean success = false;
+	        if (db.hasString()) {
+	          // i.setText(db.getString());
+	           success = true;
+	        }
+	        /* let the source know whether the string was successfully 
+	         * transferred and used */
+	        event.setDropCompleted(success);
+	        
+	        event.consume();
+		});
+		
+		
+		t.setOnDragDone(event->{
+			if (event.getTransferMode() == TransferMode.MOVE) {
+	            t.setText("");
+	        }
+	        event.consume();
+		});
 																
 
 		
