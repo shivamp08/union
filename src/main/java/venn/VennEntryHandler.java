@@ -6,6 +6,7 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -15,32 +16,40 @@ import java.util.List;
 
 public class VennEntryHandler {
     List<VennTextEntry> entries;
+    Pane container;
 
-    public VennEntryHandler () {
+    public VennEntryHandler (Pane container) {
         this.entries = new ArrayList<>();
+        this.container = container;
+    }
+    
+    public static StackPane getCircle (int index) {
+    	StackPane pane = new StackPane();
+    	
+    	Circle circle = new Circle();
+    	circle.setRadius(20);
+    	circle.setFill(Color.ORANGERED);
+        
+        Text previewText = new Text(String.valueOf(index));
+        previewText.setFill(Color.WHITE);
+        
+        pane.getChildren().addAll(circle, previewText);
+        
+        return pane;
     }
 
     public void addEntry (VennTextEntry entry) {
         this.entries.add(entry);
+        this.container.getChildren().add(entry.pane);
 
         entry.pane.setOnDragDetected(event -> {
             Dragboard db = entry.pane.startDragAndDrop(TransferMode.ANY);
-
-            Group previewGroup = new Group();
-
-            Circle preview = new Circle();
-            preview.setRadius(20);
-            preview.setFill(Color.ORANGERED);
-
-            Text previewText = new Text(String.valueOf(this.getIndexOfEntry(entry) + 1));
-            previewText.setFill(Color.WHITE);
-
-            previewGroup.getChildren().addAll(preview, previewText);
+            
+            StackPane pane = VennEntryHandler.getCircle(this.getIndexOfEntry(entry) + 1);           
 
             SnapshotParameters sp = new SnapshotParameters();
             sp.setFill(Color.TRANSPARENT);
-
-            db.setDragView(previewGroup.snapshot(sp, null), event.getX(), event.getY());
+            db.setDragView(pane.snapshot(sp, null), event.getX(), event.getY());
 
             /* Put a string on a dragboard */
             ClipboardContent content = new ClipboardContent();

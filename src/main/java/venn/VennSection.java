@@ -46,21 +46,26 @@ public class VennSection {
 //        this.radius = (scene.getHeight() / 2) - (scene.getHeight() / 10);
 //        this.width = (scene.getWidth() / 2);
 //        this.height = (scene.getHeight() / 2);
-        this.radius = 200;
-        this.width = 1000;
+        this.radius = 250;
+        this.width = 750;
         this.height = 500;
     }
 
     protected void initChangeHandler () {
-        this.pane.getChildren().addListener(new ListChangeListener() {
-            @Override
+        this.pane.getChildren().addListener(new ListChangeListener<Object>() {
+            @SuppressWarnings({ "unchecked", "rawtypes" })
+			@Override
             public void onChanged(ListChangeListener.Change c) {
                 c.next();
-                List added = c.getAddedSubList();
+                List<Pane> added = c.getAddedSubList();
+                List<Pane> removed = c.getRemoved();
                 if (added.size() == 1) {
                     VennTextEntry entry = (VennTextEntry) ((Pane) added.get(0)).getUserData();
                     System.out.println("was at " + entry.location + ", now at " + section);
                     entry.setLocation(section);
+                } else if (removed.size() == 1) {
+                	VennTextEntry entry = (VennTextEntry) ((Pane) removed.get(0)).getUserData();
+                	System.out.println("removed from " + entry.location);
                 }
             }
         });
@@ -72,7 +77,7 @@ public class VennSection {
         shape.setOnMouseEntered(event -> {
             shape.setFill(this.hoverColor);
             for (Node n : this.pane.getChildren()) {
-                HBox box = (HBox) n;
+                Pane box = (Pane) n;
                 box.getStyleClass().remove("el-default");
                 box.getStyleClass().add("el-hover");
             }
@@ -80,7 +85,7 @@ public class VennSection {
         shape.setOnMouseExited(event -> {
             shape.setFill(this.color);
             for (Node n : this.pane.getChildren()) {
-                HBox box = (HBox) n;
+                Pane box = (Pane) n;
                 box.getStyleClass().add("el-default");
                 box.getStyleClass().remove("el-hover");
             }

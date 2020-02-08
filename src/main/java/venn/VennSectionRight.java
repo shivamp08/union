@@ -1,6 +1,7 @@
 package venn;
 
 import javafx.collections.ListChangeListener;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -19,6 +20,9 @@ public class VennSectionRight extends VennSection {
         shape = new Circle();
         pane = new VBox(5);
         pane.setUserData(this);
+        
+        ((VBox) pane).setAlignment(Pos.CENTER);
+        pane.getChildren().add(VennPanelTitle.create("Right", false));
 
         this.draw();
         this.initDropHandlers();

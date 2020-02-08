@@ -1,5 +1,6 @@
 package venn;
 
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -17,6 +18,9 @@ public class VennSectionLeft extends VennSection {
         shape = new Circle();
         pane = new VBox(5);
         pane.setUserData(this);
+        
+        ((VBox) pane).setAlignment(Pos.CENTER);
+        pane.getChildren().add(VennPanelTitle.create("Left", false));
 
         this.draw();
         this.initDropHandlers();

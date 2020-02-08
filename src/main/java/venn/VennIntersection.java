@@ -19,6 +19,10 @@ public class VennIntersection extends VennSection {
         pane = new HBox(5);
         ((HBox)pane).setAlignment(Pos.CENTER);
         pane.setUserData(this);
+        
+        pane.setPrefWidth(500);
+        
+        pane.getChildren().add(VennPanelTitle.create("Center", true));
 
         this.draw();
         this.initDropHandlers();

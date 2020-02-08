@@ -20,8 +20,8 @@ import java.util.List;
 
 public class Main extends Application {
 	
-	private static final int width = 1000;
-	private static final int height = 500;
+	private static final int width = 1250;
+	private static final int height = 750;
 
 	private Group vennGroup;
 	private Scene scene;
@@ -37,7 +37,6 @@ public class Main extends Application {
 
 	public Main () {
 		super();
-		this.entries = new VennEntryHandler();
 	}
 
 	public static void main(String[] args) {
@@ -61,45 +60,35 @@ public class Main extends Application {
 
 		this.mainLayout.setCenter(this.vennGroup);
 
-		Button addButton = new Button("Add Entry");
-
 		Insets padding = new Insets(5);
 		
 		this.scene = new Scene(this.mainLayout, Main.width, Main.height);
 		this.scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
 
+		HBox dragHbox = new HBox(2);
+		
+		this.entries = new VennEntryHandler(dragHbox);
 		this.drawVenn();
-
+		
 		VBox topVBox = new VBox(5);
 		VBox leftVBox = (VBox) this.left.pane;
 		VBox rightVBox = (VBox) this.right.pane;
 		HBox bottomHBox = (HBox) this.intersection.pane;
 
-		HBox addHBox = new HBox(5);
-		HBox dragHbox = new HBox(2);
-
-		topVBox.setPadding(padding);
 		leftVBox.setPadding(padding);
 		rightVBox.setPadding(padding);
-
-		topVBox.getChildren().addAll(addHBox, dragHbox);
-
-		addHBox.getChildren().addAll(addButton);
+		
+		topVBox.getChildren().addAll(VennMenu.create(this.entries), dragHbox);
 
 		this.mainLayout.setTop(topVBox);
 		this.mainLayout.setRight(rightVBox);
 		this.mainLayout.setLeft(leftVBox);
 		this.mainLayout.setBottom(bottomHBox);
-
-		addButton.setOnAction(event -> {
-			Text data = VennAddEntry.display();
-			if (data.getText().contentEquals("")) return;
-
-			VennTextEntry entry = new VennTextEntry(data.getText());
-
-			this.entries.addEntry(entry);
-			dragHbox.getChildren().add(entry.pane);
-		});
+		
+		mainLayout.prefHeightProperty().bind(scene.heightProperty());
+        mainLayout.prefWidthProperty().bind(scene.widthProperty());
+		
+		dragHbox.getChildren().add(VennPanelTitle.create("Items: ", false));
 		
 		stage.setScene(scene);
 //		stage.setResizable(false);
