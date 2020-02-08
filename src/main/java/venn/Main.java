@@ -6,6 +6,7 @@ package venn;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -15,6 +16,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
@@ -26,6 +28,7 @@ public class Main extends Application {
 	private Group layout;
 	private Scene scene;
 	private BorderPane mainLayout;
+	private Color hoverColor;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -107,6 +110,7 @@ public class Main extends Application {
 	         
 	         e.consume();
 	    });
+	    t.setCursor(Cursor.HAND);
 	    
 	    
 	    
@@ -172,12 +176,20 @@ public class Main extends Application {
 		});
 		
 		
-		t.setOnDragDone(event->{
+		i.setOnDragDone(event->{
 			if (event.getTransferMode() == TransferMode.MOVE) {
 	            t.setText("");
 	        }
 	        event.consume();
 		});
+		
+		
+		i.setOnDragEntered(event -> {
+            if (event.getDragboard().hasString()) {
+                i.setFill(this.hoverColor);
+            }
+            event.consume();
+        });
 																
 
 		
