@@ -10,7 +10,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,13 +39,13 @@ public class VennEntryHandler {
         return pane;
     }
 
-    public void addEntry (VennTextEntry entry) {
+    public void addEntry (VennTextEntry entry, Group vennCircles) {
         this.entries.add(entry);
         this.container.getChildren().add(entry.pane);
 
         entry.pane.setOnDragDetected(event -> {
             Dragboard db = entry.pane.startDragAndDrop(TransferMode.ANY);
-            
+         
             StackPane pane = VennEntryHandler.getCircle(this.getIndexOfEntry(entry) + 1);           
 
             SnapshotParameters sp = new SnapshotParameters();
@@ -57,6 +58,14 @@ public class VennEntryHandler {
             db.setContent(content);
 
             event.consume();
+        });
+        
+        entry.pane.setOnDragDone(event -> {
+        	Point p = MouseInfo.getPointerInfo().getLocation(); 
+        	StackPane pane = VennEntryHandler.getCircle(this.getIndexOfEntry(entry) + 1);
+        	pane.setTranslateX(p.getX());
+        	pane.setTranslateY(p.getY());
+        	vennCircles.getChildren().addAll(pane);
         });
     }
 

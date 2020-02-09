@@ -26,6 +26,7 @@ public class Main extends Application {
 	private Group vennGroup;
 	private Scene scene;
 	private Stage stage;
+	private Group vennCircles;
 
 	private BorderPane mainLayout;
 
@@ -57,11 +58,13 @@ public class Main extends Application {
 
 		this.mainLayout = new BorderPane();
 		this.vennGroup = new Group();
+		this.vennCircles = new Group(); 
 
 		this.mainLayout.setCenter(this.vennGroup);
 
 		Insets padding = new Insets(5);
 		
+		this.mainLayout.getChildren().add(vennCircles);
 		this.scene = new Scene(this.mainLayout, Main.width, Main.height);
 		this.scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
 
@@ -78,7 +81,7 @@ public class Main extends Application {
 		leftVBox.setPadding(padding);
 		rightVBox.setPadding(padding);
 		
-		topVBox.getChildren().addAll(VennMenu.create(this.entries), dragHbox);
+		topVBox.getChildren().addAll(VennMenu.create(this.entries, vennCircles), dragHbox);
 
 		this.mainLayout.setTop(topVBox);
 		this.mainLayout.setRight(rightVBox);
@@ -89,6 +92,7 @@ public class Main extends Application {
         mainLayout.prefWidthProperty().bind(scene.widthProperty());
 		
 		dragHbox.getChildren().add(VennPanelTitle.create("Items: ", false));
+		
 		
 		stage.setScene(scene);
 //		stage.setResizable(false);

@@ -1,12 +1,13 @@
 package venn;
 
+import javafx.scene.Group;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.text.Text;
 
 public class VennMenu {
-	public static MenuBar create (VennEntryHandler handler) {
+	public static MenuBar create (VennEntryHandler handler, Group vennCircles) {
 		MenuBar bar = new MenuBar();
 		
 		Menu menu = new Menu("Venn");
@@ -19,7 +20,7 @@ public class VennMenu {
 
 			VennTextEntry entry = new VennTextEntry(data.getText());
 
-			handler.addEntry(entry);
+			handler.addEntry(entry, vennCircles);
 		});
 	
 		menu.getItems().add(add);
