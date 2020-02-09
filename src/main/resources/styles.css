@@ -1,0 +1,20 @@
+.el-default {
+    -fx-border-color: black;
+    -fx-border-insets: 5;
+    -fx-border-width: 3;
+    -fx-border-style: solid;
+}
+
+.el-hover {
+    -fx-border-color: red;
+    -fx-border-insets: 5;
+    -fx-border-width: 3;
+    -fx-border-style: solid;
+}
+
+.el-title {
+    -fx-border-color: green;
+    -fx-border-insets: 5;
+    -fx-border-width: 3;
+    -fx-border-style: solid;
+}
