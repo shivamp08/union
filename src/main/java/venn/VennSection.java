@@ -63,12 +63,12 @@ public class VennSection {
                 List<Pane> added = c.getAddedSubList();
                 List<Pane> removed = c.getRemoved();
                 if (added.size() == 1) {
-                    VennTextEntry entry = (VennTextEntry) ((Pane) added.get(0)).getUserData();
+                    VennTextEntry entry = (VennTextEntry) added.get(0).getUserData();
                     System.out.println("was at " + entry.location + ", now at " + section);
                     
                     entry.setLocation(section);
                 } else if (removed.size() == 1) {
-                	VennTextEntry entry = (VennTextEntry) ((Pane) removed.get(0)).getUserData();
+                	VennTextEntry entry = (VennTextEntry) removed.get(0).getUserData();
                 	
                 	VennEntryHandler.handleLineDrawings(app.overlayGroup, entry, false);
                 	
@@ -79,7 +79,6 @@ public class VennSection {
     }
 
     protected void initHoverHandlers () {
-        List<Line> lines = new ArrayList<>();
         Group linesGroup = this.app.overlayGroup;
 
         shape.setOnMouseEntered(event -> {
@@ -155,12 +154,12 @@ public class VennSection {
             }
             
             Group vennGroup = this.app.vennGroup;
-            StackPane pane = entry.draggable;
-            if (pane != null) {
-            	pane.setLayoutX(event.getX());
-            	pane.setLayoutY(event.getY());
-            	if (!vennGroup.getChildren().contains(pane)) {
-            		vennGroup.getChildren().add(pane);	
+            StackPane draggable = entry.draggable;
+            if (draggable != null) {
+            	draggable.setLayoutX(event.getX() - (draggable.getWidth() / 2));
+            	draggable.setLayoutY(event.getY() - (draggable.getHeight() / 2));
+            	if (!vennGroup.getChildren().contains(draggable)) {
+            		vennGroup.getChildren().add(draggable);
             	}
             }
 

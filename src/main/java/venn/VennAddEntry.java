@@ -14,6 +14,16 @@ import javafx.stage.Stage;
 
 public class VennAddEntry {
 
+    public static void add (VennEntryHandler handler) {
+        Text data = VennAddEntry.display();
+
+        if (data.getText().contentEquals("")) return;
+
+        VennTextEntry entry = new VennTextEntry(data.getText());
+
+        handler.addEntry(entry);
+    }
+
     public static Text display()
     {
 //        VennEntry entry = new VennEntry("");
@@ -38,6 +48,11 @@ public class VennAddEntry {
         // cancel button
         Button closeButton = new Button("Cancel");
         closeButton.setOnAction(e -> window.close());
+        
+        data.setOnAction(e -> {
+        	text.setText(data.getText());
+            window.close();
+        });
 
         //Add button.
         Button addButton = new Button("Add");

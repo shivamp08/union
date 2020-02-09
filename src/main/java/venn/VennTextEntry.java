@@ -46,9 +46,18 @@ public class VennTextEntry extends Region {
     	Bounds draggableBoundsInScene = draggable.localToScene(draggable.getBoundsInLocal());
     	Bounds paneBoundsInScene = pane.localToScene(pane.getBoundsInLocal());
     	
-    	System.out.println("min " + paneBoundsInScene.getMinX());
-    	System.out.println("max " + paneBoundsInScene.getMinY());
-    	System.out.println("pane " + pane);
+//    	System.out.println("min " + paneBoundsInScene.getMinX());
+//    	System.out.println("max " + paneBoundsInScene.getMinY());
+//    	System.out.println("pane " + pane);
+
+        // two annoying bugs I cannot figure out why they exist
+    	if (
+            (paneBoundsInScene.getMinX() > 1600 && paneBoundsInScene.getMinY() < 100) ||
+            (paneBoundsInScene.getMinX() < 100 && paneBoundsInScene.getMinY() > 1000)
+        ) {
+    	    this.line = new Line();
+    	    return line;
+        }
     	
     	Line line = new Line(
 			paneBoundsInScene.getMaxX() - (paneBoundsInScene.getWidth() / 2),

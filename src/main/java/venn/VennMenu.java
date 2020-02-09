@@ -14,14 +14,7 @@ public class VennMenu {
 		
 		MenuItem add = new MenuItem("Add");
 		
-		add.setOnAction(event -> {
-			Text data = VennAddEntry.display();
-			if (data.getText().contentEquals("")) return;
-
-			VennTextEntry entry = new VennTextEntry(data.getText());
-
-			handler.addEntry(entry);
-		});
+		add.setOnAction(event -> VennAddEntry.add(handler));
 	
 		menu.getItems().add(add);
 		bar.getMenus().add(menu);

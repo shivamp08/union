@@ -52,7 +52,7 @@ public class Main extends Application {
 	}
 
 	@Override
-	public void start(Stage stage) throws Exception {
+	public void start(Stage stage) {
 		this.stage = stage;
 		stage.setTitle("Union App");
 
@@ -97,7 +97,11 @@ public class Main extends Application {
 		
 		dragHbox.getChildren().add(VennPanelTitle.create("Items: ", false));
 		
-		
+		// keyboard combbo
+		KeyCombination kc1 = new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN);
+		Runnable rn = () -> VennAddEntry.add(this.entries);
+		scene.getAccelerators().put(kc1, rn);
+
 		stage.setScene(scene);
 //		stage.setResizable(false);
 		stage.show(); 
