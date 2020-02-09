@@ -19,6 +19,8 @@ public class VennTextEntry extends Region {
     StackPane draggable;
     HBox pane;
     Line line;
+    
+    Color draggableColor;
 
     public VennTextEntry(String data) {
         super();

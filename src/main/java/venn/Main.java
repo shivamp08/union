@@ -54,7 +54,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		this.stage = stage;
-		stage.setTitle("Venn");
+		stage.setTitle("Union App");
 
 		Group layout = new Group();
 		this.mainLayout = new BorderPane();

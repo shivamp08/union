@@ -57,31 +57,33 @@ public class VennEntryHandler {
         return Color.web(color);
     }
     
-    public static StackPane getCircle (int index) {
+    public static void setDraggableCircle (VennTextEntry entry, int index) {
     	StackPane pane = new StackPane();
     	
     	Circle circle = new Circle();
     	circle.setRadius(20);
-    	circle.setFill(VennEntryHandler.generateColour());
+    	
+    	entry.draggableColor = VennEntryHandler.generateColour();
+    	
+    	circle.setFill(entry.draggableColor);
         
         Text previewText = new Text(String.valueOf(index));
         previewText.setFill(Color.WHITE);
         
         pane.getChildren().addAll(circle, previewText);
         
-        return pane;
+        entry.draggable = pane;
     }
 
     public void addEntry (VennTextEntry entry) {
         this.entries.add(entry);
-        entry.draggable = VennEntryHandler.getCircle(this.getIndexOfEntry(entry) + 1);
+        VennEntryHandler.setDraggableCircle(entry, this.getIndexOfEntry(entry) + 1);
         
         this.container.getChildren().add(entry.pane);
         
         VennEntryHandler.bindDragHandler(entry.pane, entry, this);
         VennEntryHandler.bindDragHandler(entry.draggable, entry, this);
-        VennEntryHandler.bindHoverHandler(entry.draggable, entry, overlayGroup);
-       
+        VennEntryHandler.bindHoverHandler(entry.draggable, entry, this);
     }
     
     public static void handleLineDrawings(Group overlayGroup, VennTextEntry entry, Boolean draw) {
@@ -102,17 +104,27 @@ public class VennEntryHandler {
     	}
     }
     
-    public static void bindHoverHandler (Pane pane, VennTextEntry entry, Group overlayGroup) {
+    public static void bindHoverHandler (Pane pane, VennTextEntry entry, VennEntryHandler handler) {
     	pane.setOnMouseEntered(event -> {
             entry.hover();
             
             if (entry.line == null) {
         		Line line = entry.drawLine();
-        		overlayGroup.getChildren().add(line);
+        		handler.overlayGroup.getChildren().add(line);
         	}
+            // darken the circle
+            if (entry.draggable != null) {
+            	Circle circle = ((Circle) entry.draggable.getChildren().get(0));
+            	circle.setFill(entry.draggableColor.darker());
+            }
         });
         pane.setOnMouseExited(event -> {
             entry.endHover();
+            // reset circle back to original
+            if (entry.draggable != null) {
+            	Circle circle = ((Circle) entry.draggable.getChildren().get(0));
+            	circle.setFill(entry.draggableColor);
+            }
         });
     }
     

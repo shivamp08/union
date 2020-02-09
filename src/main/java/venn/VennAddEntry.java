@@ -23,7 +23,7 @@ public class VennAddEntry {
         Stage window = new Stage();
         window.setTitle("Add data");
         window.setMinWidth(400);
-        window.setMinHeight(400);
+        window.setMinHeight(200);
 
         // prevents user to modify other window
         window.initModality(Modality.APPLICATION_MODAL);
