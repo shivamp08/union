@@ -23,10 +23,10 @@ public class Main extends Application {
 	private static final int width = 1250;
 	private static final int height = 750;
 
-	private Group vennGroup;
+	protected Group vennGroup;
+	protected Group overlayGroup;
 	private Scene scene;
 	private Stage stage;
-	private Group vennCircles;
 
 	private BorderPane mainLayout;
 
@@ -45,9 +45,9 @@ public class Main extends Application {
 	}
 	
 	private void drawVenn() {
-		this.left = new VennSectionLeft(scene, this.entries);
-		this.right = new VennSectionRight(scene, this.entries);
-		this.intersection = new VennIntersection(scene, this.entries, left, right);
+		this.left = new VennSectionLeft(scene, this, this.entries);
+		this.right = new VennSectionRight(scene, this, this.entries);
+		this.intersection = new VennIntersection(scene, this, this.entries, left, right);
 		this.vennGroup.getChildren().addAll(left.shape, right.shape, intersection.shape);
 	}
 
@@ -56,21 +56,25 @@ public class Main extends Application {
 		this.stage = stage;
 		stage.setTitle("Venn");
 
+		Group layout = new Group();
 		this.mainLayout = new BorderPane();
 		this.vennGroup = new Group();
-		this.vennCircles = new Group(); 
+		this.overlayGroup = new Group();
 
 		this.mainLayout.setCenter(this.vennGroup);
 
 		Insets padding = new Insets(5);
 		
-		this.mainLayout.getChildren().add(vennCircles);
-		this.scene = new Scene(this.mainLayout, Main.width, Main.height);
+		layout.getChildren().add(overlayGroup);
+		layout.getChildren().add(this.mainLayout);
+		overlayGroup.toFront();
+		
+		this.scene = new Scene(layout, Main.width, Main.height);
 		this.scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
 
 		HBox dragHbox = new HBox(2);
 		
-		this.entries = new VennEntryHandler(dragHbox);
+		this.entries = new VennEntryHandler(dragHbox, overlayGroup);
 		this.drawVenn();
 		
 		VBox topVBox = new VBox(5);
@@ -81,7 +85,7 @@ public class Main extends Application {
 		leftVBox.setPadding(padding);
 		rightVBox.setPadding(padding);
 		
-		topVBox.getChildren().addAll(VennMenu.create(this.entries, vennCircles), dragHbox);
+		topVBox.getChildren().addAll(VennMenu.create(this.entries), dragHbox);
 
 		this.mainLayout.setTop(topVBox);
 		this.mainLayout.setRight(rightVBox);

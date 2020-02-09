@@ -2,6 +2,7 @@ package venn;
 
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -9,8 +10,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 public class VennSectionRight extends VennSection {
-    public VennSectionRight (Scene scene, VennEntryHandler handler) {
-        super(scene, handler);
+    public VennSectionRight (Scene scene, Main app, VennEntryHandler handler) {
+        super(scene, handler, app);
 
         this.section = EntryLocations.Right;
 

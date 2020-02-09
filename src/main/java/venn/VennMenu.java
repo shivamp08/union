@@ -7,7 +7,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.text.Text;
 
 public class VennMenu {
-	public static MenuBar create (VennEntryHandler handler, Group vennCircles) {
+	public static MenuBar create (VennEntryHandler handler) {
 		MenuBar bar = new MenuBar();
 		
 		Menu menu = new Menu("Venn");
@@ -20,7 +20,7 @@ public class VennMenu {
 
 			VennTextEntry entry = new VennTextEntry(data.getText());
 
-			handler.addEntry(entry, vennCircles);
+			handler.addEntry(entry);
 		});
 	
 		menu.getItems().add(add);

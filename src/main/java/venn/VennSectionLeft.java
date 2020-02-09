@@ -1,14 +1,15 @@
 package venn;
 
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 public class VennSectionLeft extends VennSection {
-    public VennSectionLeft (Scene scene, VennEntryHandler handler) {
-        super(scene, handler);
+    public VennSectionLeft (Scene scene, Main app, VennEntryHandler handler) {
+        super(scene, handler, app);
 
         this.section = EntryLocations.Left;
 

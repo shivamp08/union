@@ -1,14 +1,15 @@
 package venn;
 
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 
 public class VennIntersection extends VennSection {
-    public VennIntersection(Scene scene, VennEntryHandler handler, VennSectionLeft left, VennSectionRight right) {
-        super(scene, handler);
+    public VennIntersection(Scene scene, Main app, VennEntryHandler handler, VennSectionLeft left, VennSectionRight right) {
+        super(scene, handler, app);
 
         this.section = EntryLocations.Center;
 

@@ -1,11 +1,14 @@
 package venn;
 
 import javafx.collections.ListChangeListener;
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -33,15 +36,15 @@ public class VennSection {
     VennEntryHandler handler;
 
     Pane pane;
-    VBox innerPane; // temp pane
+    Main app;
 
-    public VennSection (Scene scene, VennEntryHandler handler) {
+    public VennSection (Scene scene, VennEntryHandler handler, Main app) {
         this.handler = handler;
         this.scene = scene;
 
         this.shape = new Circle();
         this.pane = new VBox();
-        this.innerPane = new VBox();
+        this.app = app;
 
 //        this.radius = (scene.getHeight() / 2) - (scene.getHeight() / 10);
 //        this.width = (scene.getWidth() / 2);
@@ -62,9 +65,13 @@ public class VennSection {
                 if (added.size() == 1) {
                     VennTextEntry entry = (VennTextEntry) ((Pane) added.get(0)).getUserData();
                     System.out.println("was at " + entry.location + ", now at " + section);
+                    
                     entry.setLocation(section);
                 } else if (removed.size() == 1) {
                 	VennTextEntry entry = (VennTextEntry) ((Pane) removed.get(0)).getUserData();
+                	
+                	VennEntryHandler.handleLineDrawings(app.overlayGroup, entry, false);
+                	
                 	System.out.println("removed from " + entry.location);
                 }
             }
@@ -73,21 +80,34 @@ public class VennSection {
 
     protected void initHoverHandlers () {
         List<Line> lines = new ArrayList<>();
+        Group linesGroup = this.app.overlayGroup;
 
         shape.setOnMouseEntered(event -> {
             shape.setFill(this.hoverColor);
+            
             for (Node n : this.pane.getChildren()) {
                 Pane box = (Pane) n;
-                box.getStyleClass().remove("el-default");
-                box.getStyleClass().add("el-hover");
+                
+                VennTextEntry entry = this.handler.findByPane(box);
+                
+                if (entry != null) {
+                	entry.hover();
+                	VennEntryHandler.handleLineDrawings(linesGroup, entry, true);
+                }
             }
         });
         shape.setOnMouseExited(event -> {
             shape.setFill(this.color);
+
             for (Node n : this.pane.getChildren()) {
                 Pane box = (Pane) n;
-                box.getStyleClass().add("el-default");
-                box.getStyleClass().remove("el-hover");
+                
+                VennTextEntry entry = this.handler.findByPane(box);
+                
+                if (entry != null) {
+                	entry.endHover();
+                	VennEntryHandler.handleLineDrawings(linesGroup, entry, false);
+                }
             }
         });
 
@@ -120,22 +140,31 @@ public class VennSection {
 
             Pane source = (Pane) event.getGestureSource();
             VennTextEntry entry = this.handler.findByPane(source);
+            
+            if (source == null) return;
 
-            ((Pane) entry.pane.getParent()).getChildren().removeIf(c -> {
-                if (c != null && c.getUserData() != null) {
-                    return c.getUserData().equals(entry);
-                }
-                return false;
-            });
+            System.out.println("source " + source);
+            Parent parent = entry.pane.getParent();
+            if (parent != null) {
+            	((Pane) entry.pane.getParent()).getChildren().removeIf(c -> {
+                    if (c != null && c.getUserData() != null) {
+                        return c.getUserData().equals(entry);
+                    }
+                    return false;
+                });	
+            }
+            
+            Group vennGroup = this.app.vennGroup;
+            StackPane pane = entry.draggable;
+            if (pane != null) {
+            	pane.setLayoutX(event.getX());
+            	pane.setLayoutY(event.getY());
+            	if (!vennGroup.getChildren().contains(pane)) {
+            		vennGroup.getChildren().add(pane);	
+            	}
+            }
 
             this.pane.getChildren().add(entry.pane);
-
-//            Button button = (Button) event.getGestureSource();
-//            double buttonCenterX = event.getX() - (button.getWidth() / 2);
-//            double buttonCenterY = event.getY() - (button.getHeight() / 2);
-//
-//            button.setLayoutX(buttonCenterX);
-//            button.setLayoutY(buttonCenterY);
 
             event.setDropCompleted(true);
             event.consume();
