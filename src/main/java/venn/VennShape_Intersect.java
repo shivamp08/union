@@ -18,8 +18,8 @@ public class VennShape_Intersect {
 		VennCircle_Left  left = new VennCircle_Left();
 		Circle l = left.left  ;
 		
-		 intersect = Shape.intersect(r,l);
-
+		intersect = Shape.intersect(r,l);
+		 
 		intersect.setFill(Color.LIGHTGREEN);
 		intersect.setStroke(Color.WHITE);
 		intersect.setStrokeWidth(3);

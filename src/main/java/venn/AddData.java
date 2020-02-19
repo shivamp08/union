@@ -40,6 +40,7 @@ public class AddData {
 		
 		//Add button.
 		Button addButton = new Button("Add");
+		addButton.setDefaultButton(true);
 		addButton.setOnAction( e->{
 			message.setText(data.getText());
 			window.close();

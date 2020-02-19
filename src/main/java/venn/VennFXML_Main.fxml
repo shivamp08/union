@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Path?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="633.0" prefWidth="867.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="venn.VennController_Main">
+   <center>
+      <Group fx:id="group" BorderPane.alignment="CENTER">
+         <children>
+            <Circle fx:id="right" fill="DODGERBLUE" layoutX="54.0" layoutY="2.0" radius="200.0" stroke="BLACK" strokeDashOffset="10.0" strokeLineCap="ROUND" strokeType="INSIDE" strokeWidth="3.0" />
+            <Circle fx:id="left" blendMode="MULTIPLY" fill="DODGERBLUE" layoutX="-116.0" layoutY="2.0" radius="200.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="3.0" />
+            <Path fx:id="intersect" fill="#ff1f4d" layoutX="-47.0" layoutY="5.0" mouseTransparent="true" opacity="0.0" pickOnBounds="true" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="3.0">
+               <stroke>
+                  <LinearGradient endX="1.0" endY="1.0" proportional="false">
+                     <stops>
+                        <Stop color="#1ed4e1" />
+                        <Stop color="WHITE" offset="1.0" />
+                     </stops>
+                  </LinearGradient>
+               </stroke>
+            </Path>
+         </children>
+      </Group>
+   </center>
+   <top>
+      <AnchorPane prefHeight="109.0" prefWidth="867.0" BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar prefHeight="32.0" prefWidth="867.0" AnchorPane.bottomAnchor="161.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <menus>
+                  <Menu mnemonicParsing="false" text="Edit">
+                    <items>
+                      <MenuItem fx:id="Add" mnemonicParsing="false" onAction="#addData" text="ADD" />
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Modify">
+                    <items>
+                      <MenuItem fx:id="Colour" mnemonicParsing="false" onAction="#colourScene" text="Colour" />
+                    </items>
+                  </Menu>
+               </menus>
+            </MenuBar>
+         </children>
+      </AnchorPane>
+   </top>
+</BorderPane>
