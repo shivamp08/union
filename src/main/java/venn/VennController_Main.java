@@ -20,6 +20,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 
 public class VennController_Main  implements Initializable{
 
@@ -90,15 +94,39 @@ public class VennController_Main  implements Initializable{
 	
 	
 	 @FXML
-	    void addData(ActionEvent event) {
+	 void addData(ActionEvent event) {
 		 
 		 Text data = AddData.display();
 		 Label label = new Label();
 		 label.setText(data.getText());
-		 dataPane.getChildren().add(label);
-		 		 
-		 
+		 label.setOnDragDetected(e ->{
+			 Dragboard db = label.startDragAndDrop(TransferMode.MOVE);
+		        
+		        /* Put a string on a dragboard */
+		        ClipboardContent content = new ClipboardContent();
+		        content.putString(label.getText());
+		        db.setContent(content);
+		        
+		        event.consume();
+		 });
+		 dataPane.getChildren().add(label); 
 	 }
+	 
+	  @FXML
+	  void handleDragOver(DragEvent event) {
+		  if (event.getDragboard().hasString()) {
+	            /* allow for both copying and moving, whatever user chooses */
+	            event.acceptTransferModes(TransferMode.MOVE);
+	        }
+	        
+	        event.consume();
+	    }
+	  
+	  @FXML
+	  void handleDrop(DragEvent event) {
+		  
+	    }
+
 
 	public Circle getLeft() {
 		return left;

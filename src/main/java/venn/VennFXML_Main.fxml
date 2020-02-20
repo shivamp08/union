@@ -18,7 +18,7 @@
       <Group fx:id="group" BorderPane.alignment="CENTER">
          <children>
             <Circle fx:id="right" fill="DODGERBLUE" layoutX="54.0" layoutY="2.0" radius="200.0" stroke="BLACK" strokeDashOffset="10.0" strokeLineCap="ROUND" strokeType="INSIDE" strokeWidth="3.0" />
-            <Circle fx:id="left" blendMode="MULTIPLY" fill="DODGERBLUE" layoutX="-116.0" layoutY="2.0" radius="200.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="3.0" />
+            <Circle fx:id="left" blendMode="MULTIPLY" fill="DODGERBLUE" layoutX="-116.0" layoutY="2.0" onDragDropped="#handleDrop" onDragOver="#handleDragOver" radius="200.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="3.0" />
             <Path fx:id="intersect" fill="#ff1f4d" layoutX="-47.0" layoutY="5.0" mouseTransparent="true" opacity="0.0" pickOnBounds="true" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="3.0">
                <stroke>
                   <LinearGradient endX="1.0" endY="1.0" proportional="false">
