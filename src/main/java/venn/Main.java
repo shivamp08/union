@@ -91,7 +91,7 @@ public class Main extends Application {
 		mainLayout.prefHeightProperty().bind(scene.heightProperty());
         mainLayout.prefWidthProperty().bind(scene.widthProperty());
 		
-		dragHbox.getChildren().add(VennPanelTitle.create("Items: ", false));
+		dragHbox.getChildren().add(VennPanelTitle.create("Items: ", false, getClass().getResource("editicon.png").toExternalForm()));
 		
 		
 		stage.setScene(scene);

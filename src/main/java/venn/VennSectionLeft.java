@@ -20,7 +20,7 @@ public class VennSectionLeft extends VennSection {
         pane.setUserData(this);
         
         ((VBox) pane).setAlignment(Pos.CENTER);
-        pane.getChildren().add(VennPanelTitle.create("Left", false));
+        pane.getChildren().add(VennPanelTitle.create("Left", false, getClass().getResource("editicon.png").toExternalForm()));
 
         this.draw();
         this.initDropHandlers();

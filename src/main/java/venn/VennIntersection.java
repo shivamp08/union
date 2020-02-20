@@ -22,7 +22,7 @@ public class VennIntersection extends VennSection {
         
         pane.setPrefWidth(500);
         
-        pane.getChildren().add(VennPanelTitle.create("Center", true));
+        pane.getChildren().add(VennPanelTitle.create("Center", true, getClass().getResource("editicon.png").toExternalForm()));
 
         this.draw();
         this.initDropHandlers();
