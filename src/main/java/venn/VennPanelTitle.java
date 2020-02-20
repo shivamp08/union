@@ -25,8 +25,8 @@ public class VennPanelTitle {
 
         pane.setPadding(new Insets(5));
         pane.getStyleClass().add("el-title");
-        
-        pane.setPrefWidth(200);
+
+        pane.setPrefWidth(100);
 
         return pane;
 	}

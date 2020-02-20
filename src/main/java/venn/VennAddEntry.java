@@ -24,16 +24,15 @@ public class VennAddEntry {
         handler.addEntry(entry);
     }
 
-    public static Text display()
-    {
+    public static Text display() {
 //        VennEntry entry = new VennEntry("");
 
         Text text = new Text();
 
         Stage window = new Stage();
         window.setTitle("Add data");
-        window.setMinWidth(400);
-        window.setMinHeight(200);
+        window.setWidth(400);
+        window.setHeight(200);
 
         // prevents user to modify other window
         window.initModality(Modality.APPLICATION_MODAL);
@@ -57,8 +56,6 @@ public class VennAddEntry {
         //Add button.
         Button addButton = new Button("Add");
         addButton.setOnAction( e->{
-//            message.setText(data.getText());
-//            entry.setData(data.getText());
             text.setText(data.getText());
             window.close();
         });

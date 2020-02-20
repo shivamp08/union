@@ -1,37 +1,27 @@
 package venn;
 
-import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 
 public class VennIntersection extends VennSection {
-    public VennIntersection(Scene scene, Main app, VennEntryHandler handler, VennSectionLeft left, VennSectionRight right) {
-        super(scene, handler, app);
+    public VennIntersection(Scene scene, Main app, VennSectionLeft left, VennSectionRight right) {
+        super(scene, app);
 
         this.section = EntryLocations.Center;
 
-        this.color = Color.LIGHTGREEN;
-        this.hoverColor = Color.GREEN;
+        this.color = Color.GREY;
+        this.hoverColor = this.color.darker();
 
-        shape = Shape.intersect(left.shape, right.shape);
-        pane = new HBox(5);
-        ((HBox)pane).setAlignment(Pos.CENTER);
-        pane.setUserData(this);
-        
-        pane.setPrefWidth(500);
-        
-        pane.getChildren().add(VennPanelTitle.create("Center", true));
-
-        this.draw();
+        this.draw(left, right);
         this.initDropHandlers();
     }
 
-    public void draw () {
+    public void draw (VennSectionLeft left, VennSectionRight right) {
+        Shape shape = Shape.intersect(left.shape, right.shape);
         shape.setFill(this.color);
         shape.setStroke(Color.WHITE);
         shape.setStrokeWidth(strokeWidth);
+        this.initGroup(shape);
     }
 }

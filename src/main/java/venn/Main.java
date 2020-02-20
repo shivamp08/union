@@ -1,22 +1,11 @@
 package venn;
 
 import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import javafx.scene.shape.*;
-import javafx.scene.text.Text;
-import javafx.scene.control.*;
-import javafx.scene.paint.Color;
-import javafx.event.*;
 import javafx.scene.input.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main extends Application {
 	
@@ -26,9 +15,6 @@ public class Main extends Application {
 	protected Group vennGroup;
 	protected Group overlayGroup;
 	private Scene scene;
-	private Stage stage;
-
-	private BorderPane mainLayout;
 
 	VennEntryHandler entries;
 
@@ -45,28 +31,25 @@ public class Main extends Application {
 	}
 	
 	private void drawVenn() {
-		this.left = new VennSectionLeft(scene, this, this.entries);
-		this.right = new VennSectionRight(scene, this, this.entries);
-		this.intersection = new VennIntersection(scene, this, this.entries, left, right);
-		this.vennGroup.getChildren().addAll(left.shape, right.shape, intersection.shape);
+		this.left = new VennSectionLeft(scene, this);
+		this.right = new VennSectionRight(scene, this);
+		this.intersection = new VennIntersection(scene, this, left, right);
+		this.vennGroup.getChildren().addAll(left.group, right.group, intersection.group);
 	}
 
 	@Override
 	public void start(Stage stage) {
-		this.stage = stage;
 		stage.setTitle("Union App");
 
 		Group layout = new Group();
-		this.mainLayout = new BorderPane();
+		BorderPane mainLayout = new BorderPane();
 		this.vennGroup = new Group();
 		this.overlayGroup = new Group();
 
-		this.mainLayout.setCenter(this.vennGroup);
-
-		Insets padding = new Insets(5);
+		mainLayout.setCenter(this.vennGroup);
 		
 		layout.getChildren().add(overlayGroup);
-		layout.getChildren().add(this.mainLayout);
+		layout.getChildren().add(mainLayout);
 		overlayGroup.toFront();
 		
 		this.scene = new Scene(layout, Main.width, Main.height);
@@ -77,27 +60,18 @@ public class Main extends Application {
 		this.entries = new VennEntryHandler(dragHbox, overlayGroup);
 		this.drawVenn();
 		
-		VBox topVBox = new VBox(5);
-		VBox leftVBox = (VBox) this.left.pane;
-		VBox rightVBox = (VBox) this.right.pane;
-		HBox bottomHBox = (HBox) this.intersection.pane;
-
-		leftVBox.setPadding(padding);
-		rightVBox.setPadding(padding);
+		VBox top = new VBox(5);
 		
-		topVBox.getChildren().addAll(VennMenu.create(this.entries), dragHbox);
+		top.getChildren().addAll(VennMenu.create(this.entries), dragHbox);
 
-		this.mainLayout.setTop(topVBox);
-		this.mainLayout.setRight(rightVBox);
-		this.mainLayout.setLeft(leftVBox);
-		this.mainLayout.setBottom(bottomHBox);
+		mainLayout.setTop(top);
 		
 		mainLayout.prefHeightProperty().bind(scene.heightProperty());
         mainLayout.prefWidthProperty().bind(scene.widthProperty());
 		
 		dragHbox.getChildren().add(VennPanelTitle.create("Items: ", false));
 		
-		// keyboard combbo
+		// keyboard combo
 		KeyCombination kc1 = new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN);
 		Runnable rn = () -> VennAddEntry.add(this.entries);
 		scene.getAccelerators().put(kc1, rn);

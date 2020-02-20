@@ -1,24 +1,23 @@
 package venn;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class VennSection {
+public abstract class VennSection {
 
     Color color;
     Color hoverColor;
@@ -28,6 +27,7 @@ public class VennSection {
     int strokeWidth = 3;
 
     protected Shape shape;
+    protected Group group;
 
     Scene scene;
 
@@ -35,42 +35,50 @@ public class VennSection {
 
     VennEntryHandler handler;
 
+    ObservableList<VennTextEntry> elements;
     Pane pane;
+
     Main app;
 
-    public VennSection (Scene scene, VennEntryHandler handler, Main app) {
-        this.handler = handler;
+    public VennSection (Scene scene, Main app) {
+        this.handler = app.entries;
         this.scene = scene;
 
-        this.shape = new Circle();
+        this.shape = null;
+        this.group = new Group();
+
         this.pane = new VBox();
+        this.elements = FXCollections.observableList(new ArrayList<>());
         this.app = app;
 
-//        this.radius = (scene.getHeight() / 2) - (scene.getHeight() / 10);
-//        this.width = (scene.getWidth() / 2);
-//        this.height = (scene.getHeight() / 2);
-        this.radius = 250;
+        this.radius = 300;
         this.width = 750;
         this.height = 500;
     }
 
+    public void initGroup (Shape shape) {
+        this.group.getChildren().add(shape);
+        this.group.setOpacity(50);
+        this.shape = shape;
+    }
+
+    public void draw () {}
+
     protected void initChangeHandler () {
-        this.pane.getChildren().addListener(new ListChangeListener<Object>() {
+        this.elements.addListener(new ListChangeListener<Object>() {
             @SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
             public void onChanged(ListChangeListener.Change c) {
                 c.next();
-                List<Pane> added = c.getAddedSubList();
-                List<Pane> removed = c.getRemoved();
+                List<VennTextEntry> added = c.getAddedSubList();
+                List<VennTextEntry> removed = c.getRemoved();
                 if (added.size() == 1) {
-                    VennTextEntry entry = (VennTextEntry) added.get(0).getUserData();
+                    VennTextEntry entry = added.get(0);
                     System.out.println("was at " + entry.location + ", now at " + section);
                     
                     entry.setLocation(section);
                 } else if (removed.size() == 1) {
-                	VennTextEntry entry = (VennTextEntry) removed.get(0).getUserData();
-                	
-                	VennEntryHandler.handleLineDrawings(app.overlayGroup, entry, false);
+                	VennTextEntry entry = removed.get(0);
                 	
                 	System.out.println("removed from " + entry.location);
                 }
@@ -79,38 +87,37 @@ public class VennSection {
     }
 
     protected void initHoverHandlers () {
-        Group linesGroup = this.app.overlayGroup;
+        shape.getStyleClass().add("debug");
 
         shape.setOnMouseEntered(event -> {
             shape.setFill(this.hoverColor);
             
-            for (Node n : this.pane.getChildren()) {
-                Pane box = (Pane) n;
-                
-                VennTextEntry entry = this.handler.findByPane(box);
-                
-                if (entry != null) {
-                	entry.hover();
-                	VennEntryHandler.handleLineDrawings(linesGroup, entry, true);
-                }
-            }
+//            for (VennTextEntry entry : this.elements) {
+//            }
         });
         shape.setOnMouseExited(event -> {
             shape.setFill(this.color);
 
-            for (Node n : this.pane.getChildren()) {
-                Pane box = (Pane) n;
-                
-                VennTextEntry entry = this.handler.findByPane(box);
-                
-                if (entry != null) {
-                	entry.endHover();
-                	VennEntryHandler.handleLineDrawings(linesGroup, entry, false);
-                }
-            }
+//            for (VennTextEntry entry : this.elements) {
+//            }
         });
 
         this.initChangeHandler();
+    }
+
+    private boolean hasNoCollision(Region dragged, double x, double y) {
+        // For each node
+        for (VennTextEntry entry : this.elements) {
+            Node n = entry.draggable;
+            // If it is not the same, and future position overlaps
+            if (!n.equals(dragged) &&
+                    n.localToScene(n.getBoundsInLocal()).intersects(x, y, dragged.getWidth(), dragged.getHeight())) {
+                // Then prevent collision
+                return false;
+            }
+        }
+        // Otherwise all is good!
+        return true;
     }
 
     protected void initDropHandlers () {
@@ -122,9 +129,29 @@ public class VennSection {
         });
 
         shape.setOnDragOver(event -> {
-            if (event.getDragboard().hasString()) {
+            VennTextEntry entry = this.handler.getEntryById(event.getDragboard().getString());
+//            Region draggable = entry.draggable;
+//            Rectangle rec = new Rectangle(
+//                    event.getSceneX() - draggable.getWidth() / 2 + 10,
+//                    event.getSceneY() - draggable.getHeight() / 2,
+//                    draggable.getWidth(),
+//                    draggable.getHeight()
+//            );
+
+//            this.app.overlayGroup.getChildren().add(rec);
+
+//            boolean collides =
+//                !this.hasNoCollision(
+//                        entry.draggable,
+//                        event.getSceneX() - draggable.getWidth() / 2,
+//                        event.getSceneY() - draggable.getHeight() / 2 - 10
+//                );
+            boolean collides = false;
+            if (event.getDragboard().hasString() && !collides) {
                 event.acceptTransferModes(TransferMode.ANY);
             }
+
+//            this.app.overlayGroup.getChildren().remove(rec);
             event.consume();
         });
 
@@ -137,33 +164,27 @@ public class VennSection {
         shape.setOnDragDropped(event -> {
             System.out.println("dropped in " + this.section);
 
-            Pane source = (Pane) event.getGestureSource();
-            VennTextEntry entry = this.handler.findByPane(source);
-            
-            if (source == null) return;
+            VennTextEntry entry = this.handler.getEntryById(event.getDragboard().getString());
 
-            System.out.println("source " + source);
-            Parent parent = entry.pane.getParent();
-            if (parent != null) {
-            	((Pane) entry.pane.getParent()).getChildren().removeIf(c -> {
-                    if (c != null && c.getUserData() != null) {
-                        return c.getUserData().equals(entry);
-                    }
-                    return false;
-                });	
+            if (entry == null) return;
+
+            if (entry.section != null) {
+                entry.section.elements.remove(entry);
+            } else {
+                this.handler.removeFromDragContainer(entry);
             }
-            
-            Group vennGroup = this.app.vennGroup;
-            StackPane draggable = entry.draggable;
+            entry.section = this;
+            this.elements.add(entry);
+
+            Region draggable = entry.draggable;
+
             if (draggable != null) {
             	draggable.setLayoutX(event.getX() - (draggable.getWidth() / 2));
             	draggable.setLayoutY(event.getY() - (draggable.getHeight() / 2));
-            	if (!vennGroup.getChildren().contains(draggable)) {
-            		vennGroup.getChildren().add(draggable);
+            	if (!this.group.getChildren().contains(draggable)) {
+            		this.group.getChildren().add(draggable);
             	}
             }
-
-            this.pane.getChildren().add(entry.pane);
 
             event.setDropCompleted(true);
             event.consume();

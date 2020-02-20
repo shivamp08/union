@@ -3,6 +3,7 @@ package venn;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
@@ -12,19 +13,29 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
+import java.util.UUID;
+
+import static venn.VennEntryHandler.getWebColor;
+
 public class VennTextEntry extends Region {
     String data;
     EntryLocations location;
 
-    StackPane draggable;
+    Region draggable;
     HBox pane;
-    Line line;
+    VennSection section;
+
+    String id;
     
     Color draggableColor;
 
     public VennTextEntry(String data) {
         super();
         this.data = data;
+
+        this.id = UUID.randomUUID().toString();
+
+        this.section = null;
 
         // the location where it is after creation
         this.location = EntryLocations.Draggable;
@@ -37,55 +48,23 @@ public class VennTextEntry extends Region {
     public void setLocation(EntryLocations location) {
         this.location = location;
     }
-    
-    public Boolean canDrawLine() {
-    	return this.pane != null && this.draggable != null;
-    }
-    
-    public Line drawLine() {
-    	Bounds draggableBoundsInScene = draggable.localToScene(draggable.getBoundsInLocal());
-    	Bounds paneBoundsInScene = pane.localToScene(pane.getBoundsInLocal());
-    	
-//    	System.out.println("min " + paneBoundsInScene.getMinX());
-//    	System.out.println("max " + paneBoundsInScene.getMinY());
-//    	System.out.println("pane " + pane);
 
-        // two annoying bugs I cannot figure out why they exist
-    	if (
-            (paneBoundsInScene.getMinX() > 1600 && paneBoundsInScene.getMinY() < 100) ||
-            (paneBoundsInScene.getMinX() < 100 && paneBoundsInScene.getMinY() > 1000)
-        ) {
-    	    this.line = new Line();
-    	    return line;
-        }
-    	
-    	Line line = new Line(
-			paneBoundsInScene.getMaxX() - (paneBoundsInScene.getWidth() / 2),
-			paneBoundsInScene.getMinY() + 10,
-			draggableBoundsInScene.getMaxX() - (draggableBoundsInScene.getWidth() / 2),
-			draggableBoundsInScene.getMaxY() - 10
-    	);
-    	
-    	line.setStroke(Color.BLACK);
-    	line.setStrokeWidth(5);
-    	
-    	this.line = line;
-    	
-    	return line;
-    }
-    
-    public void hover() {
-    	if (this.pane != null) {
-    		this.pane.getStyleClass().remove("el-default");
-    		this.pane.getStyleClass().add("el-hover");
-    	}
-    }
-    
-    public void endHover() {
-    	if (this.pane != null) {
-    		this.pane.getStyleClass().remove("el-hover");
-    		this.pane.getStyleClass().add("el-default");
-    	}
+    public void setDraggable () {
+        StackPane pane = new StackPane();
+        Label label = new Label(this.data);
+
+        pane.getStyleClass().add("rounded-label");
+
+        this.draggableColor = VennEntryHandler.generateColour();
+
+        pane.setStyle("-fx-background-color: " + getWebColor(this.draggableColor));
+
+        Tooltip tooltip = new Tooltip(this.data);
+        Tooltip.install(label, tooltip);
+
+        pane.getChildren().add(label);
+
+        this.draggable = pane;
     }
 
     private HBox draw () {

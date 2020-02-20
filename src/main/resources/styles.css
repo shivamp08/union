@@ -3,6 +3,7 @@
     -fx-border-insets: 5;
     -fx-border-width: 3;
     -fx-border-style: solid;
+    -fx-cursor: move;
 }
 
 .el-hover {
@@ -10,6 +11,7 @@
     -fx-border-insets: 5;
     -fx-border-width: 3;
     -fx-border-style: solid;
+    -fx-cursor: move;
 }
 
 .el-title {
@@ -17,4 +19,17 @@
     -fx-border-insets: 5;
     -fx-border-width: 3;
     -fx-border-style: solid;
+}
+
+.nested-circle:hover {
+    -fx-cursor: move;
+}
+
+.rounded-label {
+    -fx-padding: 5px;
+    -fx-background-radius: 10px;
+}
+
+.debug {
+    -fx-background-color: red;
 }
