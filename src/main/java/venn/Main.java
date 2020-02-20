@@ -3,6 +3,7 @@ package venn;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.scene.input.*;
@@ -70,6 +71,14 @@ public class Main extends Application {
         mainLayout.prefWidthProperty().bind(scene.widthProperty());
 		
 		dragHbox.getChildren().add(VennPanelTitle.create("Items: ", false));
+		
+		//Add Button
+		Button add = new Button("Add Entry");
+		add.setOnAction(event -> VennAddEntry.add(this.entries));
+		add.setTranslateY(80);
+		add.setTranslateX(5);
+		layout.getChildren().add(add);
+		
 		
 		// keyboard combo
 		KeyCombination kc1 = new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN);
