@@ -20,5 +20,6 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
 	<classpathentry kind="lib" path="C:/Users/rusha/Downloads/jfoenix-8.0.8.jar"/>
+	<classpathentry kind="var" path="SceneBuilder"/>
 	<classpathentry kind="output" path="bin/default"/>
 </classpath>

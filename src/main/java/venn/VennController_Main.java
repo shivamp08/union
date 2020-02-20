@@ -3,6 +3,7 @@ package venn;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.jfoenix.controls.JFXMasonryPane;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,11 +16,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.Pane;
 
 public class VennController_Main  implements Initializable{
 
@@ -42,6 +42,9 @@ public class VennController_Main  implements Initializable{
 	 
 	  @FXML
 	  private MenuItem Colour;
+	  
+	  @FXML
+	  private JFXMasonryPane dataPane;
 	 
 	 
 
@@ -90,7 +93,10 @@ public class VennController_Main  implements Initializable{
 	    void addData(ActionEvent event) {
 		 
 		 Text data = AddData.display();
-		 
+		 Label label = new Label();
+		 label.setText(data.getText());
+		 dataPane.getChildren().add(label);
+		 		 
 		 
 	 }
 
