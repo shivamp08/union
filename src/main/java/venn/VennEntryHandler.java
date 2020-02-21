@@ -75,6 +75,10 @@ public class VennEntryHandler {
         VennEntryHandler.bindDragHandler(entry.draggable, entry, this);
         VennEntryHandler.bindHoverHandler(entry.draggable, entry, this);
     }
+
+    public void deleteEntry (VennTextEntry entry) {
+        this.entries.remove(entry);
+    }
     
     public static void bindHoverHandler (Region pane, VennTextEntry entry, VennEntryHandler handler) {
     	pane.setOnMouseEntered(event -> {

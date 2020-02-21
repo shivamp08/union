@@ -27,6 +27,7 @@ public class Main extends Application {
 	VennSectionLeft left;
 	VennSectionRight right;
 	VennIntersection intersection;
+	VennDeleteEntry trashCan;
 
 	public Main () {
 		super();
@@ -40,6 +41,7 @@ public class Main extends Application {
 		this.left = new VennSectionLeft(scene, this);
 		this.right = new VennSectionRight(scene, this);
 		this.intersection = new VennIntersection(scene, this, left, right);
+		this.trashCan = new VennDeleteEntry(this.entries);
 		this.vennGroup.getChildren().addAll(left.group, right.group, intersection.group);
 	}
 
@@ -67,10 +69,15 @@ public class Main extends Application {
 		this.drawVenn();
 		
 		VBox top = new VBox(5);
+		HBox bottom = new HBox(5);
+		bottom.setAlignment(Pos.CENTER_RIGHT);
+
+		bottom.getChildren().add(this.trashCan.pane);
 		
 		top.getChildren().addAll(VennMenu.create(this.entries), dragHbox);
 
 		mainLayout.setTop(top);
+		mainLayout.setBottom(bottom);
 		
 		mainLayout.prefHeightProperty().bind(scene.heightProperty());
         mainLayout.prefWidthProperty().bind(scene.widthProperty());
@@ -85,17 +92,6 @@ public class Main extends Application {
 		add.setTranslateX(5);
 		Tooltip.install(add, CtrlN);
 		layout.getChildren().add(add);
-		
-		//Recyling Bin 
-		ImageView bin = new ImageView(getClass().getResource("recyclingbin.png").toExternalForm());
-		bin.setFitHeight(70);
-		bin.setFitWidth(70);
-		HBox hbRecycle = new HBox(); 
-		hbRecycle.getChildren().add(bin);
-		hbRecycle.setAlignment(Pos.BOTTOM_RIGHT);
-		mainLayout.setBottom(hbRecycle);
-		
-		
 		
 		// keyboard combo
 		KeyCombination kc1 = new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN);
