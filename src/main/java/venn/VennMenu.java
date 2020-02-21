@@ -10,7 +10,7 @@ public class VennMenu {
 		
 		Menu menu = new Menu("Venn");
 		
-		MenuItem add = new MenuItem("Add");
+		MenuItem add = new MenuItem("Customization");
 		
 		add.setOnAction(event -> VennAddEntry.add(handler));
 	

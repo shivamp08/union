@@ -1,9 +1,15 @@
 package venn;
 
 import javafx.application.Application;
+import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.input.*;
 
@@ -70,6 +76,26 @@ public class Main extends Application {
         mainLayout.prefWidthProperty().bind(scene.widthProperty());
 		
 		dragHbox.getChildren().add(VennPanelTitle.create("Items: ", false));
+		
+		//Add Button
+		Tooltip CtrlN = new Tooltip("CTRL + N"); 
+		Button add = new Button("Add Entry");
+		add.setOnAction(event -> VennAddEntry.add(this.entries));
+		add.setTranslateY(80);
+		add.setTranslateX(5);
+		Tooltip.install(add, CtrlN);
+		layout.getChildren().add(add);
+		
+		//Recyling Bin 
+		ImageView bin = new ImageView(getClass().getResource("recyclingbin.png").toExternalForm());
+		bin.setFitHeight(70);
+		bin.setFitWidth(70);
+		HBox hbRecycle = new HBox(); 
+		hbRecycle.getChildren().add(bin);
+		hbRecycle.setAlignment(Pos.BOTTOM_RIGHT);
+		mainLayout.setBottom(hbRecycle);
+		
+		
 		
 		// keyboard combo
 		KeyCombination kc1 = new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN);
