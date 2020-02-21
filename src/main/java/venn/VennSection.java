@@ -28,6 +28,7 @@ public abstract class VennSection {
 
     protected Shape shape;
     protected Group group;
+    protected Group imageGroup; 
 
     Scene scene;
 
@@ -46,6 +47,7 @@ public abstract class VennSection {
 
         this.shape = null;
         this.group = new Group();
+        this.imageGroup = new Group(); 
 
         this.pane = new VBox();
         this.elements = FXCollections.observableList(new ArrayList<>());

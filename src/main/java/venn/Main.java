@@ -27,6 +27,7 @@ public class Main extends Application {
 	VennSectionLeft left;
 	VennSectionRight right;
 	VennIntersection intersection;
+	VennSectionBin bin; 
 
 	public Main () {
 		super();
@@ -37,6 +38,7 @@ public class Main extends Application {
 	}
 	
 	private void drawVenn() {
+		this.bin = new VennSectionBin(scene, this);
 		this.left = new VennSectionLeft(scene, this);
 		this.right = new VennSectionRight(scene, this);
 		this.intersection = new VennIntersection(scene, this, left, right);
@@ -87,15 +89,13 @@ public class Main extends Application {
 		layout.getChildren().add(add);
 		
 		//Recyling Bin 
-		ImageView bin = new ImageView(getClass().getResource("recyclingbin.png").toExternalForm());
-		bin.setFitHeight(70);
-		bin.setFitWidth(70);
-		HBox hbRecycle = new HBox(); 
-		hbRecycle.getChildren().add(bin);
-		hbRecycle.setAlignment(Pos.BOTTOM_RIGHT);
-		mainLayout.setBottom(hbRecycle);
-		
-		
+//		ImageView bin = new ImageView(getClass().getResource("recyclingbin.png").toExternalForm());
+//		bin.setFitHeight(70);
+//		bin.setFitWidth(70);
+//		HBox hbRecycle = new HBox(); 
+//		hbRecycle.getChildren().add(bin);
+//		hbRecycle.setAlignment(Pos.BOTTOM_RIGHT);
+		layout.getChildren().add(bin.binLayout);
 		
 		// keyboard combo
 		KeyCombination kc1 = new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN);

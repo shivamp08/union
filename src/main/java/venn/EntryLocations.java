@@ -5,4 +5,5 @@ public enum EntryLocations {
     Left,
     Right,
     Center,
+    Bin,
 }
