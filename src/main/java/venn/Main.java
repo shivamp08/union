@@ -9,14 +9,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.input.*;
 
 public class Main extends Application {
-	
-	private static final int width = 1250;
-	private static final int height = 750;
+
+	// initial resolution, 720p
+	private static final int width = 1280;
+	private static final int height = 720;
 
 	protected Group vennGroup;
 	protected Group overlayGroup;
@@ -24,10 +27,11 @@ public class Main extends Application {
 
 	VennEntryHandler entries;
 
+	VennLeftColumn leftColumn;
+
 	VennSectionLeft left;
 	VennSectionRight right;
 	VennIntersection intersection;
-	VennDeleteEntry trashCan;
 
 	public Main () {
 		super();
@@ -41,7 +45,6 @@ public class Main extends Application {
 		this.left = new VennSectionLeft(scene, this);
 		this.right = new VennSectionRight(scene, this);
 		this.intersection = new VennIntersection(scene, this, left, right);
-		this.trashCan = new VennDeleteEntry(this.entries);
 		this.vennGroup.getChildren().addAll(left.group, right.group, intersection.group);
 	}
 
@@ -63,40 +66,31 @@ public class Main extends Application {
 		this.scene = new Scene(layout, Main.width, Main.height);
 		this.scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
 
-		HBox dragHbox = new HBox(2);
-		
-		this.entries = new VennEntryHandler(dragHbox, overlayGroup);
+		this.leftColumn = new VennLeftColumn();
+		this.entries = new VennEntryHandler(overlayGroup);
+
+		// draw the main three sections
 		this.drawVenn();
-		
-		VBox top = new VBox(5);
-		HBox bottom = new HBox(5);
-		bottom.setAlignment(Pos.CENTER_RIGHT);
 
-		bottom.getChildren().add(this.trashCan.pane);
-		
-		top.getChildren().addAll(VennMenu.create(this.entries), dragHbox);
+		// set for the column its data
+		this.leftColumn.setHandler(this.entries);
+		this.leftColumn.setSections(left, right, intersection);
+		this.leftColumn.draw();
 
-		mainLayout.setTop(top);
-		mainLayout.setBottom(bottom);
+		// give the entry handler it's container
+		this.entries.setContainer(this.leftColumn.entries);
+
+		mainLayout.setLeft(this.leftColumn.root);
 		
 		mainLayout.prefHeightProperty().bind(scene.heightProperty());
         mainLayout.prefWidthProperty().bind(scene.widthProperty());
 		
-		dragHbox.getChildren().add(VennPanelTitle.create("Items: ", false));
-		
-		//Add Button
-		Tooltip CtrlN = new Tooltip("CTRL + N"); 
-		Button add = new Button("Add Entry");
-		add.setOnAction(event -> VennAddEntry.add(this.entries));
-		add.setTranslateY(80);
-		add.setTranslateX(5);
-		Tooltip.install(add, CtrlN);
-		layout.getChildren().add(add);
-		
 		// keyboard combo
 		KeyCombination kc1 = new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN);
-		Runnable rn = () -> VennAddEntry.add(this.entries);
+		Runnable rn = () -> VennEntryModalHandler.add(this.entries);
 		scene.getAccelerators().put(kc1, rn);
+
+		scene.setFill(Color.web("#f6f8fa"));
 
 		stage.setScene(scene);
 //		stage.setResizable(false);

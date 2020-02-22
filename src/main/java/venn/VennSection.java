@@ -1,5 +1,7 @@
 package venn;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -11,7 +13,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
 import java.util.ArrayList;
@@ -19,8 +20,7 @@ import java.util.List;
 
 public abstract class VennSection {
 
-    Color color;
-    Color hoverColor;
+    ObjectProperty<Color> color;
     double radius;
     double width;
     double height;
@@ -32,6 +32,7 @@ public abstract class VennSection {
     Scene scene;
 
     protected EntryLocations section;
+    protected StringProperty sectionName;
 
     VennEntryHandler handler;
 
@@ -62,6 +63,20 @@ public abstract class VennSection {
         this.shape = shape;
     }
 
+    public void beginHover () {
+        Color darker = this.color.getValue().deriveColor(
+        0, 1.0, 0.8, 1.0
+        );
+        this.color.set(darker);
+    }
+
+    public void endHover () {
+        Color brighter = this.color.getValue().deriveColor(
+            0, 1.0, 1.0 / 0.8, 1.0
+        );
+        this.color.set(brighter);
+    }
+
     public void draw () {}
 
     protected void initChangeHandler () {
@@ -90,13 +105,14 @@ public abstract class VennSection {
         shape.getStyleClass().add("debug");
 
         shape.setOnMouseEntered(event -> {
-            shape.setFill(this.hoverColor);
+            this.beginHover();
+//            shape.setFill(this.color.darker());
             
 //            for (VennTextEntry entry : this.elements) {
 //            }
         });
         shape.setOnMouseExited(event -> {
-            shape.setFill(this.color);
+            this.endHover();
 
 //            for (VennTextEntry entry : this.elements) {
 //            }
@@ -123,7 +139,7 @@ public abstract class VennSection {
     protected void initDropHandlers () {
         shape.setOnDragEntered(event -> {
             if (event.getDragboard().hasString()) {
-                shape.setFill(this.hoverColor);
+                this.beginHover();
             }
             event.consume();
         });
@@ -157,7 +173,7 @@ public abstract class VennSection {
 
         shape.setOnDragExited(event -> {
             // reset fill
-            shape.setFill(this.color);
+            this.endHover();
             event.consume();
         });
 

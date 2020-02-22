@@ -6,14 +6,6 @@
     -fx-cursor: move;
 }
 
-.el-hover {
-    -fx-border-color: red;
-    -fx-border-insets: 5;
-    -fx-border-width: 3;
-    -fx-border-style: solid;
-    -fx-cursor: move;
-}
-
 .el-title {
     -fx-border-color: green;
     -fx-border-insets: 5;
@@ -21,8 +13,12 @@
     -fx-border-style: solid;
 }
 
-.nested-circle:hover {
-    -fx-cursor: move;
+.left-column-title {
+    -fx-padding: 10 0 10 0;
+}
+
+.left-column-title .text {
+    -fx-underline: true;
 }
 
 .rounded-label {
@@ -32,4 +28,16 @@
 
 .debug {
     -fx-background-color: red;
+}
+
+.column-border {
+    -fx-border-color: #D3D3D3;
+    -fx-border-width: 2px;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+.scroll-pane {
+    -fx-background-color: transparent;
 }

@@ -29,7 +29,16 @@ public class VennEntryHandler {
         this.container = container;
         this.overlayGroup = overlayGroup;
     }
-    
+
+    public VennEntryHandler (Group overlayGroup) {
+        this.entries = new ArrayList<>();
+        this.overlayGroup = overlayGroup;
+    }
+
+    public void setContainer (Pane container) {
+        this.container = container;
+    }
+
     /**
      * Generates a light color
      * @return the color

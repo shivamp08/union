@@ -1,5 +1,6 @@
 package venn;
 
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -12,25 +13,29 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class VennAddEntry {
-
+public class VennEntryModalHandler {
     public static void add (VennEntryHandler handler) {
-        Text data = VennAddEntry.display();
+        String add = VennEntryModalHandler.create("Add entry", "What do you want to add?", "Add", null);
 
-        if (data.getText().contentEquals("")) return;
+        if (add == null) return;
 
-        VennTextEntry entry = new VennTextEntry(data.getText());
-
+        VennTextEntry entry = new VennTextEntry(add);
         handler.addEntry(entry);
     }
 
-    public static Text display() {
-//        VennEntry entry = new VennEntry("");
+    public static void edit (StringProperty current) {
+        String edited = VennEntryModalHandler.create("Edit entry", "Text:", "Update", current.getValue());
 
+        if (edited == null) return;
+
+        current.set(edited);
+    }
+
+    public static String create (String title, String prompt, String action, String current) {
         Text text = new Text();
 
         Stage window = new Stage();
-        window.setTitle("Add data");
+        window.setTitle(title);
         window.setWidth(400);
         window.setHeight(200);
 
@@ -38,23 +43,26 @@ public class VennAddEntry {
         window.initModality(Modality.APPLICATION_MODAL);
 
         Label label = new Label();
-        label.setText("Add the new Data");
+        label.setText(prompt);
 
         TextField data = new TextField();
+        if (current != null) {
+            data.setText(current);
+        }
         data.autosize();
         data.setMaxWidth(300);
 
         // cancel button
         Button closeButton = new Button("Cancel");
         closeButton.setOnAction(e -> window.close());
-        
+
         data.setOnAction(e -> {
-        	text.setText(data.getText());
+            text.setText(data.getText());
             window.close();
         });
 
         //Add button.
-        Button addButton = new Button("Add");
+        Button addButton = new Button(action);
         addButton.setOnAction( e->{
             text.setText(data.getText());
             window.close();
@@ -74,7 +82,11 @@ public class VennAddEntry {
         window.setScene(scene);
         window.showAndWait();
 
-        return text;
+        String textContent = text.getText();
+        if (textContent.contentEquals("")) {
+            return null;
+        } else {
+            return textContent;
+        }
     }
-
 }

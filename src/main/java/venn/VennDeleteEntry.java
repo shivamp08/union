@@ -39,6 +39,9 @@ public class VennDeleteEntry {
             } else {
                 this.handler.removeFromDragContainer(entry);
             }
+
+            event.setDropCompleted(true);
+            event.consume();
         });
     }
 
@@ -47,8 +50,8 @@ public class VennDeleteEntry {
         StackPane pane = new StackPane();
 
         ImageView bin = new ImageView(getClass().getResource("/recyclingbin.png").toExternalForm());
-        bin.setFitHeight(70);
-        bin.setFitWidth(70);
+        bin.setFitHeight(50);
+        bin.setFitWidth(50);
 
         pane.getChildren().add(bin);
         this.pane = pane;

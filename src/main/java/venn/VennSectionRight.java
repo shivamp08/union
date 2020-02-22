@@ -1,5 +1,7 @@
 package venn;
 
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -9,9 +11,9 @@ public class VennSectionRight extends VennSection {
         super(scene, app);
 
         this.section = EntryLocations.Right;
+        this.sectionName = new SimpleStringProperty("Right");
 
-        this.color = Color.LIGHTCORAL;
-        this.hoverColor = this.color.darker();
+        this.color = new SimpleObjectProperty<>(Color.LIGHTCORAL);
 
         this.draw();
         this.initDropHandlers();
@@ -24,7 +26,7 @@ public class VennSectionRight extends VennSection {
 
         shape.setRadius(this.radius);
 
-        shape.setFill(this.color);
+        shape.fillProperty().bind(this.color);
         shape.setStroke(Color.BLACK);
         shape.setStrokeWidth(strokeWidth);
         this.initGroup(shape);
