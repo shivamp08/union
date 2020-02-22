@@ -1,17 +1,11 @@
 package venn;
 
 import javafx.application.Application;
-import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Tooltip;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.input.*;
 
@@ -22,8 +16,8 @@ public class Main extends Application {
 	private static final int height = 720;
 
 	protected Group vennGroup;
-	protected Group overlayGroup;
 	private Scene scene;
+	protected Stage stage;
 
 	VennEntryHandler entries;
 
@@ -45,29 +39,32 @@ public class Main extends Application {
 		this.left = new VennSectionLeft(scene, this);
 		this.right = new VennSectionRight(scene, this);
 		this.intersection = new VennIntersection(scene, this, left, right);
-		this.vennGroup.getChildren().addAll(left.group, right.group, intersection.group);
+		this.vennGroup.getChildren().addAll(left.element, right.element, intersection.element);
 	}
 
 	@Override
 	public void start(Stage stage) {
 		stage.setTitle("Union App");
+		this.stage = stage;
 
-		Group layout = new Group();
 		BorderPane mainLayout = new BorderPane();
-		this.vennGroup = new Group();
-		this.overlayGroup = new Group();
 
-		mainLayout.setCenter(this.vennGroup);
+		this.vennGroup = new Group();
+
+		// the holder is to center, and the scroller is to ensure that the
+		// entire venn is visible
+		StackPane holder = new StackPane(this.vennGroup);
+		ScrollPane vennScroller = new ScrollPane(holder);
+		vennScroller.fitToHeightProperty().set(true);
+		vennScroller.fitToWidthProperty().set(true);
+
+		mainLayout.setCenter(vennScroller);
 		
-		layout.getChildren().add(overlayGroup);
-		layout.getChildren().add(mainLayout);
-		overlayGroup.toFront();
-		
-		this.scene = new Scene(layout, Main.width, Main.height);
+		this.scene = new Scene(mainLayout, Main.width, Main.height);
 		this.scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
 
-		this.leftColumn = new VennLeftColumn();
-		this.entries = new VennEntryHandler(overlayGroup);
+		this.leftColumn = new VennLeftColumn(this);
+		this.entries = new VennEntryHandler();
 
 		// draw the main three sections
 		this.drawVenn();
@@ -93,6 +90,8 @@ public class Main extends Application {
 		scene.setFill(Color.web("#f6f8fa"));
 
 		stage.setScene(scene);
+		stage.setMinHeight(height);
+//		stage.setMinWidth(width);
 //		stage.setResizable(false);
 		stage.show(); 
 	}

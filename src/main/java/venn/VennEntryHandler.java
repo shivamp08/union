@@ -21,18 +21,14 @@ import java.util.Random;
 public class VennEntryHandler {
     List<VennTextEntry> entries;
     Pane container;
-    
-    Group overlayGroup;
 
-    public VennEntryHandler (Pane container, Group overlayGroup) {
+    public VennEntryHandler (Pane container) {
         this.entries = new ArrayList<>();
         this.container = container;
-        this.overlayGroup = overlayGroup;
     }
 
-    public VennEntryHandler (Group overlayGroup) {
+    public VennEntryHandler () {
         this.entries = new ArrayList<>();
-        this.overlayGroup = overlayGroup;
     }
 
     public void setContainer (Pane container) {

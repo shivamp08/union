@@ -8,11 +8,13 @@ import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 
 import java.util.ArrayList;
@@ -27,7 +29,7 @@ public abstract class VennSection {
     int strokeWidth = 3;
 
     protected Shape shape;
-    protected Group group;
+    protected Group element;
 
     Scene scene;
 
@@ -46,7 +48,7 @@ public abstract class VennSection {
         this.scene = scene;
 
         this.shape = null;
-        this.group = new Group();
+        this.element = new Group();
 
         this.pane = new VBox();
         this.elements = FXCollections.observableList(new ArrayList<>());
@@ -58,8 +60,8 @@ public abstract class VennSection {
     }
 
     public void initGroup (Shape shape) {
-        this.group.getChildren().add(shape);
-        this.group.setOpacity(50);
+        this.element.getChildren().add(shape);
+        this.element.setOpacity(50);
         this.shape = shape;
     }
 
@@ -77,7 +79,37 @@ public abstract class VennSection {
         this.color.set(brighter);
     }
 
-    public void draw () {}
+    public void draw () {
+        this.drawCircle();
+//        this.drawTitle();
+    }
+
+    private void drawTitle () {
+        double top = this.shape.getBoundsInParent().getHeight();
+        Label title = new Label();
+        title.textProperty().bind(this.sectionName);
+
+        title.setTranslateY(-10);
+
+        this.element.getChildren().add(title);
+    }
+
+    private void drawCircle () {
+        int multiplier = 1;
+        if (this.section == EntryLocations.Left) multiplier = -1;
+
+        Circle shape = new Circle();
+
+        shape.setCenterX(width + (multiplier * (this.radius / 2)));
+        shape.setCenterY(height);
+
+        shape.setRadius(this.radius);
+
+        shape.fillProperty().bind(this.color);
+        shape.setStroke(Color.BLACK);
+        shape.setStrokeWidth(strokeWidth);
+        this.initGroup(shape);
+    }
 
     protected void initChangeHandler () {
         this.elements.addListener(new ListChangeListener<Object>() {
@@ -102,20 +134,11 @@ public abstract class VennSection {
     }
 
     protected void initHoverHandlers () {
-        shape.getStyleClass().add("debug");
-
         shape.setOnMouseEntered(event -> {
             this.beginHover();
-//            shape.setFill(this.color.darker());
-            
-//            for (VennTextEntry entry : this.elements) {
-//            }
         });
         shape.setOnMouseExited(event -> {
             this.endHover();
-
-//            for (VennTextEntry entry : this.elements) {
-//            }
         });
 
         this.initChangeHandler();
@@ -146,15 +169,6 @@ public abstract class VennSection {
 
         shape.setOnDragOver(event -> {
             VennTextEntry entry = this.handler.getEntryById(event.getDragboard().getString());
-//            Region draggable = entry.draggable;
-//            Rectangle rec = new Rectangle(
-//                    event.getSceneX() - draggable.getWidth() / 2 + 10,
-//                    event.getSceneY() - draggable.getHeight() / 2,
-//                    draggable.getWidth(),
-//                    draggable.getHeight()
-//            );
-
-//            this.app.overlayGroup.getChildren().add(rec);
 
 //            boolean collides =
 //                !this.hasNoCollision(
@@ -162,12 +176,9 @@ public abstract class VennSection {
 //                        event.getSceneX() - draggable.getWidth() / 2,
 //                        event.getSceneY() - draggable.getHeight() / 2 - 10
 //                );
-            boolean collides = false;
-            if (event.getDragboard().hasString() && !collides) {
+            if (event.getDragboard().hasString()) {
                 event.acceptTransferModes(TransferMode.ANY);
             }
-
-//            this.app.overlayGroup.getChildren().remove(rec);
             event.consume();
         });
 
@@ -197,8 +208,8 @@ public abstract class VennSection {
             if (draggable != null) {
             	draggable.setLayoutX(event.getX() - (draggable.getWidth() / 2));
             	draggable.setLayoutY(event.getY() - (draggable.getHeight() / 2));
-            	if (!this.group.getChildren().contains(draggable)) {
-            		this.group.getChildren().add(draggable);
+            	if (!this.element.getChildren().contains(draggable)) {
+            		this.element.getChildren().add(draggable);
             	}
             }
 

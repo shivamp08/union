@@ -80,6 +80,7 @@ public class VennEntryModalHandler {
 
         Scene scene = new Scene(layout,100,100);
         window.setScene(scene);
+        window.setResizable(false);
         window.showAndWait();
 
         String textContent = text.getText();

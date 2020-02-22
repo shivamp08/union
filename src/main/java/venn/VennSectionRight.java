@@ -18,17 +18,4 @@ public class VennSectionRight extends VennSection {
         this.draw();
         this.initDropHandlers();
     }
-
-    public void draw () {
-        Circle shape = new Circle();
-        shape.setCenterX(width + (this.radius / 2));
-        shape.setCenterY(height);
-
-        shape.setRadius(this.radius);
-
-        shape.fillProperty().bind(this.color);
-        shape.setStroke(Color.BLACK);
-        shape.setStrokeWidth(strokeWidth);
-        this.initGroup(shape);
-    }
 }
