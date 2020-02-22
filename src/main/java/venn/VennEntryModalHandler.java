@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 
 public class VennEntryModalHandler {
     public static void add (VennEntryHandler handler) {
-        String add = VennEntryModalHandler.create("Add entry", "What do you want to add?", "Add", null);
+        String add = VennEntryModalHandler.create("Add entry", "What do you want to add?", "Add", null, -1);
 
         if (add == null) return;
 
@@ -24,14 +24,31 @@ public class VennEntryModalHandler {
     }
 
     public static void edit (StringProperty current) {
-        String edited = VennEntryModalHandler.create("Edit entry", "Text:", "Update", current.getValue());
+        String edited = VennEntryModalHandler.create("Edit entry", "Text:", "Update", current.getValue(), -1);
 
         if (edited == null) return;
 
         current.set(edited);
     }
 
-    public static String create (String title, String prompt, String action, String current) {
+    public static void edit (StringProperty current, int maxLength) {
+        String edited = VennEntryModalHandler.create("Edit entry", "Text (Max Length "  + maxLength + "):", "Update", current.getValue(), maxLength);
+
+        if (edited == null) return;
+
+        current.set(edited);
+    }
+
+    public static void addTextLimiter(final TextField tf, final int maxLength) {
+        tf.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (tf.getText().length() > maxLength) {
+                String s = tf.getText().substring(0, maxLength);
+                tf.setText(s);
+            }
+        });
+    }
+
+    public static String create (String title, String prompt, String action, String current, int maxLength) {
         Text text = new Text();
 
         Stage window = new Stage();
@@ -48,6 +65,9 @@ public class VennEntryModalHandler {
         TextField data = new TextField();
         if (current != null) {
             data.setText(current);
+        }
+        if (maxLength != -1) {
+            addTextLimiter(data, maxLength);
         }
         data.autosize();
         data.setMaxWidth(300);

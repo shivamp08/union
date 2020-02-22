@@ -8,7 +8,9 @@ import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -59,15 +61,9 @@ public abstract class VennSection {
         this.height = 500;
     }
 
-    public void initGroup (Shape shape) {
-        this.element.getChildren().add(shape);
-        this.element.setOpacity(50);
-        this.shape = shape;
-    }
-
     public void beginHover () {
         Color darker = this.color.getValue().deriveColor(
-        0, 1.0, 0.8, 1.0
+            0, 1.0, 0.8, 1.0
         );
         this.color.set(darker);
     }
@@ -81,26 +77,45 @@ public abstract class VennSection {
 
     public void draw () {
         this.drawCircle();
-//        this.drawTitle();
     }
 
-    private void drawTitle () {
-        double top = this.shape.getBoundsInParent().getHeight();
-        Label title = new Label();
-        title.textProperty().bind(this.sectionName);
+    private int getMultiplier () {
+        int multiplier = 1;
+        if (this.section == EntryLocations.Left) multiplier = -1;
+        return multiplier;
+    }
 
-        title.setTranslateY(-10);
+    private double getXPosition () {
+        int multiplier = this.getMultiplier();
+        return width + (multiplier * (this.radius / 2));
+    }
 
-        this.element.getChildren().add(title);
+    protected void bindTitleEditing (Control control) {
+        // double click to edit
+        control.setOnMouseClicked(event -> {
+            if (event.getButton().equals(MouseButton.PRIMARY)){
+                if (event.getClickCount() == 2){
+                    VennEntryModalHandler.edit(this.sectionName, 25);
+                }
+            }
+        });
     }
 
     private void drawCircle () {
-        int multiplier = 1;
-        if (this.section == EntryLocations.Left) multiplier = -1;
-
         Circle shape = new Circle();
+        double x = this.getXPosition();
 
-        shape.setCenterX(width + (multiplier * (this.radius / 2)));
+        Label title = new Label();
+        title.textProperty().bind(this.sectionName);
+
+        this.bindTitleEditing(title);
+
+        title.setLayoutY(height / 3);
+        title.widthProperty().addListener((obs, oldVal, newVal) ->
+            title.setLayoutX(x - (title.getWidth() / 2) + (this.getMultiplier() * 20))
+        );
+
+        shape.setCenterX(x);
         shape.setCenterY(height);
 
         shape.setRadius(this.radius);
@@ -108,12 +123,15 @@ public abstract class VennSection {
         shape.fillProperty().bind(this.color);
         shape.setStroke(Color.BLACK);
         shape.setStrokeWidth(strokeWidth);
-        this.initGroup(shape);
+
+        this.element.getChildren().addAll(title, shape);
+        this.element.setOpacity(50);
+        this.shape = shape;
     }
 
     protected void initChangeHandler () {
         this.elements.addListener(new ListChangeListener<Object>() {
-            @SuppressWarnings({ "unchecked", "rawtypes" })
+            @SuppressWarnings({ "unchecked" })
 			@Override
             public void onChanged(ListChangeListener.Change c) {
                 c.next();
