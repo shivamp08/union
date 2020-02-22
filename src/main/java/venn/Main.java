@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -93,6 +94,7 @@ public class Main extends Application {
 		stage.setMinHeight(height);
 //		stage.setMinWidth(width);
 //		stage.setResizable(false);
+		stage.getIcons().add(new Image(getClass().getResource("/logo.png").toExternalForm()));
 		stage.show(); 
 	}
 
