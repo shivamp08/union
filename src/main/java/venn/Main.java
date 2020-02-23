@@ -89,7 +89,7 @@ public class Main extends Application {
 		scene.getAccelerators().put(kc1, rn);
 
 		scene.setFill(Color.web("#f6f8fa"));
-
+		
 		stage.setScene(scene);
 		stage.setMinHeight(height);
 //		stage.setMinWidth(width);
