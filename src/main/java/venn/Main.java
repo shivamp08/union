@@ -92,6 +92,7 @@ public class Main extends Application {
 		
 		stage.setScene(scene);
 		stage.setMinHeight(height);
+		stage.setMaximized(true);
 //		stage.setMinWidth(width);
 //		stage.setResizable(false);
 		stage.getIcons().add(new Image(getClass().getResource("/logo.png").toExternalForm()));
