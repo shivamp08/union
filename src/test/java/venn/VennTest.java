@@ -52,6 +52,9 @@ public class VennTest {
     public void manualTest() throws InterruptedException {
     	Platform.runLater(() -> {
     		frame.entries.addEntry(
+    			new VennTextEntry("manual test")
+    		);
+    		frame.entries.addEntry(
     			new VennTextEntry("drag me 1")
     		);
     		frame.entries.addEntry(
@@ -108,45 +111,14 @@ public class VennTest {
     	Thread.sleep(1000);
     }
 
-//    @Ignore
     @Test
     public void testAddEntryDialog() throws Throwable {
     	Thread.sleep(1000);
     	try {
 			runAndWaitOnJavaFx(() -> {
-				VennAddEntry.add(this.frame.entries);
+				VennEntryModalHandler.add(frame.entries);
 			});
 		} catch (Exception ignored) {}
-    	Thread.sleep(1000);
-    }
-
-    @Test
-    public void testDnd() throws InterruptedException {
-    	Thread.sleep(1000);
-    	Platform.runLater(() -> {
-    		frame.entries.addEntry(
-    			new VennTextEntry("hello")
-    		);
-    		frame.entries.addEntry(
-    			new VennTextEntry("hello2")
-    		);
-    		frame.entries.addEntry(
-    			new VennTextEntry("hello3")
-    		);
-    	});
-    	Thread.sleep(1000);
-    	try {
-			runAndWaitOnJavaFx(() -> {
-				try {
-					Robot robot = new Robot();
-					robot.delay(1000);
-					robot.mouseMove(500, 500);
-					robot.delay(1000);
-					robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-//					Thread.sleep(1000);
-				} catch (Exception ignored) {}
-			});
-		} catch (Throwable ignored) {}
     	Thread.sleep(1000);
     }
 
