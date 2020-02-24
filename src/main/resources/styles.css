@@ -3,13 +3,7 @@
     -fx-border-insets: 5;
     -fx-border-width: 3;
     -fx-border-style: solid;
-}
-
-.el-hover {
-    -fx-border-color: red;
-    -fx-border-insets: 5;
-    -fx-border-width: 3;
-    -fx-border-style: solid;
+    -fx-cursor: move;
 }
 
 .el-title {
@@ -17,4 +11,33 @@
     -fx-border-insets: 5;
     -fx-border-width: 3;
     -fx-border-style: solid;
+}
+
+.left-column-title {
+    -fx-padding: 10 0 10 0;
+}
+
+.left-column-title .text {
+    -fx-underline: true;
+}
+
+.rounded-label {
+    -fx-padding: 5px;
+    -fx-background-radius: 10px;
+}
+
+.debug {
+    -fx-background-color: red;
+}
+
+.column-border {
+    -fx-border-color: #D3D3D3;
+    -fx-border-width: 2px;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+.scroll-pane {
+    -fx-background-color: transparent;
 }

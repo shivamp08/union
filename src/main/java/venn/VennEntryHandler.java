@@ -1,17 +1,18 @@
 package venn;
 
 import javafx.scene.Group;
-import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
-import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,18 +21,23 @@ import java.util.Random;
 public class VennEntryHandler {
     List<VennTextEntry> entries;
     Pane container;
-    
-    Group overlayGroup;
 
-    public VennEntryHandler (Pane container, Group overlayGroup) {
+    public VennEntryHandler (Pane container) {
         this.entries = new ArrayList<>();
         this.container = container;
-        this.overlayGroup = overlayGroup;
     }
-    
+
+    public VennEntryHandler () {
+        this.entries = new ArrayList<>();
+    }
+
+    public void setContainer (Pane container) {
+        this.container = container;
+    }
+
     /**
      * Generates a light color
-     * @return
+     * @return the color
      */
     public static Color generateColour() {
     	String[] mColors = {
@@ -56,28 +62,17 @@ public class VennEntryHandler {
         String color = mColors[randomNumber];
         return Color.web(color);
     }
-    
-    public static void setDraggableCircle (VennTextEntry entry, int index) {
-    	StackPane pane = new StackPane();
-    	
-    	Circle circle = new Circle();
-    	circle.setRadius(20);
-    	
-    	entry.draggableColor = VennEntryHandler.generateColour();
-    	
-    	circle.setFill(entry.draggableColor);
-        
-        Text previewText = new Text(String.valueOf(index));
-        previewText.setFill(Color.WHITE);
-        
-        pane.getChildren().addAll(circle, previewText);
-        
-        entry.draggable = pane;
+
+    public static String getWebColor (Color color) {
+        return String.format( "#%02X%02X%02X",
+                (int)( color.getRed() * 255 ),
+                (int)( color.getGreen() * 255 ),
+                (int)( color.getBlue() * 255 ) );
     }
 
     public void addEntry (VennTextEntry entry) {
         this.entries.add(entry);
-        VennEntryHandler.setDraggableCircle(entry, this.getIndexOfEntry(entry) + 1);
+        entry.setDraggable();
         
         this.container.getChildren().add(entry.pane);
         
@@ -85,79 +80,61 @@ public class VennEntryHandler {
         VennEntryHandler.bindDragHandler(entry.draggable, entry, this);
         VennEntryHandler.bindHoverHandler(entry.draggable, entry, this);
     }
-    
-    public static void handleLineDrawings(Group overlayGroup, VennTextEntry entry, Boolean draw) {
-    	if (draw) {
-    		if (entry.line == null && entry.canDrawLine()) {
-    			entry.drawLine();
-    			if (!overlayGroup.getChildren().contains(entry.line)) {
-    				overlayGroup.getChildren().add(entry.line);
-    			}
-    		}
-    	} else {
-    		if (entry.line != null) {
-    			if (overlayGroup.getChildren().contains(entry.line)) {
-    				overlayGroup.getChildren().remove(entry.line);
-    				entry.line = null;
-    			}
-    		}
-    	}
+
+    public void deleteEntry (VennTextEntry entry) {
+        this.entries.remove(entry);
     }
     
-    public static void bindHoverHandler (Pane pane, VennTextEntry entry, VennEntryHandler handler) {
+    public static void bindHoverHandler (Region pane, VennTextEntry entry, VennEntryHandler handler) {
     	pane.setOnMouseEntered(event -> {
-            entry.hover();
-            
-            if (entry.line == null) {
-        		Line line = entry.drawLine();
-        		handler.overlayGroup.getChildren().add(line);
-        	}
             // darken the circle
             if (entry.draggable != null) {
-            	Circle circle = ((Circle) entry.draggable.getChildren().get(0));
-            	circle.setFill(entry.draggableColor.darker());
+                Region draggable = entry.draggable;
+                draggable.setStyle("-fx-background-color: " + getWebColor(entry.draggableColor.darker()));
             }
         });
         pane.setOnMouseExited(event -> {
-            entry.endHover();
             // reset circle back to original
             if (entry.draggable != null) {
-            	Circle circle = ((Circle) entry.draggable.getChildren().get(0));
-            	circle.setFill(entry.draggableColor);
+                Region draggable = entry.draggable;
+                draggable.setStyle("-fx-background-color: " + getWebColor(entry.draggableColor));
             }
         });
     }
+
+    private static Image getSnapshot (VennTextEntry entry) {
+        if (entry.draggable.getScene() == null) new Scene(entry.draggable);
+
+        SnapshotParameters sp = new SnapshotParameters();
+        sp.setFill(Color.TRANSPARENT);
+        return entry.draggable.snapshot(sp, null);
+    }
     
-    public static void bindDragHandler(Pane pane, VennTextEntry entry, VennEntryHandler handler) {
+    public static void bindDragHandler(Region pane, VennTextEntry entry, VennEntryHandler handler) {
     	pane.setOnDragDetected(event -> {
 	    	Dragboard db = pane.startDragAndDrop(TransferMode.ANY);
-	    	
-	    	StackPane circle = entry.draggable;        
-	
-	        SnapshotParameters sp = new SnapshotParameters();
-	        sp.setFill(Color.TRANSPARENT);
+
 	        db.setDragView(
-	        	circle.snapshot(sp, null),
+	        	getSnapshot(entry),
 	        	event.getX() - (pane.getWidth() / 2),
 	        	event.getY() - (pane.getHeight() / 2)
 	        );
-	
-	        /* Put a string on a dragboard */
+
 	        ClipboardContent content = new ClipboardContent();
-	        content.putString(entry.data);
+	        content.putString(entry.id);
 	        db.setContent(content);
 	
 	        event.consume();
     	});
     }
 
-    public int getIndexOfEntry (VennTextEntry entry) {
-        return this.entries.indexOf(entry);
+    public void removeFromDragContainer (VennTextEntry entry) {
+        this.container.getChildren().remove(entry.pane);
     }
 
-    public VennTextEntry findByPane (Pane pane) {
+    public VennTextEntry getEntryById (String id) {
         for (VennTextEntry entry : this.entries) {
-            if (entry.pane.equals(pane) || entry.draggable.equals(pane)) return entry;
+            if (entry.id.contentEquals(id)) return entry;
         }
         return null;
     }

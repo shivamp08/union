@@ -1,36 +1,28 @@
 package venn;
 
 import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
-import javafx.stage.Stage;
-import javafx.scene.shape.*;
-import javafx.scene.text.Text;
-import javafx.scene.control.*;
 import javafx.scene.paint.Color;
-import javafx.event.*;
+import javafx.stage.Stage;
 import javafx.scene.input.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Main extends Application {
-	
-	private static final int width = 1250;
-	private static final int height = 750;
+
+	// initial resolution, 720p
+	private static final int width = 1280;
+	private static final int height = 720;
 
 	protected Group vennGroup;
-	protected Group overlayGroup;
 	private Scene scene;
-	private Stage stage;
-
-	private BorderPane mainLayout;
+	protected Stage stage;
 
 	VennEntryHandler entries;
+
+	VennLeftColumn leftColumn;
 
 	VennSectionLeft left;
 	VennSectionRight right;
@@ -45,65 +37,65 @@ public class Main extends Application {
 	}
 	
 	private void drawVenn() {
-		this.left = new VennSectionLeft(scene, this, this.entries);
-		this.right = new VennSectionRight(scene, this, this.entries);
-		this.intersection = new VennIntersection(scene, this, this.entries, left, right);
-		this.vennGroup.getChildren().addAll(left.shape, right.shape, intersection.shape);
+		this.left = new VennSectionLeft(scene, this);
+		this.right = new VennSectionRight(scene, this);
+		this.intersection = new VennIntersection(scene, this, left, right);
+		this.vennGroup.getChildren().addAll(left.element, right.element, intersection.element);
 	}
 
 	@Override
 	public void start(Stage stage) {
-		this.stage = stage;
 		stage.setTitle("Union App");
+		this.stage = stage;
 
-		Group layout = new Group();
-		this.mainLayout = new BorderPane();
+		BorderPane mainLayout = new BorderPane();
+
 		this.vennGroup = new Group();
-		this.overlayGroup = new Group();
 
-		this.mainLayout.setCenter(this.vennGroup);
+		// the holder is to center, and the scroller is to ensure that the
+		// entire venn is visible
+		StackPane holder = new StackPane(this.vennGroup);
+		ScrollPane vennScroller = new ScrollPane(holder);
+		vennScroller.fitToHeightProperty().set(true);
+		vennScroller.fitToWidthProperty().set(true);
 
-		Insets padding = new Insets(5);
+		mainLayout.setCenter(vennScroller);
 		
-		layout.getChildren().add(overlayGroup);
-		layout.getChildren().add(this.mainLayout);
-		overlayGroup.toFront();
-		
-		this.scene = new Scene(layout, Main.width, Main.height);
+		this.scene = new Scene(mainLayout, Main.width, Main.height);
 		this.scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
 
-		HBox dragHbox = new HBox(2);
-		
-		this.entries = new VennEntryHandler(dragHbox, overlayGroup);
+		this.leftColumn = new VennLeftColumn(this);
+		this.entries = new VennEntryHandler();
+
+		// draw the main three sections
 		this.drawVenn();
-		
-		VBox topVBox = new VBox(5);
-		VBox leftVBox = (VBox) this.left.pane;
-		VBox rightVBox = (VBox) this.right.pane;
-		HBox bottomHBox = (HBox) this.intersection.pane;
 
-		leftVBox.setPadding(padding);
-		rightVBox.setPadding(padding);
-		
-		topVBox.getChildren().addAll(VennMenu.create(this.entries), dragHbox);
+		// set for the column its data
+		this.leftColumn.setHandler(this.entries);
+		this.leftColumn.setSections(left, right, intersection);
+		this.leftColumn.draw();
 
-		this.mainLayout.setTop(topVBox);
-		this.mainLayout.setRight(rightVBox);
-		this.mainLayout.setLeft(leftVBox);
-		this.mainLayout.setBottom(bottomHBox);
+		// give the entry handler it's container
+		this.entries.setContainer(this.leftColumn.entries);
+
+		mainLayout.setLeft(this.leftColumn.root);
 		
 		mainLayout.prefHeightProperty().bind(scene.heightProperty());
         mainLayout.prefWidthProperty().bind(scene.widthProperty());
 		
-		dragHbox.getChildren().add(VennPanelTitle.create("Items: ", false));
-		
-		// keyboard combbo
+		// keyboard combo
 		KeyCombination kc1 = new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN);
-		Runnable rn = () -> VennAddEntry.add(this.entries);
+		Runnable rn = () -> VennEntryModalHandler.add(this.entries);
 		scene.getAccelerators().put(kc1, rn);
 
+		scene.setFill(Color.web("#f6f8fa"));
+		
 		stage.setScene(scene);
+		stage.setMinHeight(height);
+		stage.setMaximized(true);
+//		stage.setMinWidth(width);
 //		stage.setResizable(false);
+		stage.getIcons().add(new Image(getClass().getResource("/logo.png").toExternalForm()));
 		stage.show(); 
 	}
 

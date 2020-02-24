@@ -8,7 +8,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 public class VennPanelTitle {
-	public static Pane create (String data, Boolean vertical) {
+	public static Pane create (String data, Boolean vertical, String className) {
 		Pane pane = new HBox();
 		if (vertical) {
 			pane = new VBox();	
@@ -24,9 +24,7 @@ public class VennPanelTitle {
         }
 
         pane.setPadding(new Insets(5));
-        pane.getStyleClass().add("el-title");
-        
-        pane.setPrefWidth(200);
+        pane.getStyleClass().add(className);
 
         return pane;
 	}
