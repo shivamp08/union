@@ -79,15 +79,11 @@ public class VennTest {
     public void testAddMultipleEntries() throws InterruptedException {
     	Thread.sleep(1000);
     	Platform.runLater(() -> {
-    		frame.entries.addEntry(
-    			new VennTextEntry("hello")
-    		);
-    		frame.entries.addEntry(
-    			new VennTextEntry("hello2")
-    		);
-    		frame.entries.addEntry(
-    			new VennTextEntry("hello3")
-    		);
+    		for (int i = 0; i < 100; i++) {
+    			frame.entries.addEntry(
+	    			new VennTextEntry("entry #" + i)
+	    		);
+    		}
     	});
         Thread.sleep(1000);
     }
