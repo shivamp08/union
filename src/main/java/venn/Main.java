@@ -143,7 +143,9 @@ public class Main extends Application {
 
 		stage.setTitle("Venn");
 
+		
 		this.scene = new Scene(root, 1000, 700);
+//		this.scene.setFill(Color.web("#f6f8fa"));
 		stage.setScene(scene);
 		stage.show(); 
 	}

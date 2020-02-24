@@ -65,6 +65,8 @@ public class AddData {
 		window.setScene(secene);
 		window.showAndWait();
 		
+		
+
 		return message;
 	}
 
