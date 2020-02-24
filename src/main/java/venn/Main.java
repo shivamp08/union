@@ -1,12 +1,14 @@
 package venn;
 
 import javafx.application.Application;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.input.*;
 
@@ -61,7 +63,8 @@ public class Main extends Application {
 
 		mainLayout.setCenter(vennScroller);
 		
-		this.scene = new Scene(mainLayout, Main.width, Main.height);
+		Rectangle2D r = Screen.getPrimary().getBounds();
+		this.scene = new Scene(mainLayout, r.getWidth(), r.getHeight());
 		this.scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
 
 		this.leftColumn = new VennLeftColumn(this);
@@ -95,7 +98,8 @@ public class Main extends Application {
 		stage.setMaximized(true);
 //		stage.setMinWidth(width);
 //		stage.setResizable(false);
-		stage.getIcons().add(new Image(getClass().getResource("/logo.png").toExternalForm()));
+		Image icon = new Image(getClass().getResource("/logo.png").toExternalForm());
+		stage.getIcons().add(icon);
 		stage.show(); 
 	}
 
