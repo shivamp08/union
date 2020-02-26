@@ -1,5 +1,7 @@
 package venn;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
@@ -19,6 +21,8 @@ import java.util.List;
 import java.util.Random;
 
 public class VennEntryHandler {
+    @SerializedName("e")
+    @Expose
     List<VennTextEntry> entries;
     Pane container;
 
@@ -70,15 +74,18 @@ public class VennEntryHandler {
                 (int)( color.getBlue() * 255 ) );
     }
 
-    public void addEntry (VennTextEntry entry) {
+    public void initEntry (VennTextEntry entry) {
         this.entries.add(entry);
         entry.setDraggable();
-        
-        this.container.getChildren().add(entry.pane);
-        
+
         VennEntryHandler.bindDragHandler(entry.pane, entry, this);
         VennEntryHandler.bindDragHandler(entry.draggable, entry, this);
         VennEntryHandler.bindHoverHandler(entry.draggable, entry, this);
+    }
+
+    public void addEntry (VennTextEntry entry) {
+        if (entry.draggable == null) this.initEntry(entry);
+        this.container.getChildren().add(entry.pane);
     }
 
     public void deleteEntry (VennTextEntry entry) {

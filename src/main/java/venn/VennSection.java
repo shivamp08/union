@@ -1,5 +1,7 @@
 package venn;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -23,7 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class VennSection {
-
+    @SerializedName("c")
+    @Expose
     ObjectProperty<Color> color;
     double radius;
     double width;
@@ -31,11 +34,13 @@ public abstract class VennSection {
     int strokeWidth = 3;
 
     protected Shape shape;
-    protected Group element;
+    public Group element;
 
     Scene scene;
 
     protected EntryLocations section;
+    @SerializedName("n")
+    @Expose
     protected StringProperty sectionName;
 
     VennEntryHandler handler;
@@ -224,8 +229,8 @@ public abstract class VennSection {
             Region draggable = entry.draggable;
 
             if (draggable != null) {
-            	draggable.setLayoutX(event.getX() - (draggable.getWidth() / 2));
-            	draggable.setLayoutY(event.getY() - (draggable.getHeight() / 2));
+//                entry.setDraggablePositionCenter(event.getX(), event.getY());
+                entry.positionDraggable(event.getX(), event.getY(), true, true);
             	if (!this.element.getChildren().contains(draggable)) {
             		this.element.getChildren().add(draggable);
             	}

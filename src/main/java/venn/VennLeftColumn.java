@@ -11,6 +11,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.scene.transform.Transform;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -30,6 +31,7 @@ public class VennLeftColumn {
     VennSectionRight right;
     VennIntersection intersection;
     VennOptions options;
+    VennFileHandler fileHandler;
 
     public VennLeftColumn(VennEntryHandler handler) {
         this.handler = handler;
@@ -93,7 +95,7 @@ public class VennLeftColumn {
         HBox.setHgrow(optionsButton, Priority.ALWAYS);
 
         optionsButton.setOnAction(event -> {
-            File file = this.getSaveFileLocation();
+            File file = getFileLocationFromChooser(this.app.stage, "png", true);
             if (file != null) {
                 boolean success = this.saveScreenshot(file);
                 System.out.println("Saved file: " + success);
@@ -101,6 +103,30 @@ public class VennLeftColumn {
         });
 
         return optionsButton;
+    }
+
+    private Button getExportButton () {
+        Button exportButton = new Button("Export");
+        exportButton.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(exportButton, Priority.ALWAYS);
+
+        exportButton.setOnAction(event -> {
+            fileHandler.exportVenn();
+        });
+
+        return exportButton;
+    }
+
+    private Button getImportButton () {
+        Button exportButton = new Button("Import");
+        exportButton.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(exportButton, Priority.ALWAYS);
+
+        exportButton.setOnAction(event -> {
+            fileHandler.importVenn();
+        });
+
+        return exportButton;
     }
 
     private boolean saveScreenshot (File file) {
@@ -120,15 +146,23 @@ public class VennLeftColumn {
         }
     }
 
-    private File getSaveFileLocation () {
+    public static File getFileLocationFromChooser(Stage stage, String fileExtension, boolean save) {
         FileChooser fileChooser = new FileChooser();
 
+        String title = fileExtension.toUpperCase();
+        String extension = "*." + fileExtension;
+
         //Set extension filter
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(title + " files (" + extension +")", extension);
         fileChooser.getExtensionFilters().add(extFilter);
 
         //Show save file dialog
-        File file = fileChooser.showSaveDialog(this.app.stage);
+        File file;
+        if (save) {
+            file = fileChooser.showSaveDialog(stage);
+        } else {
+            file = fileChooser.showOpenDialog(stage);
+        }
 
         return file;
     }
@@ -167,10 +201,15 @@ public class VennLeftColumn {
         topContainer.getStyleClass().add("column-border");
         bottomContainer.getStyleClass().add("column-border");
 
+        // importing hanndler
+        fileHandler = new VennFileHandler(app, handler, right, left, intersection);
+
         // adding buttons
         Button addButton = this.getAddButton();
         Button optionsButton = this.getOptionsButton();
         Button screenshotButton = this.getScreenshotButton();
+        Button exportButton = this.getExportButton();
+        Button importButton = this.getImportButton();
 //        Button addMultipleButton = this.getAddMultipleButton();
 
         // color pickers
@@ -181,7 +220,10 @@ public class VennLeftColumn {
             VennPanelTitle.create("Options", false, "left-column-title"),
             optionsButton,
             VennPanelTitle.create("Screenshot", false, "left-column-title"),
-            screenshotButton
+            screenshotButton,
+            VennPanelTitle.create("Export/Import", false, "left-column-title"),
+            exportButton,
+            importButton
         );
 
         // trash can
