@@ -8,7 +8,9 @@ jobs:
     docker:
       # specify the version you desire here
       #- image: circleci/openjdk:8-jdk
-      - image: danielmapar/gradle_and_node:2.0
+#      - image: danielmapar/gradle_and_node:2.0
+      - image: circleci/jdk8:0.1.1
+      - image: circleci/node:13.6
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -32,11 +34,15 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
+#      - run:
+#          name: "Install JavaFX"
+#          command: |
+#            sudo apt-get -y update
+#            sudo apt-get -y install openjfx
       - run:
-          name: "Install JavaFX"
+          name: "Install NPM Packages"
           command: |
-            sudo apt-get -y update
-            sudo apt-get -y install openjfx
+            npm install -g github-release-cli
 
       - run: gradle dependencies
 
@@ -46,7 +52,7 @@ jobs:
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
       # run tests!
-      - run: gradle test
+#      - run: gradle test
 
       - run:
           name: "Build and Publish Release on GitHub"
