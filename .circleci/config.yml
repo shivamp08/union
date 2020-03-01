@@ -33,17 +33,17 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-#      - run:
-#          name: "Install JavaFX"
-#          command: |
-#            sudo apt-get -y update
-#            sudo apt-get -y install openjfx
       - run:
-          name: "Install Node"
+          name: "Install Packages"
           command: |
             sudo apt-get update
             sudo apt-get install -y curl
             sudo apt-get install -y unzip
+            sudo apt-get install -y zip
+
+      - run:
+          name: "Install Node"
+          command: |
             curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.2/install.sh | bash
             export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
