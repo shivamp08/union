@@ -59,9 +59,9 @@ jobs:
           command: |
             wget https://services.gradle.org/distributions/gradle-6.2.1-bin.zip -P /tmp
             sudo unzip -d /opt/gradle /tmp/gradle-*.zip
-            echo 'export GRADLE_HOME=/opt/gradle/gradle' >> $BASH_ENV
+            echo 'export GRADLE_HOME=/opt/gradle/gradle-6.2.1' >> $BASH_ENV
             echo 'export PATH=${GRADLE_HOME}/bin:${PATH}' >> $BASH_ENV
-            export GRADLE_HOME=/opt/gradle/gradle
+            export GRADLE_HOME=/opt/gradle/gradle-6.2.1
             export PATH=${GRADLE_HOME}/bin:${PATH}
             gradle -v
 
