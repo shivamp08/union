@@ -39,7 +39,7 @@ jobs:
 #            sudo apt-get -y update
 #            sudo apt-get -y install openjfx
       - run:
-          name: "Install NPM Packages"
+          name: "Install Node"
           command: |
             sudo apt-get update
             sudo apt-get install -y curl
@@ -47,7 +47,12 @@ jobs:
             export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             nvm install 13
-            sudo npm install -g github-release-cli
+            node -v
+
+      - run:
+          name: "Install Node Modules"
+          command: |
+            npm install -g github-release-cli
 
       - run: gradle dependencies
 
