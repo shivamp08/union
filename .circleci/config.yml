@@ -57,6 +57,8 @@ jobs:
           name: "Install Node Modules"
           command: |
             node -v
+            npm config set user 0
+            npm config set unsafe-perm true
             sudo npm install -g github-release-cli
 
       - run: gradle dependencies
