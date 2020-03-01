@@ -55,7 +55,7 @@ jobs:
           name: "Install Node Modules"
           command: |
             node -v
-            npm install -g github-release-cli
+            sudo npm install -g github-release-cli
 
       - run: gradle dependencies
 
