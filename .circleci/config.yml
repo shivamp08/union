@@ -61,10 +61,9 @@ jobs:
             sudo unzip -d /opt/gradle /tmp/gradle-*.zip
             echo 'export GRADLE_HOME=/opt/gradle/gradle' >> $BASH_ENV
             echo 'export PATH=${GRADLE_HOME}/bin:${PATH}' >> $BASH_ENV
-            echo 'source /etc/profile.d/gradle.sh' >> $BASH_ENV
             export GRADLE_HOME=/opt/gradle/gradle
             export PATH=${GRADLE_HOME}/bin:${PATH}
-            source /etc/profile.d/gradle.sh
+            gradle -v
 
       - run:
           name: "Install Node Modules"
