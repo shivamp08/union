@@ -54,6 +54,18 @@ jobs:
             sudo ln -s "$NVM_DIR/versions/node/$(nvm version)/bin/npm" "/usr/local/bin/npm"
 
       - run:
+          name: "Install Gradle"
+          command: |
+            wget https://services.gradle.org/distributions/gradle-6.2.1-bin.zip -P /tmp
+            sudo unzip -d /opt/gradle /tmp/gradle-*.zip
+            echo 'export GRADLE_HOME=/opt/gradle/gradle' >> $BASH_ENV
+            echo 'export PATH=${GRADLE_HOME}/bin:${PATH}' >> $BASH_ENV
+            echo 'source /etc/profile.d/gradle.sh' >> $BASH_ENV
+            export GRADLE_HOME=/opt/gradle/gradle
+            export PATH=${GRADLE_HOME}/bin:${PATH}
+            source /etc/profile.d/gradle.sh
+
+      - run:
           name: "Install Node Modules"
           command: |
             node -v
