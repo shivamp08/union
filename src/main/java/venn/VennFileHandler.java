@@ -24,18 +24,24 @@ public class VennFileHandler {
         this.intersection = intersection;
     }
 
+    public String getExportString () {
+        VennExport export = new VennExport(handler, right, left, intersection);
+
+        Gson gson = FxGson.fullBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
+
+        return gson.toJson(export);
+    }
+
     public void exportVenn () {
         File location = VennLeftColumn.getFileLocationFromChooser(this.app.stage, "json", true);
 
         if (location == null) return;
 
-        VennExport export = new VennExport(handler, right, left, intersection);
-
-        Gson gson = FxGson.fullBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
+        String export = this.getExportString();
 
         try {
             FileWriter writer = new FileWriter(location);
-            gson.toJson(export, writer);
+            writer.write(export);
             writer.flush();
             writer.close();
         } catch (IOException ignored) {
@@ -45,20 +51,7 @@ public class VennFileHandler {
         System.out.println("Exported " + this.handler.entries.size() + " entries");
     }
 
-    public void importVenn () {
-        File location = VennLeftColumn.getFileLocationFromChooser(this.app.stage, "json", false);
-
-        if (location == null) return;
-
-        Gson gson = FxGson.fullBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
-
-        VennExport imported;
-        try {
-            imported = gson.fromJson(new FileReader(location), VennExport.class);
-        } catch (IOException exception) {
-            return;
-        }
-
+    public void importFromObject (VennExport imported) {
         // update the titles and colors
         this.left.sectionName.set(imported.left.sectionName.getValue());
         this.left.color.set(imported.left.color.getValue());
@@ -72,10 +65,10 @@ public class VennFileHandler {
         // go over each of the imported entries
         for (VennTextEntry entry : imported.elements.entries) {
             if (
-                EntryLocations.Left.equals(entry.location) ||
-                EntryLocations.Right.equals(entry.location) ||
-                EntryLocations.Center.equals(entry.location) ||
-                EntryLocations.Draggable.equals(entry.location)
+                    EntryLocations.Left.equals(entry.location) ||
+                            EntryLocations.Right.equals(entry.location) ||
+                            EntryLocations.Center.equals(entry.location) ||
+                            EntryLocations.Draggable.equals(entry.location)
             ) {
                 entry.draw();
                 this.handler.initEntry(entry);
@@ -106,6 +99,23 @@ public class VennFileHandler {
                 }
             }
         }
+    }
+
+    public void importVenn () {
+        File location = VennLeftColumn.getFileLocationFromChooser(this.app.stage, "json", false);
+
+        if (location == null) return;
+
+        Gson gson = FxGson.fullBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
+
+        VennExport imported;
+        try {
+            imported = gson.fromJson(new FileReader(location), VennExport.class);
+        } catch (IOException exception) {
+            return;
+        }
+
+        this.importFromObject(imported);
 
         System.out.println("Done importing!");
         System.out.println("Imported " + imported.elements.entries.size() + " entries");

@@ -23,15 +23,13 @@ import java.util.Random;
 public class VennEntryHandler {
     @SerializedName("e")
     @Expose
-    List<VennTextEntry> entries;
+    ArrayList<VennTextEntry> entries;
     Pane container;
 
-    public VennEntryHandler (Pane container) {
-        this.entries = new ArrayList<>();
-        this.container = container;
-    }
+    Main app;
 
-    public VennEntryHandler () {
+    public VennEntryHandler (Main app) {
+        this.app = app;
         this.entries = new ArrayList<>();
     }
 
@@ -86,10 +84,12 @@ public class VennEntryHandler {
     public void addEntry (VennTextEntry entry) {
         if (entry.draggable == null) this.initEntry(entry);
         this.container.getChildren().add(entry.pane);
+        this.app.changeHandler.calculateChange();
     }
 
-    public void deleteEntry (VennTextEntry entry) {
+    public void deleteEntry (VennTextEntry entry, boolean pushChange) {
         this.entries.remove(entry);
+        if (pushChange) this.app.changeHandler.calculateChange();
     }
     
     public static void bindHoverHandler (Region pane, VennTextEntry entry, VennEntryHandler handler) {

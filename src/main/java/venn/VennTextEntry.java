@@ -148,4 +148,13 @@ public class VennTextEntry extends Region {
 
         return this.pane;
     }
+
+    @Override
+    public String toString() {
+        return "VennTextEntry{" +
+                "data=" + data +
+                ", x=" + xCoordinate +
+                ", y=" + yCoordinate +
+                '}';
+    }
 }

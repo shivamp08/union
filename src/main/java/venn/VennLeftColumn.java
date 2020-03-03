@@ -212,6 +212,12 @@ public class VennLeftColumn {
         Button importButton = this.getImportButton();
 //        Button addMultipleButton = this.getAddMultipleButton();
 
+        HBox importExportHBox = new HBox(5);
+        importExportHBox.getChildren().addAll(
+            importButton,
+            exportButton
+        );
+
         // color pickers
         top.getChildren().addAll(
             VennPanelTitle.create("Add Entries", false, "left-column-title"),
@@ -222,8 +228,7 @@ public class VennLeftColumn {
             VennPanelTitle.create("Screenshot", false, "left-column-title"),
             screenshotButton,
             VennPanelTitle.create("Export/Import", false, "left-column-title"),
-            exportButton,
-            importButton
+            importExportHBox
         );
 
         // trash can

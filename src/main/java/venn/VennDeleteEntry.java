@@ -35,7 +35,7 @@ public class VennDeleteEntry {
                 if (parent != null) {
                     ((Group) parent).getChildren().remove(entry.draggable);
                 }
-                this.handler.deleteEntry(entry);
+                this.handler.deleteEntry(entry, true);
             } else {
                 this.handler.removeFromDragContainer(entry);
             }

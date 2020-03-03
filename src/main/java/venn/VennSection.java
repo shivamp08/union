@@ -147,6 +147,7 @@ public abstract class VennSection {
                     System.out.println("was at " + entry.location + ", now at " + section);
                     
                     entry.setLocation(section);
+                    app.changeHandler.calculateChange();
                 } else if (removed.size() == 1) {
                 	VennTextEntry entry = removed.get(0);
                 	
