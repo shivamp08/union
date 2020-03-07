@@ -1,6 +1,10 @@
 package venn;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXMasonryPane;
@@ -55,8 +59,11 @@ public class VennController_Main  implements Initializable{
 
 	@FXML
 	private JFXMasonryPane dataPane;
+	
+	private List<Label> list = new ArrayList<>();
+	Map<String, Label> map = new HashMap<>();
 
-
+	
 
 
 
@@ -104,36 +111,27 @@ public class VennController_Main  implements Initializable{
 
 
 	@FXML
-	void addData(ActionEvent event) {
+	void addData(ActionEvent e) {
 
 		// Creates new label and give it texts.
 		Text data = AddData.display();
 		Label label = new Label();
 		label.setText(data.getText());
+		this.list.add(label);
+		this.map.put(label.getText(), label);
 		// drag dected method
-		label.setOnDragDetected(e ->{
+		label.setOnDragDetected(event ->{
 			Dragboard db = label.startDragAndDrop(TransferMode.MOVE);
 
 			/* Put a string on a dragboard */
 			ClipboardContent content = new ClipboardContent();
 			content.putString(label.getText());
 			db.setContent(content);
-
 			event.consume();
 		});
 
 		dataPane.getChildren().add(label); // adding the label to the data.
 
-		// drag done method on label
-		label.setOnDragDone(e -> {
-			//System.out.print(e);
-
-
-			this.dataPane.getChildren().remove(label);
-
-			e.consume();
-
-		});
 	}
 
 	// drag over method for the diagram.
@@ -143,7 +141,6 @@ public class VennController_Main  implements Initializable{
 			/* allow for both copying and moving, whatever user chooses */
 			event.acceptTransferModes(TransferMode.MOVE);
 		}
-
 		event.consume();
 	}
 
@@ -152,14 +149,10 @@ public class VennController_Main  implements Initializable{
 	void handleDrop(DragEvent event) {
 
 		Dragboard d = event.getDragboard();
-
 		Pane pane = new Pane();
-
 		Text t = new Text(d.getString());
 		pane.getChildren().add(t);
 		this.group.getChildren().add(pane);
-
-
 
 		// setting the plane layouts to the cursor.
 		event.setDropCompleted(false);
@@ -173,8 +166,11 @@ public class VennController_Main  implements Initializable{
 			e.consume();
 		});
 
-
-
+		if(!event.isDropCompleted())
+		{
+			Label l = map.get(d.getString());
+			this.dataPane.getChildren().remove(l);
+		}
 		event.consume();
 	}
 
