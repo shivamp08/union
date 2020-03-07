@@ -30,7 +30,7 @@ public class Main extends Application {
 	VennSectionRight right;
 	VennIntersection intersection;
 
-	VennChangeHandler changeHandler;
+	public static VennChangeHandler changeHandler;
 
 	public Main () {
 		super();
@@ -52,7 +52,7 @@ public class Main extends Application {
 		stage.setTitle("Union App");
 		this.stage = stage;
 
-		this.changeHandler = new VennChangeHandler(this);
+		changeHandler = new VennChangeHandler(this);
 
 		BorderPane mainLayout = new BorderPane();
 
@@ -99,7 +99,14 @@ public class Main extends Application {
 		Runnable rn2 = () -> changeHandler.undo();
 		scene.getAccelerators().put(kc2, rn2);
 
+		KeyCombination kc3 = new KeyCodeCombination(KeyCode.Y, KeyCombination.SHORTCUT_DOWN);
+		Runnable rn3 = () -> changeHandler.redo();
+		scene.getAccelerators().put(kc3, rn3);
+
 		scene.setFill(Color.web("#f6f8fa"));
+
+		System.out.println("initial change");
+		changeHandler.calculateChange();
 		
 		stage.setScene(scene);
 		stage.setMinHeight(height);

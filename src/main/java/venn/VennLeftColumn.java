@@ -17,6 +17,8 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 
+import static venn.Main.changeHandler;
+
 public class VennLeftColumn {
     VBox root;
 
@@ -105,7 +107,17 @@ public class VennLeftColumn {
         return optionsButton;
     }
 
-    private Button getExportButton () {
+    private HBox getImportExportButtons () {
+        HBox importExportButtons = new HBox(5);
+
+        Button importButton = new Button("Import");
+        importButton.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(importButton, Priority.ALWAYS);
+
+        importButton.setOnAction(event -> {
+            fileHandler.importVenn();
+        });
+
         Button exportButton = new Button("Export");
         exportButton.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(exportButton, Priority.ALWAYS);
@@ -114,19 +126,45 @@ public class VennLeftColumn {
             fileHandler.exportVenn();
         });
 
-        return exportButton;
+        importExportButtons.getChildren().addAll(importButton, exportButton);
+        return importExportButtons;
     }
 
-    private Button getImportButton () {
-        Button exportButton = new Button("Import");
-        exportButton.setMaxWidth(Double.MAX_VALUE);
-        HBox.setHgrow(exportButton, Priority.ALWAYS);
+    private HBox getUndoRedoButtons () {
+        HBox undoRedoButtons = new HBox(5);
 
-        exportButton.setOnAction(event -> {
-            fileHandler.importVenn();
+        Button undoButton = new Button("Undo");
+        undoButton.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(undoButton, Priority.ALWAYS);
+
+        undoButton.setOnAction(event -> {
+            changeHandler.undo();
+        });
+        undoButton.setDisable(true);
+
+        Button redoButton = new Button("Redo");
+        redoButton.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(redoButton, Priority.ALWAYS);
+
+        redoButton.setOnAction(event -> {
+            changeHandler.redo();
+        });
+        redoButton.setDisable(true);
+
+        changeHandler.currentIndex.addListener((observable, oldValue, newValue) -> {
+            int value = (int) newValue;
+            if (value == 0) {
+                redoButton.setDisable(true);
+            } else {
+                redoButton.setDisable(false);
+            }
+
+            if (changeHandler.canUndo()) undoButton.setDisable(false);
+            else undoButton.setDisable(true);
         });
 
-        return exportButton;
+        undoRedoButtons.getChildren().addAll(undoButton, redoButton);
+        return undoRedoButtons;
     }
 
     private boolean saveScreenshot (File file) {
@@ -184,10 +222,10 @@ public class VennLeftColumn {
 
         // init the containers and it's padding
         HBox topContainer = new HBox(5);
-        VBox top = new VBox(5);
+        VBox top = new VBox(3);
         topContainer.getChildren().add(top);
         HBox bottomContainer = new HBox(5);
-        VBox bottom = new VBox(5);
+        VBox bottom = new VBox(3);
 //        bottomContainer.getChildren().add(bottom);
         this.entries = bottom;
 
@@ -208,27 +246,22 @@ public class VennLeftColumn {
         Button addButton = this.getAddButton();
         Button optionsButton = this.getOptionsButton();
         Button screenshotButton = this.getScreenshotButton();
-        Button exportButton = this.getExportButton();
-        Button importButton = this.getImportButton();
-//        Button addMultipleButton = this.getAddMultipleButton();
 
-        HBox importExportHBox = new HBox(5);
-        importExportHBox.getChildren().addAll(
-            importButton,
-            exportButton
-        );
+        HBox importExportHBox = this.getImportExportButtons();
+        HBox undoRedoBox = this.getUndoRedoButtons();
 
         // color pickers
         top.getChildren().addAll(
             VennPanelTitle.create("Add Entries", false, "left-column-title"),
             addButton,
-//            addMultipleButton,
             VennPanelTitle.create("Options", false, "left-column-title"),
             optionsButton,
             VennPanelTitle.create("Screenshot", false, "left-column-title"),
             screenshotButton,
             VennPanelTitle.create("Export/Import", false, "left-column-title"),
-            importExportHBox
+            importExportHBox,
+            VennPanelTitle.create("Redo/Undo", false, "left-column-title"),
+            undoRedoBox
         );
 
         // trash can

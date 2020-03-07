@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static venn.Main.changeHandler;
+
 public class VennEntryHandler {
     @SerializedName("e")
     @Expose
@@ -81,15 +83,19 @@ public class VennEntryHandler {
         VennEntryHandler.bindHoverHandler(entry.draggable, entry, this);
     }
 
-    public void addEntry (VennTextEntry entry) {
+    public void addEntry (VennTextEntry entry, boolean pushChange) {
         if (entry.draggable == null) this.initEntry(entry);
         this.container.getChildren().add(entry.pane);
-        this.app.changeHandler.calculateChange();
+        if (pushChange) {
+            changeHandler.calculateChange();
+        }
     }
 
     public void deleteEntry (VennTextEntry entry, boolean pushChange) {
         this.entries.remove(entry);
-        if (pushChange) this.app.changeHandler.calculateChange();
+        if (pushChange) {
+            changeHandler.calculateChange();
+        }
     }
     
     public static void bindHoverHandler (Region pane, VennTextEntry entry, VennEntryHandler handler) {

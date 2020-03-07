@@ -1,6 +1,7 @@
 package venn;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.scene.layout.StackPane;
 import org.hildan.fxgson.FxGson;
 
@@ -24,10 +25,16 @@ public class VennFileHandler {
         this.intersection = intersection;
     }
 
-    public String getExportString () {
+    public String getExportString (boolean pretty) {
         VennExport export = new VennExport(handler, right, left, intersection);
 
-        Gson gson = FxGson.fullBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
+        GsonBuilder gsonBuilder = FxGson.fullBuilder().excludeFieldsWithoutExposeAnnotation();
+
+        if (pretty) {
+            gsonBuilder.setPrettyPrinting();
+        }
+
+        Gson gson = gsonBuilder.create();
 
         return gson.toJson(export);
     }
@@ -37,7 +44,7 @@ public class VennFileHandler {
 
         if (location == null) return;
 
-        String export = this.getExportString();
+        String export = this.getExportString(true);
 
         try {
             FileWriter writer = new FileWriter(location);
@@ -51,24 +58,24 @@ public class VennFileHandler {
         System.out.println("Exported " + this.handler.entries.size() + " entries");
     }
 
-    public void importFromObject (VennExport imported) {
+    public void importFromObject (VennExport imported, boolean fromFile) {
         // update the titles and colors
         this.left.sectionName.set(imported.left.sectionName.getValue());
-        this.left.color.set(imported.left.color.getValue());
+        if (fromFile) this.left.color.set(imported.left.color.getValue());
 
         this.right.sectionName.set(imported.right.sectionName.getValue());
-        this.right.color.set(imported.right.color.getValue());
+        if (fromFile) this.right.color.set(imported.right.color.getValue());
 
         this.intersection.sectionName.set(imported.intersection.sectionName.getValue());
-        this.intersection.color.set(imported.intersection.color.getValue());
+        if (fromFile) this.intersection.color.set(imported.intersection.color.getValue());
 
         // go over each of the imported entries
         for (VennTextEntry entry : imported.elements.entries) {
             if (
-                    EntryLocations.Left.equals(entry.location) ||
-                            EntryLocations.Right.equals(entry.location) ||
-                            EntryLocations.Center.equals(entry.location) ||
-                            EntryLocations.Draggable.equals(entry.location)
+                EntryLocations.Left.equals(entry.location) ||
+                EntryLocations.Right.equals(entry.location) ||
+                EntryLocations.Center.equals(entry.location) ||
+                EntryLocations.Draggable.equals(entry.location)
             ) {
                 entry.draw();
                 this.handler.initEntry(entry);
@@ -95,7 +102,7 @@ public class VennFileHandler {
                     section.element.getChildren().add(entry.draggable);
                 } else if (EntryLocations.Draggable.equals(entry.location)) {
                     // add to the draggable area
-                    this.handler.addEntry(entry);
+                    this.handler.addEntry(entry, fromFile);
                 }
             }
         }
@@ -115,7 +122,7 @@ public class VennFileHandler {
             return;
         }
 
-        this.importFromObject(imported);
+        this.importFromObject(imported, true);
 
         System.out.println("Done importing!");
         System.out.println("Imported " + imported.elements.entries.size() + " entries");

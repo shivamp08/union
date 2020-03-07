@@ -13,20 +13,26 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import static venn.Main.changeHandler;
+
 public class VennEntryModalHandler {
     public static void add (VennEntryHandler handler) {
         String add = VennEntryModalHandler.create("Add entry", "What do you want to add?", "Add", null, -1);
 
         if (add == null) return;
 
+        changeHandler.calculateChange();
+
         VennTextEntry entry = new VennTextEntry(add);
-        handler.addEntry(entry);
+        handler.addEntry(entry, false);
     }
 
     public static void edit (StringProperty current) {
         String edited = VennEntryModalHandler.create("Edit entry", "Text:", "Update", current.getValue(), -1);
 
         if (edited == null) return;
+
+        changeHandler.calculateChange();
 
         current.set(edited);
     }

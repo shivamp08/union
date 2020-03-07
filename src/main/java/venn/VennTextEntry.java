@@ -155,6 +155,7 @@ public class VennTextEntry extends Region {
                 "data=" + data +
                 ", x=" + xCoordinate +
                 ", y=" + yCoordinate +
+                ", location=" + location +
                 '}';
     }
 }

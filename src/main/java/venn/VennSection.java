@@ -24,6 +24,8 @@ import javafx.scene.shape.Shape;
 import java.util.ArrayList;
 import java.util.List;
 
+import static venn.Main.changeHandler;
+
 public abstract class VennSection {
     @SerializedName("c")
     @Expose
@@ -147,7 +149,6 @@ public abstract class VennSection {
                     System.out.println("was at " + entry.location + ", now at " + section);
                     
                     entry.setLocation(section);
-                    app.changeHandler.calculateChange();
                 } else if (removed.size() == 1) {
                 	VennTextEntry entry = removed.get(0);
                 	
@@ -218,6 +219,8 @@ public abstract class VennSection {
             VennTextEntry entry = this.handler.getEntryById(event.getDragboard().getString());
 
             if (entry == null) return;
+
+            changeHandler.calculateChange();
 
             if (entry.section != null) {
                 entry.section.elements.remove(entry);
