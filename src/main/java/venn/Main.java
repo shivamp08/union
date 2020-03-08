@@ -12,6 +12,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.input.*;
 
+import java.util.Locale;
+
 public class Main extends Application {
 
 	// initial resolution, 720p
@@ -49,7 +51,6 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage stage) {
-		stage.setTitle("Union App");
 		this.stage = stage;
 
 		changeHandler = new VennChangeHandler(this);
@@ -117,7 +118,8 @@ public class Main extends Application {
 
 //		System.out.println("initial change");
 //		changeHandler.calculateChange();
-		
+
+		stage.titleProperty().bind(VennInternationalization.createStringBinding("app_title"));
 		stage.setScene(scene);
 		stage.setMinHeight(height);
 		stage.setMaximized(true);

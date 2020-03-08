@@ -1,5 +1,6 @@
 package venn;
 
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,7 +19,14 @@ import static venn.Main.changeHandler;
 
 public class VennEntryModalHandler {
     public static void add (VennEntryHandler handler) {
-        String[] add = VennEntryModalHandler.create("Add entry", "What do you want to add?", "Add", null, "", -1);
+        String[] add = VennEntryModalHandler.create(
+            VennInternationalization.createStringBinding("add_title"),
+            VennInternationalization.createStringBinding("add_prompt"),
+            VennInternationalization.createStringBinding("add_action"),
+            null,
+            "",
+            -1
+        );
 
         if (add == null) return;
 
@@ -30,7 +38,14 @@ public class VennEntryModalHandler {
     }
 
     public static void edit (StringProperty currTitle, StringProperty currDes) {
-        String[] edited = VennEntryModalHandler.create("Edit entry", "Text:", "Update", currTitle.getValue(), currDes.getValue(), -1);
+        String[] edited = VennEntryModalHandler.create(
+            VennInternationalization.createStringBinding("edit_title"),
+            VennInternationalization.createStringBinding("edit_prompt"),
+            VennInternationalization.createStringBinding("edit_action"),
+            currTitle.getValue(),
+            currDes.getValue(),
+            -1
+        );
 
         if (edited == null) return;
 
@@ -42,7 +57,14 @@ public class VennEntryModalHandler {
     }
 
     public static void edit (StringProperty current, int maxLength) {
-        String[] edited = VennEntryModalHandler.create("Edit entry", "Text (Max Length "  + maxLength + "):", "Update", current.getValue(), null, maxLength);
+        String[] edited = VennEntryModalHandler.create(
+            VennInternationalization.createStringBinding("edit_title"),
+            VennInternationalization.createStringBinding("edit_prompt_maxlength", maxLength),
+            VennInternationalization.createStringBinding("edit_action"),
+            current.getValue(),
+            null,
+            maxLength
+        );
 
         if (edited == null) return;
 
@@ -58,12 +80,12 @@ public class VennEntryModalHandler {
         });
     }
 
-    public static String[] create (String title, String prompt, String action, String current, String des, int maxLength) {
+    public static String[] create (StringBinding title, StringBinding prompt, StringBinding action, String current, String des, int maxLength) {
         Text text = new Text();
         Text desText = new Text(); 
 
         Stage window = new Stage();
-        window.setTitle(title);
+        window.titleProperty().bind(title);
         window.setWidth(400);
         window.setHeight(300);
         if (des == null) window.setHeight(200);
@@ -72,7 +94,7 @@ public class VennEntryModalHandler {
         window.initModality(Modality.APPLICATION_MODAL);
 
         Label label = new Label();
-        label.setText(prompt);
+        label.textProperty().bind(prompt);
 
         TextField data = new TextField();
         if (current != null) {
@@ -93,10 +115,11 @@ public class VennEntryModalHandler {
         description.setMaxWidth(300);
 
         Label descriptionLabel = new Label();
-        descriptionLabel.setText("Description");
+        descriptionLabel.textProperty().bind(VennInternationalization.createStringBinding("modal_description"));
         
         // cancel button
-        Button closeButton = new Button("Cancel");
+        Button closeButton = new Button();
+        closeButton.textProperty().bind(VennInternationalization.createStringBinding("modal_cancel"));
         closeButton.setOnAction(e -> window.close());
 
         data.setOnAction(e -> {
@@ -106,7 +129,8 @@ public class VennEntryModalHandler {
         });
 
         //Add button.
-        Button addButton = new Button(action);
+        Button addButton = new Button();
+        addButton.textProperty().bind(action);
         addButton.setOnAction( e->{
             text.setText(data.getText());
             desText.setText(description.getText());
