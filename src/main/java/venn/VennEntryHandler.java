@@ -78,9 +78,9 @@ public class VennEntryHandler {
         this.entries.add(entry);
         entry.setDraggable();
 
-        VennEntryHandler.bindDragHandler(entry.pane, entry, this);
-        VennEntryHandler.bindDragHandler(entry.draggable, entry, this);
-        VennEntryHandler.bindHoverHandler(entry.draggable, entry, this);
+        VennEntryHandler.bindDragHandler(entry.pane, entry);
+        VennEntryHandler.bindDragHandler(entry.draggable, entry);
+        VennEntryHandler.bindHoverHandler(entry.draggable, entry);
     }
 
     public void addEntry (VennTextEntry entry, boolean pushChange) {
@@ -98,7 +98,7 @@ public class VennEntryHandler {
         }
     }
     
-    public static void bindHoverHandler (Region pane, VennTextEntry entry, VennEntryHandler handler) {
+    public static void bindHoverHandler (Region pane, VennTextEntry entry) {
     	pane.setOnMouseEntered(event -> {
             // darken the circle
             if (entry.draggable != null) {
@@ -123,7 +123,7 @@ public class VennEntryHandler {
         return entry.draggable.snapshot(sp, null);
     }
     
-    public static void bindDragHandler(Region pane, VennTextEntry entry, VennEntryHandler handler) {
+    public static void bindDragHandler(Region pane, VennTextEntry entry) {
     	pane.setOnDragDetected(event -> {
 	    	Dragboard db = pane.startDragAndDrop(TransferMode.ANY);
 
