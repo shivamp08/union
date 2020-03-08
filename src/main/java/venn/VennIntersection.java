@@ -15,6 +15,7 @@ public class VennIntersection extends VennSection {
         this.sectionName = new SimpleStringProperty("Intersection");
 
         this.color = new SimpleObjectProperty<>(Color.GREY);
+        this.bindColorCopy();
 
         this.draw(left, right);
         this.initDropHandlers();
@@ -22,7 +23,7 @@ public class VennIntersection extends VennSection {
 
     public void draw (VennSectionLeft left, VennSectionRight right) {
         Shape shape = Shape.intersect(left.shape, right.shape);
-        shape.fillProperty().bind(this.color);
+        shape.fillProperty().bind(this.mutatingColor);
         shape.setStroke(Color.WHITE);
         shape.setStrokeWidth(strokeWidth);
 

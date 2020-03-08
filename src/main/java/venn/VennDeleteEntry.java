@@ -29,7 +29,10 @@ public class VennDeleteEntry {
         pane.setOnDragDropped(event -> {
             VennTextEntry entry = this.handler.getEntryById(event.getDragboard().getString());
 
+            System.out.println("change from deletion");
             changeHandler.calculateChange();
+
+            System.out.println(entry);
 
             if (entry.section != null) {
                 entry.section.elements.remove(entry);

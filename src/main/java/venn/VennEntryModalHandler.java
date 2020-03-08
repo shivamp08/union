@@ -21,6 +21,7 @@ public class VennEntryModalHandler {
 
         if (add == null) return;
 
+        System.out.println("change from add entry");
         changeHandler.calculateChange();
 
         VennTextEntry entry = new VennTextEntry(add);
@@ -32,6 +33,7 @@ public class VennEntryModalHandler {
 
         if (edited == null) return;
 
+        System.out.println("adding from edit entry");
         changeHandler.calculateChange();
 
         current.set(edited);

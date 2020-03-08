@@ -105,8 +105,8 @@ public class Main extends Application {
 
 		scene.setFill(Color.web("#f6f8fa"));
 
-		System.out.println("initial change");
-		changeHandler.calculateChange();
+//		System.out.println("initial change");
+//		changeHandler.calculateChange();
 		
 		stage.setScene(scene);
 		stage.setMinHeight(height);

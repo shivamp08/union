@@ -127,6 +127,9 @@ public class VennEntryHandler {
     	pane.setOnDragDetected(event -> {
 	    	Dragboard db = pane.startDragAndDrop(TransferMode.ANY);
 
+            System.out.println("change from drag detected");
+	    	changeHandler.calculateChange();
+
 	        db.setDragView(
 	        	getSnapshot(entry),
 	        	event.getX() - (pane.getWidth() / 2),
@@ -136,9 +139,19 @@ public class VennEntryHandler {
 	        ClipboardContent content = new ClipboardContent();
 	        content.putString(entry.id);
 	        db.setContent(content);
+
+            System.out.println("start");
 	
 	        event.consume();
     	});
+
+    	pane.setOnDragDone(event -> {
+            System.out.println("adding from drag done");
+    	    changeHandler.calculateChange();
+
+    	    System.out.println("done");
+    	    event.consume();
+        });
     }
 
     public void removeFromDragContainer (VennTextEntry entry) {

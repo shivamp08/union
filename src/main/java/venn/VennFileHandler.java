@@ -61,13 +61,13 @@ public class VennFileHandler {
     public void importFromObject (VennExport imported, boolean fromFile) {
         // update the titles and colors
         this.left.sectionName.set(imported.left.sectionName.getValue());
-        if (fromFile) this.left.color.set(imported.left.color.getValue());
+        this.left.color.set(imported.left.color.getValue());
 
         this.right.sectionName.set(imported.right.sectionName.getValue());
-        if (fromFile) this.right.color.set(imported.right.color.getValue());
+        this.right.color.set(imported.right.color.getValue());
 
         this.intersection.sectionName.set(imported.intersection.sectionName.getValue());
-        if (fromFile) this.intersection.color.set(imported.intersection.color.getValue());
+        this.intersection.color.set(imported.intersection.color.getValue());
 
         // go over each of the imported entries
         for (VennTextEntry entry : imported.elements.entries) {
@@ -100,6 +100,7 @@ public class VennFileHandler {
                 if (section != null) {
                     section.elements.add(entry);
                     section.element.getChildren().add(entry.draggable);
+                    entry.section = section;
                 } else if (EntryLocations.Draggable.equals(entry.location)) {
                     // add to the draggable area
                     this.handler.addEntry(entry, fromFile);

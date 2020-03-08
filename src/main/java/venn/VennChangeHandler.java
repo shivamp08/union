@@ -1,48 +1,75 @@
 package venn;
 
 import com.google.gson.Gson;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Group;
 import javafx.scene.layout.Pane;
 import org.hildan.fxgson.FxGson;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Stack;
 
 public class VennChangeHandler {
     Main app;
 
-    Stack<String> changes;
+    private final Deque<String> undo;
+    private final Deque<String> redo;
 
-    IntegerProperty currentIndex;
+    public BooleanProperty canRedo;
+    public BooleanProperty canUndo;
+
+    private int sizeMax;
 
     public VennChangeHandler(Main app) {
         this.app = app;
 
-        this.currentIndex = new SimpleIntegerProperty(0);
+        undo = new ArrayDeque<>();
+        redo = new ArrayDeque<>();
 
-        this.changes = new Stack<>();
+        canRedo = new SimpleBooleanProperty(false);
+        canUndo = new SimpleBooleanProperty(false);
+
+        sizeMax = 30;
+    }
+
+    private String getCurrentString () {
+        return app.leftColumn.fileHandler.getExportString(false);
+    }
+
+    private void updateProperties () {
+        if (undo.isEmpty()) canUndo.set(false);
+        else canUndo.set(true);
+
+        if (redo.isEmpty()) canRedo.set(false);
+        else canRedo.set(true);
     }
 
     public void calculateChange() {
-        String current = app.leftColumn.fileHandler.getExportString(false);
+        if(sizeMax > 0) {
+            if(undo.size() == sizeMax) {
+                undo.removeLast();
+            }
 
-        while (currentIndex.get() > 0) {
-            this.changes.pop();
-            currentIndex.set(currentIndex.get() - 1);
+            String current = this.getCurrentString();
+
+            // ignore if the same change is being pushed
+            String lastUndo = undo.peek();
+            if (lastUndo != null && lastUndo.contentEquals(current)) {
+                System.out.println("ignoring change since same as last");
+            } else {
+                System.out.println("adding change");
+
+                undo.push(current);
+            }
+            redo.clear(); /* The redoable objects must be removed. */
+            this.updateProperties();
         }
-        System.out.println(changes);
-
-        this.changes.push(current);
     }
 
     private void importAndClear (String importString) {
         Gson gson = FxGson.fullBuilder().excludeFieldsWithoutExposeAnnotation().create();
         VennExport change = gson.fromJson(importString, VennExport.class);
-
-//        System.out.println(app.entries.entries);
 
         Object[] elements = app.entries.entries.toArray();
 
@@ -61,36 +88,39 @@ public class VennChangeHandler {
         app.leftColumn.fileHandler.importFromObject(change, false);
     }
 
-    public boolean canUndo () {
-        return this.changes.size() - currentIndex.get() - 1 >= 0;
-    }
-
     public void undo () {
-        int size = this.changes.size();
-        if (size == 0) {
-            return;
+        if(!undo.isEmpty()) {
+            System.out.println("undoing change");
+            String last = undo.pop();
+
+            String current = this.getCurrentString();
+            if (last.contentEquals(current) && undo.size() > 1) {
+                if (!redo.contains(last)) redo.push(last);
+                last = undo.peek();
+            }
+
+            this.importAndClear(last);
+            if (!redo.contains(last)) redo.push(last);
         }
-
-        // if this is too far back
-        if (size - currentIndex.get() - 2 <= 0) return;
-
-        String last = this.changes.get(size - currentIndex.get() - 1);
-
-        currentIndex.set(currentIndex.get() + 1);
-        System.out.println("undo: index at " + currentIndex.get());
-
-        this.importAndClear(last);
+        this.updateProperties();
     }
 
     public void redo () {
-        int size = this.changes.size();
-        if (currentIndex.get() > 0) {
-            currentIndex.set(currentIndex.get() - 1);
-            System.out.println("redo: index at " + currentIndex);
+        if(!redo.isEmpty()) {
+            System.out.println("redoing change");
+            String next = redo.pop();
 
-            String change = this.changes.get(size - currentIndex.get() - 1);
+            String current = this.getCurrentString();
+            if (next.contentEquals(current) && redo.size() > 1) {
+                if (!undo.contains(next)) undo.push(next);
+                next = redo.pop();
+            }
 
-            this.importAndClear(change);
+            System.out.println(next);
+
+            this.importAndClear(next);
+            if (!undo.contains(next)) undo.push(next);
         }
+        this.updateProperties();
     }
 }

@@ -141,6 +141,7 @@ public class VennLeftColumn {
             changeHandler.undo();
         });
         undoButton.setDisable(true);
+        undoButton.disableProperty().bind(changeHandler.canUndo.not());
 
         Button redoButton = new Button("Redo");
         redoButton.setMaxWidth(Double.MAX_VALUE);
@@ -150,18 +151,7 @@ public class VennLeftColumn {
             changeHandler.redo();
         });
         redoButton.setDisable(true);
-
-        changeHandler.currentIndex.addListener((observable, oldValue, newValue) -> {
-            int value = (int) newValue;
-            if (value == 0) {
-                redoButton.setDisable(true);
-            } else {
-                redoButton.setDisable(false);
-            }
-
-            if (changeHandler.canUndo()) undoButton.setDisable(false);
-            else undoButton.setDisable(true);
-        });
+        redoButton.disableProperty().bind(changeHandler.canRedo.not());
 
         undoRedoButtons.getChildren().addAll(undoButton, redoButton);
         return undoRedoButtons;
