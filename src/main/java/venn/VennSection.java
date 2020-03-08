@@ -3,6 +3,7 @@ package venn;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -24,10 +25,14 @@ import javafx.scene.shape.Shape;
 import java.util.ArrayList;
 import java.util.List;
 
+import static venn.Main.changeHandler;
+
 public abstract class VennSection {
     @SerializedName("c")
     @Expose
     ObjectProperty<Color> color;
+    ObjectProperty<Color> mutatingColor;
+
     double radius;
     double width;
     double height;
@@ -67,20 +72,21 @@ public abstract class VennSection {
     }
 
     public void beginHover () {
-        Color darker = this.color.getValue().deriveColor(
+        Color darker = this.mutatingColor.getValue().deriveColor(
             0, 1.0, 0.8, 1.0
         );
-        this.color.set(darker);
+        this.mutatingColor.set(darker);
     }
 
     public void endHover () {
-        Color brighter = this.color.getValue().deriveColor(
+        Color brighter = this.mutatingColor.getValue().deriveColor(
             0, 1.0, 1.0 / 0.8, 1.0
         );
-        this.color.set(brighter);
+        this.mutatingColor.set(brighter);
     }
 
     public void draw () {
+        this.bindColorCopy();
         this.drawCircle();
     }
 
@@ -93,6 +99,16 @@ public abstract class VennSection {
     private double getXPosition () {
         int multiplier = this.getMultiplier();
         return width + (multiplier * (this.radius / 2));
+    }
+
+    protected void bindColorCopy () {
+        // store the actual color (for hovering) here
+        if (this.color != null) {
+            this.mutatingColor = new SimpleObjectProperty<>(this.color.get());
+            this.color.addListener((observable, oldValue, newValue) -> {
+                this.mutatingColor.set(newValue);
+            });
+        }
     }
 
     protected void bindTitleEditing (Control control) {
@@ -125,7 +141,7 @@ public abstract class VennSection {
 
         shape.setRadius(this.radius);
 
-        shape.fillProperty().bind(this.color);
+        shape.fillProperty().bind(this.mutatingColor);
         shape.setStroke(Color.BLACK);
         shape.setStrokeWidth(strokeWidth);
 
@@ -144,13 +160,13 @@ public abstract class VennSection {
                 List<VennTextEntry> removed = c.getRemoved();
                 if (added.size() == 1) {
                     VennTextEntry entry = added.get(0);
-                    System.out.println("was at " + entry.location + ", now at " + section);
+//                    System.out.println("was at " + entry.location + ", now at " + section);
                     
                     entry.setLocation(section);
                 } else if (removed.size() == 1) {
                 	VennTextEntry entry = removed.get(0);
                 	
-                	System.out.println("removed from " + entry.location);
+//                	System.out.println("removed from " + entry.location);
                 }
             }
         });
@@ -212,7 +228,7 @@ public abstract class VennSection {
         });
 
         shape.setOnDragDropped(event -> {
-            System.out.println("dropped in " + this.section);
+//            System.out.println("dropped in " + this.section);
 
             VennTextEntry entry = this.handler.getEntryById(event.getDragboard().getString());
 

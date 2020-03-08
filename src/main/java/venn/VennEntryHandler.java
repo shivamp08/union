@@ -20,18 +20,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static venn.Main.changeHandler;
+
 public class VennEntryHandler {
     @SerializedName("e")
     @Expose
-    List<VennTextEntry> entries;
+    ArrayList<VennTextEntry> entries;
     Pane container;
 
-    public VennEntryHandler (Pane container) {
-        this.entries = new ArrayList<>();
-        this.container = container;
-    }
+    Main app;
 
-    public VennEntryHandler () {
+    public VennEntryHandler (Main app) {
+        this.app = app;
         this.entries = new ArrayList<>();
     }
 
@@ -83,13 +83,19 @@ public class VennEntryHandler {
         VennEntryHandler.bindHoverHandler(entry.draggable, entry, this);
     }
 
-    public void addEntry (VennTextEntry entry) {
+    public void addEntry (VennTextEntry entry, boolean pushChange) {
         if (entry.draggable == null) this.initEntry(entry);
         this.container.getChildren().add(entry.pane);
+        if (pushChange) {
+            changeHandler.calculateChange();
+        }
     }
 
-    public void deleteEntry (VennTextEntry entry) {
+    public void deleteEntry (VennTextEntry entry, boolean pushChange) {
         this.entries.remove(entry);
+        if (pushChange) {
+            changeHandler.calculateChange();
+        }
     }
     
     public static void bindHoverHandler (Region pane, VennTextEntry entry, VennEntryHandler handler) {
@@ -121,6 +127,9 @@ public class VennEntryHandler {
     	pane.setOnDragDetected(event -> {
 	    	Dragboard db = pane.startDragAndDrop(TransferMode.ANY);
 
+            System.out.println("change from drag detected");
+	    	changeHandler.calculateChange();
+
 	        db.setDragView(
 	        	getSnapshot(entry),
 	        	event.getX() - (pane.getWidth() / 2),
@@ -130,9 +139,19 @@ public class VennEntryHandler {
 	        ClipboardContent content = new ClipboardContent();
 	        content.putString(entry.id);
 	        db.setContent(content);
+
+            System.out.println("start");
 	
 	        event.consume();
     	});
+
+    	pane.setOnDragDone(event -> {
+            System.out.println("adding from drag done");
+    	    changeHandler.calculateChange();
+
+    	    System.out.println("done");
+    	    event.consume();
+        });
     }
 
     public void removeFromDragContainer (VennTextEntry entry) {

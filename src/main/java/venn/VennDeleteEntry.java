@@ -6,6 +6,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.StackPane;
 
+import static venn.Main.changeHandler;
+
 public class VennDeleteEntry {
     VennEntryHandler handler;
 
@@ -27,6 +29,11 @@ public class VennDeleteEntry {
         pane.setOnDragDropped(event -> {
             VennTextEntry entry = this.handler.getEntryById(event.getDragboard().getString());
 
+            System.out.println("change from deletion");
+            changeHandler.calculateChange();
+
+            System.out.println(entry);
+
             if (entry.section != null) {
                 entry.section.elements.remove(entry);
 
@@ -35,7 +42,7 @@ public class VennDeleteEntry {
                 if (parent != null) {
                     ((Group) parent).getChildren().remove(entry.draggable);
                 }
-                this.handler.deleteEntry(entry);
+                this.handler.deleteEntry(entry, false);
             } else {
                 this.handler.removeFromDragContainer(entry);
             }

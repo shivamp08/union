@@ -20,12 +20,16 @@ import java.util.UUID;
 import static venn.VennEntryHandler.getWebColor;
 
 public class VennTextEntry extends Region {
-    @SerializedName("d")
+    @SerializedName("s")
     @Expose
-    StringProperty data;
+    StringProperty string;
     @SerializedName("l")
     @Expose
     EntryLocations location;
+    
+    @SerializedName("d")
+    @Expose
+    StringProperty description;
     
     Region draggable;
     HBox pane;
@@ -45,9 +49,13 @@ public class VennTextEntry extends Region {
     @Expose
     Color draggableColor;
 
-    public VennTextEntry(String data) {
+    public VennTextEntry(String string, String description) {
         super();
-        this.data = new SimpleStringProperty(data);
+        this.string = new SimpleStringProperty(string);
+        this.description = new SimpleStringProperty();
+        if (description != null) {
+            this.description.set(description);
+        }
 
         this.id = UUID.randomUUID().toString();
 
@@ -63,7 +71,7 @@ public class VennTextEntry extends Region {
 
         this.draw();
     }
-
+    
     public void setLocation(EntryLocations location) {
         this.location = location;
     }
@@ -71,7 +79,7 @@ public class VennTextEntry extends Region {
     public void setDraggable () {
         StackPane pane = new StackPane();
         Label label = new Label("");
-        label.textProperty().bind(this.data);
+        label.textProperty().bind(this.string);
         label.setTextFill(Color.BLACK);
         label.setStyle("-fx-font-weight: bold;");
 
@@ -82,7 +90,7 @@ public class VennTextEntry extends Region {
         pane.setStyle("-fx-background-color: " + getWebColor(this.draggableColor));
 
         Tooltip tooltip = new Tooltip();
-        tooltip.textProperty().bind(this.data);
+        tooltip.textProperty().bind(this.string);
         Tooltip.install(label, tooltip);
 
         pane.getChildren().add(label);
@@ -107,7 +115,7 @@ public class VennTextEntry extends Region {
         pane.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)){
                 if (event.getClickCount() == 2){
-                    VennEntryModalHandler.edit(this.data);
+                    VennEntryModalHandler.edit(this.string, this.description);
                 }
             }
         });
@@ -129,7 +137,7 @@ public class VennTextEntry extends Region {
 
     public HBox draw () {
         Label text = new Label();
-        text.textProperty().bind(this.data);
+        text.textProperty().bind(this.string);
 
         this.pane = new HBox();
         this.pane.setAlignment(Pos.CENTER);
@@ -143,9 +151,20 @@ public class VennTextEntry extends Region {
         this.pane.setUserData(this);
         
         Tooltip tooltip = new Tooltip();
-        tooltip.textProperty().bind(this.data);
+        tooltip.textProperty().bind(this.string);
         Tooltip.install(this.pane, tooltip);
 
         return this.pane;
+    }
+
+    @Override
+    public String toString() {
+        return "VennTextEntry{" +
+                "string=" + string +
+                ", x=" + xCoordinate +
+                ", y=" + yCoordinate +
+                ", location=" + location +
+                ", section=" + section +
+                '}';
     }
 }

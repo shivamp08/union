@@ -1,5 +1,6 @@
 package venn;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -12,6 +13,8 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import static venn.Main.changeHandler;
 
 public class VennOptions {
     VennSectionLeft left;
@@ -70,7 +73,10 @@ public class VennOptions {
 
         //Add button.
         Button okButton = new Button("Ok");
-        okButton.setOnAction(e -> window.close());
+        okButton.setOnAction(e -> {
+            changeHandler.calculateChange();
+            window.close();
+        });
 
         HBox allButtons = new HBox(10);
         allButtons.setPadding(new Insets(0, 10, 10, 10));
@@ -93,6 +99,17 @@ public class VennOptions {
 
         Scene scene = new Scene(layout,100,100);
         scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+
+        // some annoying code to make it actually detect when closing the window
+        window.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            Platform.runLater(() -> {
+                Stage stage = (Stage) newScene.getWindow();
+                stage.setOnCloseRequest(e -> {
+                    changeHandler.calculateChange();
+                });
+            });
+        });
+
         window.setScene(scene);
         window.setResizable(false);
         window.showAndWait();

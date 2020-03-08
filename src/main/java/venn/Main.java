@@ -30,6 +30,8 @@ public class Main extends Application {
 	VennSectionRight right;
 	VennIntersection intersection;
 
+	public static VennChangeHandler changeHandler;
+
 	public Main () {
 		super();
 	}
@@ -50,6 +52,8 @@ public class Main extends Application {
 		stage.setTitle("Union App");
 		this.stage = stage;
 
+		changeHandler = new VennChangeHandler(this);
+
 		BorderPane mainLayout = new BorderPane();
 
 		this.vennGroup = new Group();
@@ -68,7 +72,7 @@ public class Main extends Application {
 		this.scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
 
 		this.leftColumn = new VennLeftColumn(this);
-		this.entries = new VennEntryHandler();
+		this.entries = new VennEntryHandler(this);
 
 		// draw the main three sections
 		this.drawVenn();
@@ -91,7 +95,18 @@ public class Main extends Application {
 		Runnable rn = () -> VennEntryModalHandler.add(this.entries);
 		scene.getAccelerators().put(kc1, rn);
 
+		KeyCombination kc2 = new KeyCodeCombination(KeyCode.Z, KeyCombination.SHORTCUT_DOWN);
+		Runnable rn2 = () -> changeHandler.undo();
+		scene.getAccelerators().put(kc2, rn2);
+
+		KeyCombination kc3 = new KeyCodeCombination(KeyCode.Y, KeyCombination.SHORTCUT_DOWN);
+		Runnable rn3 = () -> changeHandler.redo();
+		scene.getAccelerators().put(kc3, rn3);
+
 		scene.setFill(Color.web("#f6f8fa"));
+
+//		System.out.println("initial change");
+//		changeHandler.calculateChange();
 		
 		stage.setScene(scene);
 		stage.setMinHeight(height);
