@@ -20,7 +20,7 @@ import java.util.UUID;
 import static venn.VennEntryHandler.getWebColor;
 
 public class VennTextEntry extends Region {
-    @SerializedName("d")
+    @SerializedName("s")
     @Expose
     StringProperty data;
     @SerializedName("l")
@@ -49,9 +49,13 @@ public class VennTextEntry extends Region {
     @Expose
     Color draggableColor;
 
-    public VennTextEntry(String data) {
+    public VennTextEntry(String data, String description) {
         super();
         this.data = new SimpleStringProperty(data);
+        this.description = new SimpleStringProperty();
+        if (description != null) {
+            this.description.set(description);
+        }
 
         this.id = UUID.randomUUID().toString();
 
@@ -66,10 +70,6 @@ public class VennTextEntry extends Region {
         this.draggable = null;
 
         this.draw();
-    }
-    
-    public void setDescription(String s) {
-    	this.description = new SimpleStringProperty(s);; 
     }
     
     public void setLocation(EntryLocations location) {

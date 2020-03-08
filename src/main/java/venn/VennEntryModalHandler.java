@@ -18,15 +18,14 @@ import static venn.Main.changeHandler;
 
 public class VennEntryModalHandler {
     public static void add (VennEntryHandler handler) {
-        String[] add = VennEntryModalHandler.create("Add entry", "What do you want to add?", "Add", null, null, -1);
+        String[] add = VennEntryModalHandler.create("Add entry", "What do you want to add?", "Add", null, "", -1);
 
         if (add == null) return;
 
         System.out.println("change from add entry");
         changeHandler.calculateChange();
 
-        VennTextEntry entry = new VennTextEntry(add[0]);
-        entry.setDescription(add[1]);
+        VennTextEntry entry = new VennTextEntry(add[0], add[1]);
         handler.addEntry(entry, false);
     }
 
@@ -67,6 +66,7 @@ public class VennEntryModalHandler {
         window.setTitle(title);
         window.setWidth(400);
         window.setHeight(300);
+        if (des == null) window.setHeight(200);
 
         // prevents user to modify other window
         window.initModality(Modality.APPLICATION_MODAL);
@@ -91,6 +91,9 @@ public class VennEntryModalHandler {
         description.setWrapText(true);
         description.setMaxHeight(75);
         description.setMaxWidth(300);
+
+        Label descriptionLabel = new Label();
+        descriptionLabel.setText("Description");
         
         // cancel button
         Button closeButton = new Button("Cancel");
@@ -101,8 +104,6 @@ public class VennEntryModalHandler {
             desText.setText(description.getText());
             window.close();
         });
-        
-        
 
         //Add button.
         Button addButton = new Button(action);
@@ -118,9 +119,14 @@ public class VennEntryModalHandler {
         allButtons.getChildren().addAll(addButton , closeButton);
         allButtons.setAlignment(Pos.CENTER);
 
-        VBox layout = new VBox(20);
-        layout.getChildren().addAll(label, data, description, allButtons);
+        VBox layout = new VBox(10);
+        layout.getChildren().addAll(label, data);
         layout.setAlignment(Pos.CENTER);
+
+        if (des != null) {
+            layout.getChildren().addAll(descriptionLabel, description);
+        }
+        layout.getChildren().add(allButtons);
 
         Scene scene = new Scene(layout,100,100);
         window.setScene(scene);
