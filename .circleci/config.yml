@@ -87,7 +87,7 @@ jobs:
           name: "Build and Publish Release on GitHub"
           command: |
             NOW="$(date)"
-            ZIP_FILE_NAME=UnionApp
+            ZIP_FILE_NAME=Venn
             TAG=Release-$(date '+%Y-%m-%d-%H-%M-%S')
             gradle jar
             cd ./build/libs/
