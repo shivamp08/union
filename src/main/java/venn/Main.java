@@ -65,6 +65,16 @@ public class Main extends Application {
 		vennScroller.fitToHeightProperty().set(true);
 		vennScroller.fitToWidthProperty().set(true);
 
+		VennAnimatedZoomHandler zoomOperator = new VennAnimatedZoomHandler();
+		holder.setOnScroll(event -> {
+			double zoomFactor = 1.5;
+			if (event.getDeltaY() <= 0) {
+				// zoom out
+				zoomFactor = 1 / zoomFactor;
+			}
+			zoomOperator.zoom(holder, zoomFactor, event.getSceneX(), event.getSceneY());
+		});
+
 		mainLayout.setCenter(vennScroller);
 		
 		Rectangle2D r = Screen.getPrimary().getBounds();
