@@ -27,9 +27,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     compile 'org.hildan.fxgson:fx-gson:3.1.2'
 
-    compile 'javax.json:javax.json-api:1.1.4'
-    compile 'org.glassfish:javax.json:1.1.4'
-
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
 }
