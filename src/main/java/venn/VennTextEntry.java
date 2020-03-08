@@ -27,6 +27,10 @@ public class VennTextEntry extends Region {
     @Expose
     EntryLocations location;
     
+    @SerializedName("d")
+    @Expose
+    StringProperty description;
+    
     Region draggable;
     HBox pane;
     VennSection section;
@@ -63,7 +67,11 @@ public class VennTextEntry extends Region {
 
         this.draw();
     }
-
+    
+    public void setDescription(String s) {
+    	this.description = new SimpleStringProperty(s);; 
+    }
+    
     public void setLocation(EntryLocations location) {
         this.location = location;
     }
@@ -107,7 +115,7 @@ public class VennTextEntry extends Region {
         pane.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)){
                 if (event.getClickCount() == 2){
-                    VennEntryModalHandler.edit(this.data);
+                    VennEntryModalHandler.edit(this.data, this.description);
                 }
             }
         });
