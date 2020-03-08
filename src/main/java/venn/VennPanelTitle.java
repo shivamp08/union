@@ -1,5 +1,6 @@
 package venn;
 
+import javafx.beans.binding.StringBinding;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -8,13 +9,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 public class VennPanelTitle {
-	public static Pane create (String data, Boolean vertical, String className) {
+	public static Pane create (StringBinding binding, Boolean vertical, String className) {
 		Pane pane = new HBox();
 		if (vertical) {
 			pane = new VBox();	
 		}
 		
-		Label text = new Label(data);
+		Label text = new Label();
+		text.textProperty().bind(binding);
         pane.getChildren().addAll(text);
         
         if (pane instanceof HBox) {

@@ -9,6 +9,12 @@ This application can be widely used in the applications of mathematics, statisti
 To create an application that allows its users to create digital venn diagrams with ease. 
 
 ## Changelog
+#### Version 1.2.0
+- Multiple languages (French, English)
+- Undo/Redo
+- Import/Export
+- Descriptions for items on the venn diagram
+
 #### Version 1.1.0: 
 - Brand new User Interface, with a customization pane.
 - Improved Drag and Drop accuracy

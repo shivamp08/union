@@ -1,11 +1,11 @@
 package venn;
 
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -13,6 +13,9 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
+
+import java.util.Locale;
 
 import static venn.Main.changeHandler;
 
@@ -30,12 +33,17 @@ public class VennOptions {
     private static VBox createColorPicker (VennSection section) {
         VBox box = new VBox();
         ColorPicker picker = new ColorPicker();
-        Label label = new Label(section.sectionName.getValue() + " Color:");
+        Label label = new Label();
+        label.setText(VennInternationalization.get("options_color_title", section.sectionName.getValue()));
+
         box.getChildren().addAll(label, picker);
 
-        // bind for updates
+        // bind for updates on either language or section title
+        VennInternationalization.createStringBinding("options_color_title").addListener((obs, oldValue, newValue) -> {
+            label.setText(VennInternationalization.get("options_color_title", section.sectionName.getValue()));
+        });
         section.sectionName.addListener((event, old, newValue) -> {
-            label.textProperty().set(newValue + " Color:");
+            label.setText(VennInternationalization.get("options_color_title", section.sectionName.getValue()));
         });
 
 //        picker.prefWidthProperty().bind(box.widthProperty());
@@ -72,9 +80,9 @@ public class VennOptions {
         window.initModality(Modality.APPLICATION_MODAL);
 
         //Add button.
-        Button okButton = new Button("Ok");
+        Button okButton = new Button();
+        okButton.textProperty().bind(VennInternationalization.createStringBinding("options_ok"));
         okButton.setOnAction(e -> {
-            changeHandler.calculateChange();
             window.close();
         });
 
@@ -83,9 +91,33 @@ public class VennOptions {
         allButtons.getChildren().addAll(okButton);
         allButtons.setAlignment(Pos.CENTER);
 
+        ComboBox<Locale> languages = new ComboBox<>();
+        for (Locale locale : VennInternationalization.getSupportedLocales()) {
+            languages.getItems().add(locale);
+        }
+        languages.setValue(VennInternationalization.getLocale());
+        languages.setOnAction(event -> VennInternationalization.setLocale(languages.getValue()));
+
+        languages.setConverter(new StringConverter<Locale>() {
+            @Override
+            public String toString(Locale object) {
+                // display the friendly name
+                return object.getDisplayName(VennInternationalization.getLocale());
+            }
+
+            @Override
+            public Locale fromString(String string) {
+                return new Locale(string);
+            }
+        });
+
+        languages.setMaxWidth(300);
+
         VBox layout = new VBox(10);
         layout.getChildren().addAll(
-            VennPanelTitle.create("Colors", false, "left-column-title")
+            VennPanelTitle.create(VennInternationalization.createStringBinding("options_language_title"), false, "left-column-title"),
+            languages,
+            VennPanelTitle.create(VennInternationalization.createStringBinding("options_colors_title"), false, "left-column-title")
         );
         layout.setAlignment(Pos.CENTER);
 
@@ -99,16 +131,6 @@ public class VennOptions {
 
         Scene scene = new Scene(layout,100,100);
         scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
-
-        // some annoying code to make it actually detect when closing the window
-        window.sceneProperty().addListener((obs, oldScene, newScene) -> {
-            Platform.runLater(() -> {
-                Stage stage = (Stage) newScene.getWindow();
-                stage.setOnCloseRequest(e -> {
-                    changeHandler.calculateChange();
-                });
-            });
-        });
 
         window.setScene(scene);
         window.setResizable(false);

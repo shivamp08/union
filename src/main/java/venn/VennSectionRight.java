@@ -4,7 +4,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 
 public class VennSectionRight extends VennSection {
     public VennSectionRight (Scene scene, Main app) {

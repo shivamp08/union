@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 import static venn.Main.changeHandler;
 
@@ -60,7 +61,8 @@ public class VennLeftColumn {
 
     private Button getAddButton () {
         Tooltip CtrlN = new Tooltip("CTRL/CMD + N");
-        Button add = new Button("Add Entry");
+        Button add = new Button();
+        add.textProperty().bind(VennInternationalization.createStringBinding("add_entry_button"));
         add.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(add, Priority.ALWAYS);
 
@@ -81,7 +83,8 @@ public class VennLeftColumn {
 //    }
 
     private Button getOptionsButton () {
-        Button optionsButton = new Button("Options");
+        Button optionsButton = new Button();
+        optionsButton.textProperty().bind(VennInternationalization.createStringBinding("options_button"));
         optionsButton.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(optionsButton, Priority.ALWAYS);
 
@@ -92,11 +95,12 @@ public class VennLeftColumn {
     }
 
     private Button getScreenshotButton () {
-        Button optionsButton = new Button("Save Screenshot");
-        optionsButton.setMaxWidth(Double.MAX_VALUE);
-        HBox.setHgrow(optionsButton, Priority.ALWAYS);
+        Button saveScreenshotButton = new Button();
+        saveScreenshotButton.textProperty().bind(VennInternationalization.createStringBinding("screenshot_button"));
+        saveScreenshotButton.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(saveScreenshotButton, Priority.ALWAYS);
 
-        optionsButton.setOnAction(event -> {
+        saveScreenshotButton.setOnAction(event -> {
             File file = getFileLocationFromChooser(this.app.stage, "png", true);
             if (file != null) {
                 boolean success = this.saveScreenshot(file);
@@ -104,13 +108,14 @@ public class VennLeftColumn {
             }
         });
 
-        return optionsButton;
+        return saveScreenshotButton;
     }
 
     private HBox getImportExportButtons () {
         HBox importExportButtons = new HBox(5);
 
-        Button importButton = new Button("Import");
+        Button importButton = new Button();
+        importButton.textProperty().bind(VennInternationalization.createStringBinding("import_button"));
         importButton.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(importButton, Priority.ALWAYS);
 
@@ -118,7 +123,8 @@ public class VennLeftColumn {
             fileHandler.importVenn();
         });
 
-        Button exportButton = new Button("Export");
+        Button exportButton = new Button();
+        exportButton.textProperty().bind(VennInternationalization.createStringBinding("export_button"));
         exportButton.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(exportButton, Priority.ALWAYS);
 
@@ -133,7 +139,8 @@ public class VennLeftColumn {
     private HBox getUndoRedoButtons () {
         HBox undoRedoButtons = new HBox(5);
 
-        Button undoButton = new Button("Undo");
+        Button undoButton = new Button();
+        undoButton.textProperty().bind(VennInternationalization.createStringBinding("undo_button"));
         undoButton.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(undoButton, Priority.ALWAYS);
 
@@ -143,7 +150,8 @@ public class VennLeftColumn {
         undoButton.setDisable(true);
         undoButton.disableProperty().bind(changeHandler.canUndo.not());
 
-        Button redoButton = new Button("Redo");
+        Button redoButton = new Button();
+        redoButton.textProperty().bind(VennInternationalization.createStringBinding("redo_button"));
         redoButton.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(redoButton, Priority.ALWAYS);
 
@@ -242,15 +250,15 @@ public class VennLeftColumn {
 
         // color pickers
         top.getChildren().addAll(
-            VennPanelTitle.create("Add Entries", false, "left-column-title"),
+            VennPanelTitle.create(VennInternationalization.createStringBinding("add_entry_title"), false, "left-column-title"),
             addButton,
-            VennPanelTitle.create("Options", false, "left-column-title"),
+            VennPanelTitle.create(VennInternationalization.createStringBinding("options_title"), false, "left-column-title"),
             optionsButton,
-            VennPanelTitle.create("Screenshot", false, "left-column-title"),
+            VennPanelTitle.create(VennInternationalization.createStringBinding("screenshot_title"), false, "left-column-title"),
             screenshotButton,
-            VennPanelTitle.create("Export/Import", false, "left-column-title"),
+            VennPanelTitle.create(VennInternationalization.createStringBinding("import_export_title"), false, "left-column-title"),
             importExportHBox,
-            VennPanelTitle.create("Redo/Undo", false, "left-column-title"),
+            VennPanelTitle.create(VennInternationalization.createStringBinding("undo_redo_title"), false, "left-column-title"),
             undoRedoBox
         );
 
