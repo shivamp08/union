@@ -59,7 +59,6 @@ public class VennChangeHandler {
                 System.out.println("ignoring change since same as last");
             } else {
                 System.out.println("adding change");
-
                 undo.push(current);
             }
             redo.clear(); /* The redoable objects must be removed. */
@@ -94,7 +93,7 @@ public class VennChangeHandler {
             String last = undo.pop();
 
             String current = this.getCurrentString();
-            if (last.contentEquals(current) && undo.size() > 1) {
+            if (last.contentEquals(current) && undo.size() > 0) {
                 if (!redo.contains(last)) redo.push(last);
                 last = undo.peek();
             }
@@ -111,7 +110,7 @@ public class VennChangeHandler {
             String next = redo.pop();
 
             String current = this.getCurrentString();
-            if (next.contentEquals(current) && redo.size() > 1) {
+            if (next.contentEquals(current) && redo.size() > 0) {
                 if (!undo.contains(next)) undo.push(next);
                 next = redo.pop();
             }
