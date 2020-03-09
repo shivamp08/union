@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXProgressBar?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<Group fx:id="rootGroup" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="venn.SplashController">
+   <children>
+      <ImageView fitHeight="437.0" fitWidth="792.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Image/4-space.jpg" />
+         </image>
+      </ImageView>
+      <Text fill="#80b853" layoutX="51.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="VENN DIAGRAMS">
+         <font>
+            <Font name="Constantia Italic" size="78.0" />
+         </font>
+      </Text>
+      <Circle blendMode="SCREEN" fill="#ff1f62" layoutX="286.0" layoutY="219.0" opacity="0.82" radius="120.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle blendMode="SCREEN" fill="#15eb35" layoutX="441.0" layoutY="219.0" opacity="0.82" radius="120.0" stroke="BLACK" strokeType="INSIDE" />
+      <JFXProgressBar layoutX="26.0" layoutY="411.0" prefHeight="12.0" prefWidth="677.0" />
+   </children>
+</Group>
