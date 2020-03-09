@@ -19,13 +19,14 @@ import static venn.Main.changeHandler;
 
 public class VennEntryModalHandler {
     public static void add (VennEntryHandler handler) {
+        final int maxLength = 40;
         String[] add = VennEntryModalHandler.create(
             VennInternationalization.createStringBinding("add_title"),
-            VennInternationalization.createStringBinding("add_prompt"),
+            VennInternationalization.createStringBinding("add_prompt", maxLength),
             VennInternationalization.createStringBinding("add_action"),
             null,
             "",
-            -1
+            maxLength
         );
 
         if (add == null) return;
@@ -35,6 +36,8 @@ public class VennEntryModalHandler {
 
         VennTextEntry entry = new VennTextEntry(add[0], add[1]);
         handler.addEntry(entry, false);
+
+        changeHandler.calculateChange();
     }
 
     public static void edit (StringProperty currTitle, StringProperty currDes) {
