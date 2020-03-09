@@ -23,6 +23,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class Main extends Application {
 	
@@ -139,13 +140,15 @@ public class Main extends Application {
 //            event.consume();
 //        });
 		
-		Parent root = FXMLLoader.load(getClass().getResource("VennFXML_Main.fxml"));														
+		Parent root = FXMLLoader.load(getClass().getResource("SplashFXML.fxml"));														
 
-		stage.setTitle("Venn");
+		//stage.setTitle("Venn");
 
 		
-		this.scene = new Scene(root, 1000, 700);
-//		this.scene.setFill(Color.web("#f6f8fa"));
+		this.scene = new Scene(root);
+		stage.setResizable(false);
+		stage.sizeToScene();
+		stage.initStyle(StageStyle.UNDECORATED);
 		stage.setScene(scene);
 		stage.show(); 
 	}
