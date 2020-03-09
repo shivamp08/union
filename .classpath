@@ -21,5 +21,8 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry kind="lib" path="C:/Users/rusha/Downloads/gson-2.8.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/rusha/Downloads/jar_files/fx-gson-3.1.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/rusha/Downloads/jfoenix-8.0.8.jar"/>
 	<classpathentry kind="output" path="bin/default"/>
 </classpath>
