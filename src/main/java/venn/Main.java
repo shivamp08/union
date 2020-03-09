@@ -14,6 +14,8 @@ import javafx.scene.input.*;
 
 import java.util.Locale;
 
+import com.jfoenix.controls.JFXDrawer;
+
 public class Main extends Application {
 
 	// initial resolution, 720p
@@ -84,6 +86,7 @@ public class Main extends Application {
 
 		this.leftColumn = new VennLeftColumn(this);
 		this.entries = new VennEntryHandler(this);
+		
 
 		// draw the main three sections
 		this.drawVenn();
@@ -96,7 +99,7 @@ public class Main extends Application {
 		// give the entry handler it's container
 		this.entries.setContainer(this.leftColumn.entries);
 
-		mainLayout.setLeft(this.leftColumn.root);
+		mainLayout.setLeft(this.leftColumn.drawer);
 		
 		mainLayout.prefHeightProperty().bind(scene.heightProperty());
         mainLayout.prefWidthProperty().bind(scene.widthProperty());
