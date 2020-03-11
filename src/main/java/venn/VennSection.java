@@ -2,6 +2,7 @@ package venn;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
@@ -47,6 +48,7 @@ public abstract class VennSection {
     @SerializedName("n")
     @Expose
     protected StringProperty sectionName;
+    protected StringBinding sectionInternationalizedBinding;
 
     VennEntryHandler handler;
 
@@ -99,6 +101,13 @@ public abstract class VennSection {
     private double getXPosition () {
         int multiplier = this.getMultiplier();
         return width + (multiplier * (this.radius / 2));
+    }
+
+    protected void bindSectionNameTranslation () {
+        // conditionally update iff the value has not changed from the translations
+        this.sectionInternationalizedBinding.addListener((observable, oldValue, newValue) -> {
+            if (this.sectionName.getValue().contentEquals(oldValue)) this.sectionName.set(newValue);
+        });
     }
 
     protected void bindColorCopy () {
