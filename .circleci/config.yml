@@ -8,7 +8,8 @@ jobs:
     docker:
       # specify the version you desire here
       #- image: circleci/openjdk:8-jdk
-      - image: eecs2311/j8-gradle-node:1.0
+#      - image: danielmapar/gradle_and_node:2.0
+      - image: circleci/jdk8:0.1.1
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -32,6 +33,46 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
+      - run:
+          name: "Install Packages"
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y curl
+            sudo apt-get install -y unzip
+            sudo apt-get install -y zip
+
+      - run:
+          name: "Install Node"
+          command: |
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.2/install.sh | bash
+            export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            echo 'export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"' >> $BASH_ENV
+            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $BASH_ENV
+            nvm install 13
+            node -v
+            sudo ln -s "$NVM_DIR/versions/node/$(nvm version)/bin/node" "/usr/local/bin/node"
+            sudo ln -s "$NVM_DIR/versions/node/$(nvm version)/bin/npm" "/usr/local/bin/npm"
+
+      - run:
+          name: "Install Gradle"
+          command: |
+            wget https://services.gradle.org/distributions/gradle-6.2.1-bin.zip -P /tmp
+            sudo unzip -d /opt/gradle /tmp/gradle-*.zip
+            echo 'export GRADLE_HOME=/opt/gradle/gradle-6.2.1' >> $BASH_ENV
+            echo 'export PATH=${GRADLE_HOME}/bin:${PATH}' >> $BASH_ENV
+            export GRADLE_HOME=/opt/gradle/gradle-6.2.1
+            export PATH=${GRADLE_HOME}/bin:${PATH}
+            gradle -v
+
+      - run:
+          name: "Install Node Modules"
+          command: |
+            node -v
+            npm config set user 0
+            npm config set unsafe-perm true
+            sudo npm install -g github-release-cli
+
       - run: gradle dependencies
 
       - save_cache:
@@ -48,13 +89,9 @@ jobs:
             NOW="$(date)"
             TAG=Release-$(date '+%Y-%m-%d-%H-%M-%S')
             gradle jar
-
             cd ./build/libs/
-
             mv Venn.jar UnionApp.jar
-
-            github-release upload --token ${GITHUB_TOKEN} --owner ${PROJECT_USERNAME} --repo ${PROJECT_REPONAME} --tag ${TAG} --name ${TAG} --body "Release date: ${NOW}" UnionApp.jar
-
+            github-release upload --token ${GITHUB_TOKEN} --owner ${PROJECT_USERNAME} --repo ${PROJECT_REPONAME} --tag ${TAG} --name ${TAG} --body "Release date: ${NOW}" UnionApp.zip
 
 workflows:
   version: 2
