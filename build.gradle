@@ -24,16 +24,23 @@ dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:28.0-jre'
 
-    implementation 'com.google.code.gson:gson:2.8.6'
-    compile 'org.hildan.fxgson:fx-gson:3.1.2'
+    compile (
+        'com.google.code.gson:gson:2.8.6',
+        'org.hildan.fxgson:fx-gson:3.1.2'
+    )
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.1'
 }
 
 jar {
     manifest {
         attributes 'Main-Class': 'venn.Main'
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 

@@ -51,15 +51,15 @@ public class VennTest {
     @Test
     public void manualTest() throws InterruptedException {
     	Platform.runLater(() -> {
-    		frame.entries.addEntry(
-    			new VennTextEntry("manual test")
-    		);
-    		frame.entries.addEntry(
-    			new VennTextEntry("drag me 1")
-    		);
-    		frame.entries.addEntry(
-    			new VennTextEntry("drag me 2")
-    		);
+//    		frame.entries.addEntry(
+//    			new VennTextEntry("manual test")
+//    		);
+//    		frame.entries.addEntry(
+//    			new VennTextEntry("drag me 1")
+//    		);
+//    		frame.entries.addEntry(
+//    			new VennTextEntry("drag me 2")
+//    		);
     	});
     	Thread.sleep(60000);
     }
@@ -68,9 +68,9 @@ public class VennTest {
     public void testAddEntry() throws InterruptedException {
     	Thread.sleep(1000);
     	Platform.runLater(() -> {
-    		frame.entries.addEntry(
-    			new VennTextEntry("hello")
-    		);
+//    		frame.entries.addEntry(
+//    			new VennTextEntry("hello")
+//    		);
     	});
         Thread.sleep(1000);
     }
@@ -80,9 +80,9 @@ public class VennTest {
     	Thread.sleep(1000);
     	Platform.runLater(() -> {
     		for (int i = 0; i < 100; i++) {
-    			frame.entries.addEntry(
-	    			new VennTextEntry("entry #" + i)
-	    		);
+//    			frame.entries.addEntry(
+//	    			new VennTextEntry("entry #" + i)
+//	    		);
     		}
     	});
         Thread.sleep(1000);
