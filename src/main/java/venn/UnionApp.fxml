@@ -23,16 +23,16 @@
          <children>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #DCDCDC;">
                <children>
-                  <ImageView fitHeight="178.0" fitWidth="189.0" layoutX="82.0" layoutY="130.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="234.0" fitWidth="240.0" layoutX="51.0" layoutY="102.0">
                      <image>
-                        <Image url="@../../../../../../Desktop/7b3825df-6413-4974-a7d8-cbea76352349_200x200.png" />
+                        <Image url="@../../../../../../Desktop/Screen%20Shot%202020-03-13%20at%2011.03.39%20AM.png" />
                      </image>
                   </ImageView>
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #F0F8FF #F0F8FF#708090#708090;" GridPane.columnIndex="1">
                <children>
-                  <JFXButton fx:id="beginApp" layoutX="77.0" layoutY="206.0" onAction="#begin" onMouseClicked="#begin" prefHeight="27.0" prefWidth="189.0" style="-fx-background-color: #2a345b;" text="Click Here To Begin!" textFill="ALICEBLUE">
+                  <JFXButton fx:id="beginApp" layoutX="77.0" layoutY="206.0" onAction="#begin" onMouseClicked="#begin" prefHeight="27.0" prefWidth="189.0" style="-fx-background-color: #2a345b;" text="Click Here To Begin!" textFill="#faffff">
                      <font>
                         <Font size="15.0" />
                      </font>
