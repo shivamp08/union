@@ -1,6 +1,7 @@
 package venn;
 
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -15,6 +16,8 @@ import javafx.scene.input.*;
 import java.util.Locale;
 
 import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXHamburger;
+import com.jfoenix.transitions.hamburger.HamburgerSlideCloseTransition;
 
 public class Main extends Application {
 
@@ -33,6 +36,8 @@ public class Main extends Application {
 	VennSectionLeft left;
 	VennSectionRight right;
 	VennIntersection intersection;
+	
+	JFXHamburger ham;
 
 	public static VennChangeHandler changeHandler;
 
@@ -77,6 +82,27 @@ public class Main extends Application {
 //			}
 //			zoomOperator.zoom(holder, zoomFactor, event.getSceneX(), event.getSceneY());
 //		});
+		
+		
+		this.ham = new JFXHamburger();
+		HamburgerSlideCloseTransition transition = new HamburgerSlideCloseTransition(ham);
+		 transition.setRate(-1);
+	        ham.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> {
+	            transition.setRate(transition.getRate() * -1);
+	            transition.play();
+	            
+	            
+	            if (this.leftColumn.drawer.isOpened()) {
+	            	this.leftColumn.drawer.close();
+	            } else {
+	                this.leftColumn.drawer.open();
+	            }
+	        });
+		
+		
+		
+		
+
 
 		mainLayout.setCenter(vennScroller);
 		
@@ -97,9 +123,17 @@ public class Main extends Application {
 		this.leftColumn.draw();
 
 		// give the entry handler it's container
-		this.entries.setContainer(this.leftColumn.entries);
-
-		mainLayout.setLeft(this.leftColumn.drawer);
+		//this.entries.setContainer(this.leftColumn.entries);
+		this.entries.setContainer(this.leftColumn.mEntries);
+		
+		mainLayout.setTop(this.leftColumn.mpane);
+		this.leftColumn.mpane.setPrefHeight(0);
+		this.leftColumn.mpane.setPrefWidth(1000);
+		//this.leftColumn.mpane.setMinSize(10000, 20);
+		BorderPane.setAlignment(this.leftColumn.mpane, Pos.BASELINE_CENTER);
+		
+		
+		mainLayout.setLeft(this.leftColumn.root);
 		
 		mainLayout.prefHeightProperty().bind(scene.heightProperty());
         mainLayout.prefWidthProperty().bind(scene.widthProperty());

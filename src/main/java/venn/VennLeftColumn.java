@@ -17,6 +17,7 @@ import javax.imageio.ImageIO;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDrawer;
+import com.jfoenix.controls.JFXMasonryPane;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,9 +30,13 @@ public class VennLeftColumn {
     JFXDrawer drawer;
 
     VBox entries;
+    
 
     VennEntryHandler handler;
     VennDeleteEntry trash;
+    
+    JFXMasonryPane mpane;
+    JFXMasonryPane mEntries;
 
     Main app;
 
@@ -74,7 +79,6 @@ public class VennLeftColumn {
 
         add.setOnAction(event -> VennEntryModalHandler.add(this.handler));
         Tooltip.install(add, CtrlN);
-
         return add;
     }
 
@@ -235,8 +239,10 @@ public class VennLeftColumn {
         topContainer.getChildren().add(top);
         HBox bottomContainer = new HBox(5);
         VBox bottom = new VBox(3);
+        JFXMasonryPane mbottom = new JFXMasonryPane();
 //        bottomContainer.getChildren().add(bottom);
         this.entries = bottom;
+        this.mEntries = mbottom;
 
         top.prefHeightProperty().bind(root.heightProperty());
         bottom.prefHeightProperty().bind(root.heightProperty());
@@ -285,6 +291,14 @@ public class VennLeftColumn {
         bottomScrollable.fitToWidthProperty().set(true);
 //        bottom.getChildren().add(bottomScrollable);
         bottomContainer.getChildren().add(bottomScrollable);
+        this.mpane = new JFXMasonryPane();
+        System.out.print(mpane.getCellHeight()+" "+ mpane.getCellWidth());
+        
+        mpane.setLayoutMode(com.jfoenix.controls.JFXMasonryPane.LayoutMode.BIN_PACKING);
+        this.mpane.getChildren().add(this.mEntries);
+        mpane.setPadding(padding);
+
+        
 
         root.getChildren().addAll(topContainer, bottomContainer);
 
