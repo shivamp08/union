@@ -98,6 +98,10 @@ public class VennTextEntry extends Region {
         //if (this.draggableColor == null) this.draggableColor = VennEntryHandler.generateColour();
 
         pane.setStyle("-fx-background-color: " + VennEntryHandler.getWebColor(draggableColor.getValue()));
+        
+        draggableColor.addListener((observable, oldValue, newValue) -> {
+        	pane.setStyle("-fx-background-color: " + VennEntryHandler.getWebColor(draggableColor.getValue()));
+        });
 
         Tooltip tooltip = new Tooltip();
         tooltip.textProperty().bind(this.string);
@@ -125,7 +129,7 @@ public class VennTextEntry extends Region {
         pane.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)){
                 if (event.getClickCount() == 2){
-                    VennEntryModalHandler.edit(this.string, this.description, this.draggableColor.getValue());
+                    VennEntryModalHandler.edit(this.string, this.description, this.draggableColor);
                 }
             }
         });

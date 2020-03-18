@@ -46,14 +46,14 @@ public class VennEntryModalHandler {
         changeHandler.calculateChange();
     }
 
-    public static void edit (StringProperty currTitle, StringProperty currDes, Color color) {
+    public static void edit (StringProperty currTitle, StringProperty currDes, ObjectProperty<Color> draggableColor) {
         String[] edited = VennEntryModalHandler.create(
             VennInternationalization.createStringBinding("edit_title"),
             VennInternationalization.createStringBinding("edit_prompt"),
             VennInternationalization.createStringBinding("edit_action"),
             currTitle.getValue(),
             currDes.getValue(),
-            color,
+            draggableColor.getValue(),
             -1
         );
 
@@ -64,6 +64,7 @@ public class VennEntryModalHandler {
 
         currTitle.set(edited[0]);
         currDes.set(edited[1]);
+        draggableColor.set(Color.valueOf(edited[2]));
     }
 
     public static void edit (StringProperty current, int maxLength) {
