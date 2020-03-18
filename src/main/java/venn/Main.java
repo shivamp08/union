@@ -1,8 +1,10 @@
 package venn;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -12,6 +14,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.input.*;
 
+import java.io.IOException;
 import java.util.Locale;
 
 public class Main extends Application {
@@ -21,7 +24,9 @@ public class Main extends Application {
 	private static final int height = 720;
 
 	protected Group vennGroup;
-	private Scene scene;
+	 Scene scene;
+	private Scene wscene;
+	
 	protected Stage stage;
 
 	VennEntryHandler entries;
@@ -50,7 +55,7 @@ public class Main extends Application {
 	}
 
 	@Override
-	public void start(Stage stage) {
+	public void start(Stage stage) throws IOException {
 		this.stage = stage;
 
 		changeHandler = new VennChangeHandler(this);
@@ -118,11 +123,12 @@ public class Main extends Application {
 
 //		System.out.println("initial change");
 //		changeHandler.calculateChange();
-
+		Parent root = FXMLLoader.load(getClass().getResource("StartWindow.fxml"));
+		this.wscene = new Scene(root);
 		stage.titleProperty().bind(VennInternationalization.createStringBinding("app_title"));
-		stage.setScene(scene);
-		stage.setMinHeight(height);
-		stage.setMaximized(true);
+		stage.setScene(wscene);
+//		stage.setMinHeight(height);
+//		stage.setMaximized(true);
 //		stage.setMinWidth(width);
 //		stage.setResizable(false);
 		Image icon = new Image(getClass().getResource("/logo.png").toExternalForm());
