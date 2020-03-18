@@ -125,7 +125,7 @@ public class Main extends Application {
 		stage.setMaximized(true);
 //		stage.setMinWidth(width);
 //		stage.setResizable(false);
-		Image icon = new Image(getClass().getResource("/logo.png").toExternalForm());
+		Image icon = new Image(getClass().getResource("/Iconlogo.png").toExternalForm());
 		stage.getIcons().add(icon);
 		stage.show(); 
 	}
