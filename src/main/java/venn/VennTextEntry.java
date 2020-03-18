@@ -2,6 +2,9 @@ package venn;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
@@ -17,7 +20,7 @@ import javafx.scene.paint.Color;
 
 import java.util.UUID;
 
-import static venn.VennEntryHandler.getWebColor;
+//import static venn.VennEntryHandler.getWebColor;
 
 public class VennTextEntry extends Region {
     @SerializedName("s")
@@ -47,15 +50,18 @@ public class VennTextEntry extends Region {
 
     @SerializedName("c")
     @Expose
-    Color draggableColor;
+    ObjectProperty<Color> draggableColor;
 
-    public VennTextEntry(String string, String description) {
+    public VennTextEntry(String string, String description, String color) {
         super();
         this.string = new SimpleStringProperty(string);
         this.description = new SimpleStringProperty();
         if (description != null) {
             this.description.set(description);
         }
+        
+        draggableColor =  new SimpleObjectProperty<Color>(Color.valueOf(color));
+
 
         this.id = UUID.randomUUID().toString();
 
@@ -73,7 +79,7 @@ public class VennTextEntry extends Region {
     }
 
     public VennTextEntry(String string) {
-        this(string, null);
+        this(string, null, null);
     }
     
     public void setLocation(EntryLocations location) {
@@ -89,9 +95,9 @@ public class VennTextEntry extends Region {
 
         pane.getStyleClass().add("rounded-label");
 
-        if (this.draggableColor == null) this.draggableColor = VennEntryHandler.generateColour();
+        //if (this.draggableColor == null) this.draggableColor = VennEntryHandler.generateColour();
 
-        pane.setStyle("-fx-background-color: " + getWebColor(this.draggableColor));
+        pane.setStyle("-fx-background-color: " + VennEntryHandler.getWebColor(draggableColor.getValue()));
 
         Tooltip tooltip = new Tooltip();
         tooltip.textProperty().bind(this.string);
@@ -119,7 +125,7 @@ public class VennTextEntry extends Region {
         pane.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)){
                 if (event.getClickCount() == 2){
-                    VennEntryModalHandler.edit(this.string, this.description);
+                    VennEntryModalHandler.edit(this.string, this.description, this.draggableColor.getValue());
                 }
             }
         });

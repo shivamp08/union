@@ -43,30 +43,30 @@ public class VennEntryHandler {
      * Generates a light color
      * @return the color
      */
-    public static Color generateColour() {
-    	String[] mColors = {
-                "#39add1", // light blue
-                "#3079ab", // dark blue
-                "#c25975", // mauve
-                "#e15258", // red
-                "#f9845b", // orange
-                "#838cc7", // lavender
-                "#7d669e", // purple
-                "#53bbb4", // aqua
-                "#51b46d", // green
-                "#e0ab18", // mustard
-                "#637a91", // dark gray
-                "#f092b0", // pink
-                "#b7c0c7"  // light gray
-        };
-    	
-    	Random randomGenerator = new Random(); // Construct a new Random number generator
-        int randomNumber = randomGenerator.nextInt(mColors.length);
-
-        String color = mColors[randomNumber];
-        return Color.web(color);
-    }
-
+//    public static Color generateColour() {
+//    	String[] mColors = {
+//                "#39add1", // light blue
+//                "#3079ab", // dark blue
+//                "#c25975", // mauve
+//                "#e15258", // red
+//                "#f9845b", // orange
+//                "#838cc7", // lavender
+//                "#7d669e", // purple
+//                "#53bbb4", // aqua
+//                "#51b46d", // green
+//                "#e0ab18", // mustard
+//                "#637a91", // dark gray
+//                "#f092b0", // pink
+//                "#b7c0c7"  // light gray
+//        };
+//    	
+//    	Random randomGenerator = new Random(); // Construct a new Random number generator
+//        int randomNumber = randomGenerator.nextInt(mColors.length);
+//
+//        String color = mColors[randomNumber];
+//        return Color.web(color);
+//    }
+//
     public static String getWebColor (Color color) {
         return String.format( "#%02X%02X%02X",
                 (int)( color.getRed() * 255 ),
@@ -103,14 +103,14 @@ public class VennEntryHandler {
             // darken the circle
             if (entry.draggable != null) {
                 Region draggable = entry.draggable;
-                draggable.setStyle("-fx-background-color: " + getWebColor(entry.draggableColor.darker()));
+                //draggable.setStyle("-fx-background-color: " + getWebColor(entry.draggableColor.darker()));
             }
         });
         pane.setOnMouseExited(event -> {
             // reset circle back to original
             if (entry.draggable != null) {
                 Region draggable = entry.draggable;
-                draggable.setStyle("-fx-background-color: " + getWebColor(entry.draggableColor));
+                //draggable.setStyle("-fx-background-color: " + getWebColor(entry.draggableColor));
             }
         });
     }
