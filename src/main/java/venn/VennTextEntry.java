@@ -17,6 +17,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import java.util.UUID;
 
@@ -51,8 +52,12 @@ public class VennTextEntry extends Region {
     @SerializedName("c")
     @Expose
     ObjectProperty<Color> draggableColor;
+    
+    @SerializedName("f")
+    @Expose
+    ObjectProperty<Font> draggableFont;
 
-    public VennTextEntry(String string, String description, String color) {
+    public VennTextEntry(String string, String description, String color, Font font) {
         super();
         this.string = new SimpleStringProperty(string);
         this.description = new SimpleStringProperty();
@@ -61,7 +66,7 @@ public class VennTextEntry extends Region {
         }
         
         draggableColor =  new SimpleObjectProperty<Color>(Color.valueOf(color));
-
+        draggableFont = new SimpleObjectProperty<Font>(font); 
 
         this.id = UUID.randomUUID().toString();
 
@@ -79,7 +84,7 @@ public class VennTextEntry extends Region {
     }
 
     public VennTextEntry(String string) {
-        this(string, null, null);
+        this(string, null, null, null);
     }
     
     public void setLocation(EntryLocations location) {
@@ -91,7 +96,12 @@ public class VennTextEntry extends Region {
         Label label = new Label("");
         label.textProperty().bind(this.string);
         label.setTextFill(Color.BLACK);
-        label.setStyle("-fx-font-weight: bold;");
+        label.setFont(draggableFont.getValue());
+        
+        draggableFont.addListener((observable, oldValue, newValue) -> {
+        	label.setFont(draggableFont.getValue());
+        });
+        
 
         pane.getStyleClass().add("rounded-label");
 
@@ -129,7 +139,7 @@ public class VennTextEntry extends Region {
         pane.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)){
                 if (event.getClickCount() == 2){
-                    VennEntryModalHandler.edit(this.string, this.description, this.draggableColor);
+                    VennEntryModalHandler.edit(this.string, this.description, this.draggableColor, this.draggableFont);
                 }
             }
         });
