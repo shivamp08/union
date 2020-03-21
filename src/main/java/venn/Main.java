@@ -38,9 +38,9 @@ public class Main extends Application {
 		super();
 	}
 
-	public static void main(String[] args) {
-		launch(args);
-	}
+//	public static void main(String[] args) {
+//		launch(args);
+//	}
 	
 	private void drawVenn() {
 		this.left = new VennSectionLeft(scene, this);
