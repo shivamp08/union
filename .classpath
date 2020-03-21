@@ -32,5 +32,8 @@
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
+	<classpathentry kind="lib" path="C:/Users/rusha/Downloads/jar_files/annotations-15.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/rusha/Downloads/jar_files/fx-gson-3.1.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/rusha/Downloads/jar_files/gson-2.8.1.jar"/>
 	<classpathentry kind="output" path="bin/default"/>
 </classpath>
