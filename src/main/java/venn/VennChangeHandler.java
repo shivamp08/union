@@ -11,7 +11,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class VennChangeHandler {
-    Main app;
+    MainWindow app;
 
     private final Deque<String> undo;
     private final Deque<String> redo;
@@ -21,8 +21,8 @@ public class VennChangeHandler {
 
     private int sizeMax;
 
-    public VennChangeHandler(Main app) {
-        this.app = app;
+    public VennChangeHandler(MainWindow mainWindow) {
+        this.app = mainWindow;
 
         undo = new ArrayDeque<>();
         redo = new ArrayDeque<>();

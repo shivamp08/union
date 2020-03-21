@@ -14,11 +14,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
-
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXDrawer;
-import com.jfoenix.controls.JFXMasonryPane;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
@@ -27,16 +22,11 @@ import static venn.Main.changeHandler;
 
 public class VennLeftColumn {
     VBox root;
-    JFXDrawer drawer;
 
     VBox entries;
-    
 
     VennEntryHandler handler;
     VennDeleteEntry trash;
-    
-    JFXMasonryPane mpane;
-    JFXMasonryPane mEntries;
 
     Main app;
 
@@ -71,14 +61,14 @@ public class VennLeftColumn {
 
     private Button getAddButton () {
         Tooltip CtrlN = new Tooltip("CTRL/CMD + N");
-        JFXButton add = new JFXButton();
-        add.setButtonType(com.jfoenix.controls.JFXButton.ButtonType.RAISED);
+        Button add = new Button();
         add.textProperty().bind(VennInternationalization.createStringBinding("add_entry_button"));
         add.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(add, Priority.ALWAYS);
 
         add.setOnAction(event -> VennEntryModalHandler.add(this.handler));
         Tooltip.install(add, CtrlN);
+
         return add;
     }
 
@@ -93,8 +83,7 @@ public class VennLeftColumn {
 //    }
 
     private Button getOptionsButton () {
-    	JFXButton optionsButton = new JFXButton();
-    	optionsButton.setButtonType(com.jfoenix.controls.JFXButton.ButtonType.RAISED);
+        Button optionsButton = new Button();
         optionsButton.textProperty().bind(VennInternationalization.createStringBinding("options_button"));
         optionsButton.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(optionsButton, Priority.ALWAYS);
@@ -106,8 +95,7 @@ public class VennLeftColumn {
     }
 
     private Button getScreenshotButton () {
-    	JFXButton saveScreenshotButton = new JFXButton();
-    	saveScreenshotButton.setButtonType(com.jfoenix.controls.JFXButton.ButtonType.RAISED);
+        Button saveScreenshotButton = new Button();
         saveScreenshotButton.textProperty().bind(VennInternationalization.createStringBinding("screenshot_button"));
         saveScreenshotButton.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(saveScreenshotButton, Priority.ALWAYS);
@@ -126,8 +114,7 @@ public class VennLeftColumn {
     private HBox getImportExportButtons () {
         HBox importExportButtons = new HBox(5);
 
-        JFXButton importButton = new JFXButton();
-        importButton.setButtonType(com.jfoenix.controls.JFXButton.ButtonType.RAISED);
+        Button importButton = new Button();
         importButton.textProperty().bind(VennInternationalization.createStringBinding("import_button"));
         importButton.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(importButton, Priority.ALWAYS);
@@ -136,8 +123,7 @@ public class VennLeftColumn {
             fileHandler.importVenn();
         });
 
-        JFXButton exportButton = new JFXButton();
-        exportButton.setButtonType(com.jfoenix.controls.JFXButton.ButtonType.RAISED);
+        Button exportButton = new Button();
         exportButton.textProperty().bind(VennInternationalization.createStringBinding("export_button"));
         exportButton.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(exportButton, Priority.ALWAYS);
@@ -152,7 +138,8 @@ public class VennLeftColumn {
 
     private HBox getUndoRedoButtons () {
         HBox undoRedoButtons = new HBox(5);
-        JFXButton undoButton = new JFXButton();
+
+        Button undoButton = new Button();
         undoButton.textProperty().bind(VennInternationalization.createStringBinding("undo_button"));
         undoButton.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(undoButton, Priority.ALWAYS);
@@ -163,8 +150,7 @@ public class VennLeftColumn {
         undoButton.setDisable(true);
         undoButton.disableProperty().bind(changeHandler.canUndo.not());
 
-        JFXButton redoButton = new JFXButton();
-        redoButton.setButtonType(com.jfoenix.controls.JFXButton.ButtonType.RAISED);
+        Button redoButton = new Button();
         redoButton.textProperty().bind(VennInternationalization.createStringBinding("redo_button"));
         redoButton.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(redoButton, Priority.ALWAYS);
@@ -225,8 +211,7 @@ public class VennLeftColumn {
     }
 
     public void draw () {
-        root = new VBox();
-        root.setSpacing(5);
+        root = new VBox(5);
 
         Insets padding = new Insets(5);
 
@@ -239,10 +224,8 @@ public class VennLeftColumn {
         topContainer.getChildren().add(top);
         HBox bottomContainer = new HBox(5);
         VBox bottom = new VBox(3);
-        JFXMasonryPane mbottom = new JFXMasonryPane();
 //        bottomContainer.getChildren().add(bottom);
         this.entries = bottom;
-        this.mEntries = mbottom;
 
         top.prefHeightProperty().bind(root.heightProperty());
         bottom.prefHeightProperty().bind(root.heightProperty());
@@ -291,14 +274,6 @@ public class VennLeftColumn {
         bottomScrollable.fitToWidthProperty().set(true);
 //        bottom.getChildren().add(bottomScrollable);
         bottomContainer.getChildren().add(bottomScrollable);
-        this.mpane = new JFXMasonryPane();
-        System.out.print(mpane.getCellHeight()+" "+ mpane.getCellWidth());
-        
-        mpane.setLayoutMode(com.jfoenix.controls.JFXMasonryPane.LayoutMode.BIN_PACKING);
-        this.mpane.getChildren().add(this.mEntries);
-        mpane.setPadding(padding);
-
-        
 
         root.getChildren().addAll(topContainer, bottomContainer);
 
@@ -307,7 +282,5 @@ public class VennLeftColumn {
         VBox.setVgrow(bottomContainer, Priority.SOMETIMES);
         VBox.setVgrow(bottom, Priority.ALWAYS);
         HBox.setHgrow(bottom, Priority.ALWAYS);
-        this.drawer = new JFXDrawer();
-        this.drawer.getChildren().add(root);
     }
 }

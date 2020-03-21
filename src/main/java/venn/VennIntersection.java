@@ -8,8 +8,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 
 public class VennIntersection extends VennSection {
-    public VennIntersection(Scene scene, Main app, VennSectionLeft left, VennSectionRight right) {
-        super(scene, app);
+    public VennIntersection(Scene scene, MainWindow mainWindow, VennSectionLeft left, VennSectionRight right) {
+        super(scene, mainWindow);
 
         this.section = EntryLocations.Center;
         this.sectionName = new SimpleStringProperty("Intersection");

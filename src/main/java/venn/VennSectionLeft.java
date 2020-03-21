@@ -7,8 +7,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 public class VennSectionLeft extends VennSection {
-    public VennSectionLeft (Scene scene, Main app) {
-        super(scene, app);
+    public VennSectionLeft (Scene scene, MainWindow mainWindow) {
+        super(scene, mainWindow);
 
         this.section = EntryLocations.Left;
         this.sectionName = new SimpleStringProperty("Left");

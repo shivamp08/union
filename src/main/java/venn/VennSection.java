@@ -53,10 +53,10 @@ public abstract class VennSection {
     ObservableList<VennTextEntry> elements;
     Pane pane;
 
-    Main app;
+    MainWindow app;
 
-    public VennSection (Scene scene, Main app) {
-        this.handler = app.entries;
+    public VennSection (Scene scene, MainWindow mainWindow) {
+        this.handler = mainWindow.entries;
         this.scene = scene;
 
         this.shape = null;
@@ -64,7 +64,7 @@ public abstract class VennSection {
 
         this.pane = new VBox();
         this.elements = FXCollections.observableList(new ArrayList<>());
-        this.app = app;
+        this.app = mainWindow;
 
         this.radius = 300;
         this.width = 750;

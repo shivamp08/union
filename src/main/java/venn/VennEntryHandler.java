@@ -2,8 +2,6 @@ package venn;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.jfoenix.controls.JFXMasonryPane;
-
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
@@ -28,7 +26,7 @@ public class VennEntryHandler {
     @SerializedName("e")
     @Expose
     ArrayList<VennTextEntry> entries;
-    JFXMasonryPane container;
+    Pane container;
 
     Main app;
 
@@ -37,7 +35,7 @@ public class VennEntryHandler {
         this.entries = new ArrayList<>();
     }
 
-    public void setContainer (JFXMasonryPane container) {
+    public void setContainer (Pane container) {
         this.container = container;
     }
 

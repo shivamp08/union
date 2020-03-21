@@ -71,6 +71,10 @@ public class VennTextEntry extends Region {
 
         this.draw();
     }
+
+    public VennTextEntry(String string) {
+        this(string, null);
+    }
     
     public void setLocation(EntryLocations location) {
         this.location = location;
