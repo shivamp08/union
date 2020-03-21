@@ -28,10 +28,10 @@ public class VennEntryHandler {
     ArrayList<VennTextEntry> entries;
     Pane container;
 
-    Main app;
+    MainWindow app;
 
-    public VennEntryHandler (Main app) {
-        this.app = app;
+    public VennEntryHandler (MainWindow mainWindow) {
+        this.app = mainWindow;
         this.entries = new ArrayList<>();
     }
 
