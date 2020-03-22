@@ -101,7 +101,7 @@ public class Main extends Application {
 		allFonts.add("Tahoma");
 		allFonts.add("Times New Roman");
 	
-
+		//Setup Scroller
 		mainLayout.setCenter(vennScroller);
 		
 		Rectangle2D r = Screen.getPrimary().getBounds();
