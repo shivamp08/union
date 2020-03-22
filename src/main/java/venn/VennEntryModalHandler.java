@@ -140,13 +140,14 @@ public class VennEntryModalHandler {
         Label descriptionLabel = new Label();
         descriptionLabel.textProperty().bind(VennInternationalization.createStringBinding("modal_description"));
         
-        Label entryColor = new Label("Color:"); 
+        Label entryColor = new Label("Color:");
         ColorPicker picker = new ColorPicker();
-        HBox HColor = new HBox(5); 
-        HColor.getChildren().addAll(entryColor, picker); 
-        entryColor.setTranslateY(4);
-        HColor.setTranslateX(100);
+        HBox HColor = new HBox(5);
+        HColor.setMaxWidth(300);
+        HColor.getChildren().addAll(entryColor, picker);
+        HColor.setAlignment(Pos.CENTER_LEFT);
         
+<<<<<<< HEAD
 //        ComboBox<Label> fontSelector = new ComboBox<Label>(); 
 //        fontSelector.setItems(FXCollections.observableArrayList(Main.allFonts));
 //        Label fontLabel = new Label("Font:");
@@ -157,11 +158,25 @@ public class VennEntryModalHandler {
         
         Label fontLabel = new Label("Font: ");
         ComboBox<String> fontSelector = new ComboBox<String>(); 
+=======
+        ComboBox<Label> fontSelector = new ComboBox<>();
+>>>>>>> branch 'shivam-entry-customization' of https://github.com/dsouza-colin-216283582/EECS2311
         fontSelector.setItems(FXCollections.observableArrayList(Main.allFonts));
+<<<<<<< HEAD
         HBox HFont = new HBox(6);
         fontLabel.setTranslateY(4);
+=======
+        Label fontLabel = new Label("Font:");
+        HBox HFont = new HBox(9);
+        HFont.setMaxWidth(300);
+>>>>>>> branch 'shivam-entry-customization' of https://github.com/dsouza-colin-216283582/EECS2311
         HFont.getChildren().addAll(fontLabel, fontSelector);
+<<<<<<< HEAD
         HFont.setTranslateX(100);
+=======
+        HFont.setAlignment(Pos.CENTER_LEFT);
+        fontSelector.setMaxWidth(300 - 50);
+>>>>>>> branch 'shivam-entry-customization' of https://github.com/dsouza-colin-216283582/EECS2311
         
         if (color != null) picker.setValue(color);
         if (font == null) {
@@ -194,7 +209,7 @@ public class VennEntryModalHandler {
         HBox allButtons = new HBox();
         allButtons.setPadding(new Insets(0, 10, 10, 10));
         allButtons.setSpacing(10);
-        allButtons.getChildren().addAll(addButton , closeButton);
+        allButtons.getChildren().addAll(addButton, closeButton);
         allButtons.setAlignment(Pos.CENTER);
 
         VBox layout = new VBox(10);
