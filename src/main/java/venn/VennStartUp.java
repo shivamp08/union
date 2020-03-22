@@ -60,7 +60,7 @@ public class VennStartUp  extends Application implements Initializable {
     @Override
 	public void initialize(URL url, ResourceBundle rb)
 	{	
-    	new ZoomIn(root).PlayOnFinished(new RubberBand(root)).play();
+    	new ZoomIn(root).playOnFinished(new RubberBand(root)).play();
 	}
 
     public static void main(String[] args) {
