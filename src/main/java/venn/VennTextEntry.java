@@ -56,8 +56,12 @@ public class VennTextEntry extends Region {
     @SerializedName("f")
     @Expose
     ObjectProperty<Font> draggableFont;
+    
+    @SerializedName("si")
+    @Expose
+    StringProperty fontSize; 
 
-    public VennTextEntry(String string, String description, String color, Font font) {
+    public VennTextEntry(String string, String description, String color, Font font, String size) {
         super();
         this.string = new SimpleStringProperty(string);
         this.description = new SimpleStringProperty();
@@ -67,6 +71,9 @@ public class VennTextEntry extends Region {
         
         draggableColor =  new SimpleObjectProperty<Color>(Color.valueOf(color));
         draggableFont = new SimpleObjectProperty<Font>(font); 
+        fontSize = new SimpleStringProperty(size); 
+        
+        
 
         this.id = UUID.randomUUID().toString();
 
@@ -84,7 +91,7 @@ public class VennTextEntry extends Region {
     }
 
     public VennTextEntry(String string) {
-        this(string, null, null, null);
+        this(string, null, null, null, null);
     }
     
     public void setLocation(EntryLocations location) {
@@ -98,6 +105,7 @@ public class VennTextEntry extends Region {
         label.setTextFill(Color.BLACK);
         label.setFont(draggableFont.getValue());
         
+      
         draggableFont.addListener((observable, oldValue, newValue) -> {
         	label.setFont(draggableFont.getValue());
         });

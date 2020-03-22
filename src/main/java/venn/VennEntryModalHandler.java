@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -40,6 +41,7 @@ public class VennEntryModalHandler {
             "",
             null,
             null,
+            null,
             maxLength
         );
 
@@ -49,7 +51,7 @@ public class VennEntryModalHandler {
         changeHandler.calculateChange();
 
         
-        VennTextEntry entry = new VennTextEntry(add[0], add[1], add[2], Font.font(add[3]));
+        VennTextEntry entry = new VennTextEntry(add[0], add[1], add[2], new Font(add[3], Integer.parseInt(add[4])), add[4]);
         handler.addEntry(entry, false);
         
         changeHandler.calculateChange();
@@ -64,6 +66,7 @@ public class VennEntryModalHandler {
             currDes.getValue(),
             draggableColor.getValue(),
             draggableFont.getValue(),
+            draggableFont.getValue().getSize() + "",
             -1
         );
 
@@ -75,7 +78,7 @@ public class VennEntryModalHandler {
         currTitle.set(edited[0]);
         currDes.set(edited[1]);
         draggableColor.set(Color.valueOf(edited[2]));
-        draggableFont.set(Font.font(edited[3]));
+        draggableFont.set(new Font(edited[3], Integer.parseInt(edited[4])));
     }
 
     public static void edit (StringProperty current, int maxLength) {
@@ -84,6 +87,7 @@ public class VennEntryModalHandler {
             VennInternationalization.createStringBinding("edit_prompt_maxlength", maxLength),
             VennInternationalization.createStringBinding("edit_action"),
             current.getValue(),
+            null,
             null,
             null,
             null,
@@ -104,7 +108,7 @@ public class VennEntryModalHandler {
         });
     }
 
-    public static String[] create (StringBinding title, StringBinding prompt, StringBinding action, String current, String des, Color color, Font font, int maxLength) {
+    public static String[] create (StringBinding title, StringBinding prompt, StringBinding action, String current, String des, Color color, Font font, String fSize, int maxLength) {
     	Text text = new Text();
         Text desText = new Text(); 
 
@@ -157,17 +161,29 @@ public class VennEntryModalHandler {
 //        HFont.setTranslateX(100);
         
         Label fontLabel = new Label("Font: ");
-        ComboBox<String> fontSelector = new ComboBox<String>(); 
-//        ComboBox<Label> fontSelector = new ComboBox<>();
-        fontSelector.setItems(FXCollections.observableArrayList(Main.allFonts));
-      //  HBox HFont = new HBox(6);
         fontLabel.setTranslateY(4);
-        //Label fontLabel = new Label("Font:");
-        HBox HFont = new HBox(9);
+        ComboBox<String> fontSelector = new ComboBox<String>(); 
+        fontSelector.setItems(FXCollections.observableArrayList(Main.allFonts)); 
+        HBox HFont = new HBox(7);
         HFont.setMaxWidth(300);
         HFont.getChildren().addAll(fontLabel, fontSelector);
         HFont.setAlignment(Pos.CENTER_LEFT);
         fontSelector.setMaxWidth(300 - 50);
+        
+        Slider fontSizeSlider = new Slider(); 
+        Text size = new Text("10px");
+        Label fontSizeLabel = new Label("Font Size: ");
+        HBox fontSizeBox = new HBox(5);
+        fontSizeBox.getChildren().addAll(fontSizeLabel, size, fontSizeSlider);
+        fontSizeSlider.setMax(32);
+        fontSizeSlider.setMin(10);
+        fontSizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+        	size.setText((int) fontSizeSlider.getValue() + "px");
+        });
+        fontSizeBox.setAlignment(Pos.CENTER_LEFT);
+        fontSizeBox.setMaxWidth(300);
+
+        
         
         if (color != null) picker.setValue(color);
         if (font == null) {
@@ -175,6 +191,9 @@ public class VennEntryModalHandler {
         }
         else {
         	fontSelector.setValue(font.getName());
+        }
+        if (fSize != null) {
+        	fontSizeSlider.setValue((int) Double.parseDouble(fSize));
         }
         
         // cancel button
@@ -214,6 +233,7 @@ public class VennEntryModalHandler {
         }
         layout.getChildren().add(HColor);
         layout.getChildren().add(HFont);
+        layout.getChildren().add(fontSizeBox);
         layout.getChildren().add(allButtons);
         //layout.getChildren().add(pane);
         
@@ -222,7 +242,7 @@ public class VennEntryModalHandler {
         window.setResizable(false);
         window.showAndWait();
 
-        String[] textContent = {text.getText(), desText.getText(), picker.getValue().toString(), fontSelector.getValue()};
+        String[] textContent = {text.getText(), desText.getText(), picker.getValue().toString(), fontSelector.getValue(), size.getText().substring(0, 2)};
         if (textContent[0].contentEquals("")) {
             return null;
         } else {
