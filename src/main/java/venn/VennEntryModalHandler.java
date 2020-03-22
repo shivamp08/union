@@ -147,7 +147,6 @@ public class VennEntryModalHandler {
         HColor.setMaxWidth(300);
         HColor.getChildren().addAll(entryColor, picker);
         HColor.setAlignment(Pos.CENTER_LEFT);
-        
 
 //        ComboBox<Label> fontSelector = new ComboBox<Label>(); 
 //        fontSelector.setItems(FXCollections.observableArrayList(Main.allFonts));

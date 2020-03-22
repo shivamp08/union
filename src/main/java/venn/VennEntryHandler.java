@@ -103,14 +103,14 @@ public class VennEntryHandler {
             // darken the circle
             if (entry.draggable != null) {
                 Region draggable = entry.draggable;
-                //draggable.setStyle("-fx-background-color: " + getWebColor(entry.draggableColor.darker()));
+                draggable.setStyle("-fx-background-color: " + getWebColor(entry.draggableColor.getValue().darker()));
             }
         });
         pane.setOnMouseExited(event -> {
             // reset circle back to original
             if (entry.draggable != null) {
                 Region draggable = entry.draggable;
-                //draggable.setStyle("-fx-background-color: " + getWebColor(entry.draggableColor));
+                draggable.setStyle("-fx-background-color: " + getWebColor(entry.draggableColor.getValue()));
             }
         });
     }

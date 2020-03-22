@@ -2,6 +2,10 @@ package venn;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import javafx.scene.Group;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import org.hildan.fxgson.FxGson;
 
@@ -9,6 +13,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+
+import static venn.Main.changeHandler;
 
 public class VennFileHandler {
     Main app;
@@ -109,7 +115,24 @@ public class VennFileHandler {
         }
     }
 
+    public static void clearDiagram (Main app) {
+        Object[] elements = app.entries.entries.toArray();
+
+        for (Object element : elements) {
+            VennTextEntry entry = (VennTextEntry) element;
+
+            app.entries.deleteEntry(entry, false);
+            if (entry.draggable.getParent() != null) {
+                ((Group) entry.draggable.getParent()).getChildren().remove(entry.draggable);
+            }
+            if (entry.pane.getParent() != null) {
+                ((Pane) entry.pane.getParent()).getChildren().remove(entry.pane);
+            }
+        }
+    }
+
     public void importVenn () {
+        System.out.println(this.handler.entries.size());
         File location = VennLeftColumn.getFileLocationFromChooser(this.app.stage, "json", false);
 
         if (location == null) return;
@@ -123,7 +146,16 @@ public class VennFileHandler {
             return;
         }
 
+        if (this.handler.entries.size() > 0) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "This will delete everything on the Venn diagram, are you sure?", ButtonType.YES, ButtonType.NO);
+            alert.showAndWait();
+
+            if (alert.getResult() == ButtonType.NO) return;
+        }
+
+        clearDiagram(this.app);
         this.importFromObject(imported, true);
+        changeHandler.reset();
 
         System.out.println("Done importing!");
         System.out.println("Imported " + imported.elements.entries.size() + " entries");
