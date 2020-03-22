@@ -16,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -103,7 +104,7 @@ public class VennEntryModalHandler {
     }
 
     public static String[] create (StringBinding title, StringBinding prompt, StringBinding action, String current, String des, Color color, Font font, int maxLength) {
-        Text text = new Text();
+    	Text text = new Text();
         Text desText = new Text(); 
 
         Stage window = new Stage();
@@ -146,21 +147,28 @@ public class VennEntryModalHandler {
         entryColor.setTranslateY(4);
         HColor.setTranslateX(100);
         
-        ComboBox<Label> fontSelector = new ComboBox<Label>(); 
+//        ComboBox<Label> fontSelector = new ComboBox<Label>(); 
+//        fontSelector.setItems(FXCollections.observableArrayList(Main.allFonts));
+//        Label fontLabel = new Label("Font:");
+//        HBox HFont = new HBox(9); 
+//        fontLabel.setTranslateY(4);
+//        HFont.getChildren().addAll(fontLabel, fontSelector);
+//        HFont.setTranslateX(100);
+        
+        Label fontLabel = new Label("Font: ");
+        ComboBox<String> fontSelector = new ComboBox<String>(); 
         fontSelector.setItems(FXCollections.observableArrayList(Main.allFonts));
-        Label fontLabel = new Label("Font:");
-        HBox HFont = new HBox(9); 
+        HBox HFont = new HBox(6);
         fontLabel.setTranslateY(4);
         HFont.getChildren().addAll(fontLabel, fontSelector);
         HFont.setTranslateX(100);
-
         
         if (color != null) picker.setValue(color);
-        if (font != null) {
-        	Label currFont = new Label(font.getFamily());
-        	currFont.setFont(font);
-        	currFont.setTextFill(Color.BLACK);
-        	fontSelector.setValue(currFont);
+        if (font == null) {
+        	fontSelector.setValue("System");
+        }
+        else {
+        	fontSelector.setValue(font.getName());
         }
         
         // cancel button
@@ -199,13 +207,14 @@ public class VennEntryModalHandler {
         layout.getChildren().add(HColor);
         layout.getChildren().add(HFont);
         layout.getChildren().add(allButtons);
-
+        layout.getChildren().add(pane);
+        
         Scene scene = new Scene(layout,100,100);
         window.setScene(scene);
         window.setResizable(false);
         window.showAndWait();
 
-        String[] textContent = {text.getText(), desText.getText(), picker.getValue().toString(), fontSelector.getValue().getText()};
+        String[] textContent = {text.getText(), desText.getText(), picker.getValue().toString(), fontSelector.getValue()};
         if (textContent[0].contentEquals("")) {
             return null;
         } else {

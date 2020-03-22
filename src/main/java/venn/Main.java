@@ -35,7 +35,7 @@ public class Main extends Application {
 	VennSectionRight right;
 	VennIntersection intersection;
 	
-	static ArrayList<Label> allFonts; 
+	static ArrayList<String> allFonts; 
 
 	public static VennChangeHandler changeHandler;
 
@@ -81,13 +81,26 @@ public class Main extends Application {
 //			zoomOperator.zoom(holder, zoomFactor, event.getSceneX(), event.getSceneY());
 //		});
 		
-		allFonts = new ArrayList<Label>(); 
-		for (String i: Font.getFamilies()) {
-			Label fontName = new Label(i);
-			fontName.setFont(Font.font(i));
-			fontName.setTextFill(Color.BLACK);
-			allFonts.add(fontName); 
-		}
+//		allFonts = new ArrayList<Label>(); 
+//		for (String i: Font.getFamilies()) {
+//			Label fontName = new Label(i);
+//			fontName.setFont(Font.font(i));
+//			fontName.setTextFill(Color.BLACK);
+//			allFonts.add(fontName); 
+//		}
+
+		allFonts = new ArrayList<String>(); 
+		allFonts.add("Algerian");
+		allFonts.add("Arial");
+		allFonts.add("Arial Black");
+		allFonts.add("Calibri");
+		allFonts.add("Cambria");
+		allFonts.add("Comic Sans MS");
+		allFonts.add("Consolas");
+		allFonts.add("System");
+		allFonts.add("Tahoma");
+		allFonts.add("Times New Roman");
+	
 
 		mainLayout.setCenter(vennScroller);
 		
