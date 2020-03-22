@@ -207,7 +207,7 @@ public class VennEntryModalHandler {
         layout.getChildren().add(HColor);
         layout.getChildren().add(HFont);
         layout.getChildren().add(allButtons);
-        layout.getChildren().add(pane);
+        //layout.getChildren().add(pane);
         
         Scene scene = new Scene(layout,100,100);
         window.setScene(scene);
