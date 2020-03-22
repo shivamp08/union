@@ -12,7 +12,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.input.*;
 
-import java.util.Locale;
+
+import animatefx.animation.*;
 
 public class Main extends Application {
 
@@ -128,6 +129,8 @@ public class Main extends Application {
 		Image icon = new Image(getClass().getResource("/logo.png").toExternalForm());
 		stage.getIcons().add(icon);
 		stage.show(); 
+		new ZoomInRight(mainLayout.getLeft()).setSpeed(0.8).PlayOnFinished(new Pulse(mainLayout.getLeft())).play();
+		
 	}
 
 }

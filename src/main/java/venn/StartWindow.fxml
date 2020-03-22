@@ -14,8 +14,8 @@
             <Image url="@UnionAppLogo.png" />
          </image>
       </ImageView>
-      <JFXButton layoutX="206.0" layoutY="314.0" onAction="#begin" onMouseClicked="#close" prefHeight="33.0" prefWidth="156.0" style="-fx-background-color: #515757#515757;" text="Click Here To Begin!" textFill="#fffefe" />
-      <Text layoutX="550.0" layoutY="23.0" onMouseClicked="#close" strokeType="OUTSIDE" strokeWidth="0.0" text="X">
+      <JFXButton fx:id="beginButton" layoutX="208.0" layoutY="327.0" onAction="#begin" onMouseClicked="#close" prefHeight="33.0" prefWidth="156.0" style="-fx-background-color: #515757#515757;" text="Click Here To Begin!" textFill="#fffefe" />
+      <Text fx:id="closeText" layoutX="550.0" layoutY="23.0" onMouseClicked="#close" strokeType="OUTSIDE" strokeWidth="0.0" text="X">
          <font>
             <Font name="System Bold" size="22.0" />
          </font>
