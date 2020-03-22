@@ -27,7 +27,8 @@ dependencies {
     compile (
         'com.google.code.gson:gson:2.8.6',
         'org.hildan.fxgson:fx-gson:3.1.2',
-        'com.jfoenix:jfoenix:8.0.8'
+        'com.jfoenix:jfoenix:8.0.8',
+        'group.id:animatefx:1.2.1-SNAPSHOT'
     )
 
     // Use JUnit test framework
