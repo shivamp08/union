@@ -200,6 +200,8 @@ public class VennEntryModalHandler {
         VBox layout = new VBox(10);
         layout.getChildren().addAll(label, data);
         layout.setAlignment(Pos.CENTER);
+        
+        //Test
 
         if (des != null) {
             layout.getChildren().addAll(descriptionLabel, description);
