@@ -29,17 +29,22 @@ import static venn.Main.changeHandler;
 
 import java.util.ArrayList;
 
+enum ModalType {
+    Entry,
+    Title,
+}
+
 public class VennEntryModalHandler {
 	//Add
     public static void add (VennEntryHandler handler) {
         final int maxLength = 40;
         String[] add = VennEntryModalHandler.create(
+            ModalType.Entry,
             VennInternationalization.createStringBinding("add_title"),
             VennInternationalization.createStringBinding("add_prompt", maxLength),
             VennInternationalization.createStringBinding("add_action"),
             null,
             "",
-            null,
             null,
             null,
             maxLength
@@ -50,7 +55,6 @@ public class VennEntryModalHandler {
         System.out.println("change from add entry");
         changeHandler.calculateChange();
 
-        
         VennTextEntry entry = new VennTextEntry(add[0], add[1], add[2], new Font(add[3], Integer.parseInt(add[4])), add[4]);
         handler.addEntry(entry, false);
         
@@ -59,14 +63,14 @@ public class VennEntryModalHandler {
 
     public static void edit (StringProperty currTitle, StringProperty currDes, ObjectProperty<Color> draggableColor, ObjectProperty<Font> draggableFont) {
         String[] edited = VennEntryModalHandler.create(
+            ModalType.Entry,
             VennInternationalization.createStringBinding("edit_title"),
             VennInternationalization.createStringBinding("edit_prompt"),
             VennInternationalization.createStringBinding("edit_action"),
             currTitle.getValue(),
             currDes.getValue(),
             draggableColor.getValue(),
-            draggableFont.getValue(),
-            draggableFont.getValue().getSize() + "",
+            draggableFont,
             -1
         );
 
@@ -83,11 +87,11 @@ public class VennEntryModalHandler {
 
     public static void edit (StringProperty current, int maxLength) {
         String[] edited = VennEntryModalHandler.create(
+            ModalType.Title,
             VennInternationalization.createStringBinding("edit_title"),
             VennInternationalization.createStringBinding("edit_prompt_maxlength", maxLength),
             VennInternationalization.createStringBinding("edit_action"),
             current.getValue(),
-            null,
             null,
             null,
             null,
@@ -108,7 +112,7 @@ public class VennEntryModalHandler {
         });
     }
 
-    public static String[] create (StringBinding title, StringBinding prompt, StringBinding action, String current, String des, Color color, Font font, String fSize, int maxLength) {
+    public static String[] create (ModalType type, StringBinding title, StringBinding prompt, StringBinding action, String current, String des, Color color, ObjectProperty<Font> font, int maxLength) {
     	Text text = new Text();
         Text desText = new Text(); 
 
@@ -151,6 +155,7 @@ public class VennEntryModalHandler {
         HColor.setMaxWidth(300);
         HColor.getChildren().addAll(entryColor, picker);
         HColor.setAlignment(Pos.CENTER_LEFT);
+        if (color != null) picker.setValue(color);
 
 //        ComboBox<Label> fontSelector = new ComboBox<Label>(); 
 //        fontSelector.setItems(FXCollections.observableArrayList(Main.allFonts));
@@ -162,38 +167,33 @@ public class VennEntryModalHandler {
         
         Label fontLabel = new Label("Font: ");
         fontLabel.setTranslateY(4);
-        ComboBox<String> fontSelector = new ComboBox<String>(); 
-        fontSelector.setItems(FXCollections.observableArrayList(Main.allFonts)); 
+        ComboBox<String> fontSelector = new ComboBox<>();
+        fontSelector.setItems(FXCollections.observableArrayList(Main.allFonts));
         HBox HFont = new HBox(7);
         HFont.setMaxWidth(300);
         HFont.getChildren().addAll(fontLabel, fontSelector);
         HFont.setAlignment(Pos.CENTER_LEFT);
         fontSelector.setMaxWidth(300 - 50);
-        
-        Slider fontSizeSlider = new Slider(); 
+
+        Slider fontSizeSlider = new Slider();
         Text size = new Text("10px");
         Label fontSizeLabel = new Label("Font Size: ");
         HBox fontSizeBox = new HBox(5);
         fontSizeBox.getChildren().addAll(fontSizeLabel, size, fontSizeSlider);
         fontSizeSlider.setMax(32);
         fontSizeSlider.setMin(10);
+        if (font != null && font.getValue() != null) fontSizeSlider.setValue(font.getValue().getSize());
+
         fontSizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
         	size.setText((int) fontSizeSlider.getValue() + "px");
         });
         fontSizeBox.setAlignment(Pos.CENTER_LEFT);
         fontSizeBox.setMaxWidth(300);
 
-        
-        
-        if (color != null) picker.setValue(color);
         if (font == null) {
         	fontSelector.setValue("System");
-        }
-        else {
-        	fontSelector.setValue(font.getName());
-        }
-        if (fSize != null) {
-        	fontSizeSlider.setValue((int) Double.parseDouble(fSize));
+        } else {
+        	fontSelector.setValue(font.getValue().getName());
         }
         
         // cancel button
@@ -231,9 +231,12 @@ public class VennEntryModalHandler {
         if (des != null) {
             layout.getChildren().addAll(descriptionLabel, description);
         }
-        layout.getChildren().add(HColor);
-        layout.getChildren().add(HFont);
-        layout.getChildren().add(fontSizeBox);
+
+        if (type == ModalType.Entry) {
+            layout.getChildren().add(HColor);
+            layout.getChildren().add(HFont);
+            layout.getChildren().add(fontSizeBox);
+        }
         layout.getChildren().add(allButtons);
         //layout.getChildren().add(pane);
         
@@ -242,7 +245,13 @@ public class VennEntryModalHandler {
         window.setResizable(false);
         window.showAndWait();
 
-        String[] textContent = {text.getText(), desText.getText(), picker.getValue().toString(), fontSelector.getValue(), size.getText().substring(0, 2)};
+        String[] textContent = {
+            text.getText(),
+            desText.getText(),
+            picker.getValue().toString(),
+            fontSelector.getValue(),
+            size.getText().substring(0, 2)
+        };
         if (textContent[0].contentEquals("")) {
             return null;
         } else {

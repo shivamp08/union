@@ -69,11 +69,9 @@ public class VennTextEntry extends Region {
             this.description.set(description);
         }
         
-        draggableColor =  new SimpleObjectProperty<Color>(Color.valueOf(color));
-        draggableFont = new SimpleObjectProperty<Font>(font); 
-        fontSize = new SimpleStringProperty(size); 
-        
-        
+        draggableColor =  new SimpleObjectProperty<>(Color.valueOf(color));
+        draggableFont = new SimpleObjectProperty<>(font);
+        fontSize = new SimpleStringProperty(size);
 
         this.id = UUID.randomUUID().toString();
 
