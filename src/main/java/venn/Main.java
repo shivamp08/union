@@ -129,7 +129,7 @@ public class Main extends Application {
 		Image icon = new Image(getClass().getResource("/logo.png").toExternalForm());
 		stage.getIcons().add(icon);
 		stage.show(); 
-		new ZoomInRight(mainLayout.getLeft()).setSpeed(0.8).playOnFinished(new Pulse(mainLayout.getLeft())).play();
+		new ZoomInRight(mainLayout.getLeft()).setSpeed(1).play();
 		
 	}
 
