@@ -17,6 +17,8 @@ import javafx.util.StringConverter;
 
 import java.util.Locale;
 
+import com.jfoenix.controls.JFXColorPicker;
+
 import static venn.Main.changeHandler;
 
 public class VennOptions {
@@ -32,7 +34,7 @@ public class VennOptions {
 
     private static VBox createColorPicker (VennSection section) {
         VBox box = new VBox();
-        ColorPicker picker = new ColorPicker();
+        JFXColorPicker picker = new JFXColorPicker();
         Label label = new Label();
         label.setText(VennInternationalization.get("options_color_title", section.sectionName.getValue()));
 
