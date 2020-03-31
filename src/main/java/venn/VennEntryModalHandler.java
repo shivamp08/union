@@ -3,6 +3,7 @@ package venn;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -243,8 +244,30 @@ public class VennEntryModalHandler {
         layout.getChildren().addAll(label, data);
         layout.setAlignment(Pos.CENTER);
         
-        //Test
-
+        //Preview Entry
+        //VennEntryPreview preview = new VennEntryPreview("Text", "Text", Color.WHITE.toString(), Font.font("System"), null, Color.BLACK.toString());
+//        VennTextEntry preview = new VennTextEntry("Text", "Text", Color.BLUE.toString(), Font.font("System"), null, Color.BLACK.toString());
+//        preview.setDraggable();
+//        HBox pHbox = new HBox();
+//        preview.draggable.get
+//        pHbox.getChildren().add(preview.draggable);
+        
+        StackPane preview = new StackPane(); 
+        Label pLabel = new Label("");
+        pLabel.textProperty().bind(new SimpleStringProperty("Text"));
+        pLabel.setTextFill(color.BLACK);
+        pLabel.setFont(Font.font("System"));
+        preview.getStyleClass().add("rounded-label"); 
+        preview.setStyle("-fx-background-color: " + VennEntryHandler.getWebColor(Color.AQUA));
+        preview.getChildren().add(pLabel);
+        
+        HBox hhh = new HBox(); 
+        hhh.getChildren().add(preview);
+        hhh.setAlignment(Pos.CENTER);
+        
+        
+        
+        
         if (des != null) {
             layout.getChildren().addAll(descriptionLabel, description);
         }
@@ -254,6 +277,7 @@ public class VennEntryModalHandler {
             layout.getChildren().add(HFont);
             layout.getChildren().add(fontSizeBox);
             layout.getChildren().add(fontColorBox); 
+            layout.getChildren().add(hhh);
         }
         layout.getChildren().add(allButtons);
         //layout.getChildren().add(pane);
