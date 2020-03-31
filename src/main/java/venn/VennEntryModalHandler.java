@@ -47,6 +47,7 @@ public class VennEntryModalHandler {
             "",
             null,
             null,
+            null,
             maxLength
         );
 
@@ -55,13 +56,13 @@ public class VennEntryModalHandler {
         System.out.println("change from add entry");
         changeHandler.calculateChange();
 
-        VennTextEntry entry = new VennTextEntry(add[0], add[1], add[2], new Font(add[3], Integer.parseInt(add[4])), add[4]);
+        VennTextEntry entry = new VennTextEntry(add[0], add[1], add[2], new Font(add[3], Integer.parseInt(add[4])), add[4], add[5]);
         handler.addEntry(entry, false);
         
         changeHandler.calculateChange();
     }
 
-    public static void edit (StringProperty currTitle, StringProperty currDes, ObjectProperty<Color> draggableColor, ObjectProperty<Font> draggableFont) {
+    public static void edit (StringProperty currTitle, StringProperty currDes, ObjectProperty<Color> draggableColor, ObjectProperty<Font> draggableFont, ObjectProperty<Color> fColor) {
         String[] edited = VennEntryModalHandler.create(
             ModalType.Entry,
             VennInternationalization.createStringBinding("edit_title"),
@@ -71,6 +72,7 @@ public class VennEntryModalHandler {
             currDes.getValue(),
             draggableColor.getValue(),
             draggableFont,
+            fColor.getValue(),
             -1
         );
 
@@ -83,6 +85,7 @@ public class VennEntryModalHandler {
         currDes.set(edited[1]);
         draggableColor.set(Color.valueOf(edited[2]));
         draggableFont.set(new Font(edited[3], Integer.parseInt(edited[4])));
+        fColor.set(Color.valueOf(edited[5]));
     }
 
     public static void edit (StringProperty current, int maxLength) {
@@ -92,6 +95,7 @@ public class VennEntryModalHandler {
             VennInternationalization.createStringBinding("edit_prompt_maxlength", maxLength),
             VennInternationalization.createStringBinding("edit_action"),
             current.getValue(),
+            null,
             null,
             null,
             null,
@@ -112,7 +116,7 @@ public class VennEntryModalHandler {
         });
     }
 
-    public static String[] create (ModalType type, StringBinding title, StringBinding prompt, StringBinding action, String current, String des, Color color, ObjectProperty<Font> font, int maxLength) {
+    public static String[] create (ModalType type, StringBinding title, StringBinding prompt, StringBinding action, String current, String des, Color color, ObjectProperty<Font> font, Color fColor, int maxLength) {
     	Text text = new Text();
         Text desText = new Text(); 
 
@@ -149,13 +153,23 @@ public class VennEntryModalHandler {
         Label descriptionLabel = new Label();
         descriptionLabel.textProperty().bind(VennInternationalization.createStringBinding("modal_description"));
         
-        Label entryColor = new Label("Color:");
+        Label entryColor = new Label("Background Color:");
         ColorPicker picker = new ColorPicker();
         HBox HColor = new HBox(5);
         HColor.setMaxWidth(300);
         HColor.getChildren().addAll(entryColor, picker);
         HColor.setAlignment(Pos.CENTER_LEFT);
         if (color != null) picker.setValue(color);
+        
+        Label fontColorLabel = new Label("Font Color: ");
+        ColorPicker fontColorPicker = new ColorPicker(); 
+        HBox fontColorBox = new HBox(5);
+        fontColorBox.setMaxWidth(300);
+        fontColorBox.getChildren().addAll(fontColorLabel, fontColorPicker); 
+        fontColorBox.setAlignment(Pos.CENTER_LEFT);
+        fontColorPicker.setValue(Color.BLACK);
+        if (fColor == null) fontColorPicker.setValue(Color.BLACK);
+        else fontColorPicker.setValue(fColor);
 
 //        ComboBox<Label> fontSelector = new ComboBox<Label>(); 
 //        fontSelector.setItems(FXCollections.observableArrayList(Main.allFonts));
@@ -182,7 +196,10 @@ public class VennEntryModalHandler {
         fontSizeBox.getChildren().addAll(fontSizeLabel, size, fontSizeSlider);
         fontSizeSlider.setMax(32);
         fontSizeSlider.setMin(10);
-        if (font != null && font.getValue() != null) fontSizeSlider.setValue(font.getValue().getSize());
+        if (font != null && font.getValue() != null) {
+        	fontSizeSlider.setValue(font.getValue().getSize());
+        	size.setText((int)font.getValue().getSize()+"px");
+        }
 
         fontSizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
         	size.setText((int) fontSizeSlider.getValue() + "px");
@@ -236,6 +253,7 @@ public class VennEntryModalHandler {
             layout.getChildren().add(HColor);
             layout.getChildren().add(HFont);
             layout.getChildren().add(fontSizeBox);
+            layout.getChildren().add(fontColorBox); 
         }
         layout.getChildren().add(allButtons);
         //layout.getChildren().add(pane);
@@ -250,7 +268,8 @@ public class VennEntryModalHandler {
             desText.getText(),
             picker.getValue().toString(),
             fontSelector.getValue(),
-            size.getText().substring(0, 2)
+            size.getText().substring(0, 2),
+            fontColorPicker.getValue().toString()
         };
         if (textContent[0].contentEquals("")) {
             return null;

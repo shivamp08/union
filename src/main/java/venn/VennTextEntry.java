@@ -57,11 +57,15 @@ public class VennTextEntry extends Region {
     @Expose
     ObjectProperty<Font> draggableFont;
     
-    @SerializedName("si")
+    @SerializedName("fs")
     @Expose
     StringProperty fontSize; 
+    
+    @SerializedName("fc")
+    @Expose
+    ObjectProperty<Color> fontColor; 
 
-    public VennTextEntry(String string, String description, String color, Font font, String size) {
+    public VennTextEntry(String string, String description, String color, Font font, String size, String fColor) {
         super();
         this.string = new SimpleStringProperty(string);
         this.description = new SimpleStringProperty();
@@ -70,6 +74,7 @@ public class VennTextEntry extends Region {
         }
         
         draggableColor =  new SimpleObjectProperty<>(Color.valueOf(color));
+        fontColor = new SimpleObjectProperty<>(Color.valueOf(fColor));
         draggableFont = new SimpleObjectProperty<>(font);
         fontSize = new SimpleStringProperty(size);
 
@@ -89,7 +94,7 @@ public class VennTextEntry extends Region {
     }
 
     public VennTextEntry(String string) {
-        this(string, null, null, null, null);
+        this(string, null, null, null, null, null);
     }
     
     public void setLocation(EntryLocations location) {
@@ -100,10 +105,12 @@ public class VennTextEntry extends Region {
         StackPane pane = new StackPane();
         Label label = new Label("");
         label.textProperty().bind(this.string);
-        label.setTextFill(Color.BLACK);
+        label.setTextFill(fontColor.getValue());
         label.setFont(draggableFont.getValue());
         
-      
+        fontColor.addListener((observable, oldValue, newValue) -> {
+        	label.setTextFill(fontColor.getValue());
+        });
         draggableFont.addListener((observable, oldValue, newValue) -> {
         	label.setFont(draggableFont.getValue());
         });
@@ -145,7 +152,7 @@ public class VennTextEntry extends Region {
         pane.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)){
                 if (event.getClickCount() == 2){
-                    VennEntryModalHandler.edit(this.string, this.description, this.draggableColor, this.draggableFont);
+                    VennEntryModalHandler.edit(this.string, this.description, this.draggableColor, this.draggableFont, this.fontColor);
                 }
             }
         });
