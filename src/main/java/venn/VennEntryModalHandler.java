@@ -154,7 +154,8 @@ public class VennEntryModalHandler {
         Label descriptionLabel = new Label();
         descriptionLabel.textProperty().bind(VennInternationalization.createStringBinding("modal_description"));
         
-        Label entryColor = new Label("Background Color:");
+        Label entryColor = new Label("");
+        entryColor.textProperty().bind(VennInternationalization.createStringBinding("modal_backgroundcolor"));
         ColorPicker picker = new ColorPicker();
         HBox HColor = new HBox(5);
         HColor.setMaxWidth(300);
