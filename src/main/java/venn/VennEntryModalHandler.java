@@ -254,18 +254,46 @@ public class VennEntryModalHandler {
         
         StackPane preview = new StackPane(); 
         Label pLabel = new Label("");
-        pLabel.textProperty().bind(new SimpleStringProperty("Text"));
-        pLabel.setTextFill(color.BLACK);
-        pLabel.setFont(Font.font("System"));
+        pLabel.textProperty().bind(new SimpleStringProperty("Preview"));
+        pLabel.setTextFill(fontColorPicker.getValue());
+        pLabel.setFont(new Font(fontSelector.getValue(), Integer.parseInt(size.getText().substring(0, 2))));
         preview.getStyleClass().add("rounded-label"); 
-        preview.setStyle("-fx-background-color: " + VennEntryHandler.getWebColor(Color.AQUA));
+        preview.setStyle("-fx-background-color: " + VennEntryHandler.getWebColor(picker.getValue()));
         preview.getChildren().add(pLabel);
         
         HBox hhh = new HBox(); 
         hhh.getChildren().add(preview);
         hhh.setAlignment(Pos.CENTER);
         
+        VBox designOptions = new VBox(10); 
+        designOptions.getChildren().addAll(HColor, HFont, fontSizeBox, fontColorBox);
         
+        VBox previewBox = new VBox(); 
+        previewBox.getChildren().add(hhh);
+        previewBox.setAlignment(Pos.CENTER);
+        
+        
+        HBox options = new HBox(50); 
+        options.getChildren().add(designOptions);
+        options.getChildren().add(previewBox);
+        options.setAlignment(Pos.CENTER_LEFT);
+        options.setTranslateX(50);
+        
+        fontSizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+        	pLabel.setFont(new Font(fontSelector.getValue(), Integer.parseInt(size.getText().substring(0, 2))));
+        });
+        
+        picker.valueProperty().addListener((observable, oldValue, newValue) -> {
+        	preview.setStyle("-fx-background-color: " + VennEntryHandler.getWebColor(picker.getValue()));
+        });
+        
+        fontSelector.valueProperty().addListener((observable, oldValue, newValue) -> {
+        	pLabel.setFont(new Font(fontSelector.getValue(), Integer.parseInt(size.getText().substring(0, 2))));
+        });
+        
+        fontColorPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+        	pLabel.setTextFill(fontColorPicker.getValue());
+        });
         
         
         if (des != null) {
@@ -273,11 +301,7 @@ public class VennEntryModalHandler {
         }
 
         if (type == ModalType.Entry) {
-            layout.getChildren().add(HColor);
-            layout.getChildren().add(HFont);
-            layout.getChildren().add(fontSizeBox);
-            layout.getChildren().add(fontColorBox); 
-            layout.getChildren().add(hhh);
+            layout.getChildren().add(options);
         }
         layout.getChildren().add(allButtons);
         //layout.getChildren().add(pane);
@@ -285,7 +309,9 @@ public class VennEntryModalHandler {
         Scene scene = new Scene(layout,100,100);
         window.setScene(scene);
         window.setResizable(false);
+        scene.getStylesheets().add(VennEntryModalHandler.class.getResource("/styles.css").toExternalForm());
         window.showAndWait();
+     
 
         String[] textContent = {
             text.getText(),
