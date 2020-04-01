@@ -154,7 +154,7 @@ public class VennEntryModalHandler {
         Label descriptionLabel = new Label();
         descriptionLabel.textProperty().bind(VennInternationalization.createStringBinding("modal_description"));
         
-        Label entryColor = new Label("");
+        Label entryColor = new Label();
         entryColor.textProperty().bind(VennInternationalization.createStringBinding("modal_backgroundcolor"));
         ColorPicker picker = new ColorPicker();
         HBox HColor = new HBox(5);
@@ -163,7 +163,8 @@ public class VennEntryModalHandler {
         HColor.setAlignment(Pos.CENTER_LEFT);
         if (color != null) picker.setValue(color);
         
-        Label fontColorLabel = new Label("Font Color: ");
+        Label fontColorLabel = new Label();
+        fontColorLabel.textProperty().bind(VennInternationalization.createStringBinding("modal_fontColor"));
         ColorPicker fontColorPicker = new ColorPicker(); 
         HBox fontColorBox = new HBox(5);
         fontColorBox.setMaxWidth(300);
@@ -181,7 +182,8 @@ public class VennEntryModalHandler {
 //        HFont.getChildren().addAll(fontLabel, fontSelector);
 //        HFont.setTranslateX(100);
         
-        Label fontLabel = new Label("Font: ");
+        Label fontLabel = new Label();
+        fontLabel.textProperty().bind(VennInternationalization.createStringBinding("modal_fontFamily"));
         fontLabel.setTranslateY(4);
         ComboBox<String> fontSelector = new ComboBox<>();
         fontSelector.setItems(FXCollections.observableArrayList(Main.allFonts));
@@ -193,7 +195,8 @@ public class VennEntryModalHandler {
 
         Slider fontSizeSlider = new Slider();
         Text size = new Text("10px");
-        Label fontSizeLabel = new Label("Font Size: ");
+        Label fontSizeLabel = new Label();
+        fontSizeLabel.textProperty().bind(VennInternationalization.createStringBinding("modal_fontSize"));
         HBox fontSizeBox = new HBox(5);
         fontSizeBox.getChildren().addAll(fontSizeLabel, size, fontSizeSlider);
         fontSizeSlider.setMax(32);
@@ -253,26 +256,15 @@ public class VennEntryModalHandler {
 //        preview.draggable.get
 //        pHbox.getChildren().add(preview.draggable);
         
-        StackPane preview = new StackPane(); 
-        Label pLabel = new Label("");
-        pLabel.textProperty().bind(new SimpleStringProperty("Preview"));
-        pLabel.setTextFill(fontColorPicker.getValue());
-        pLabel.setFont(new Font(fontSelector.getValue(), Integer.parseInt(size.getText().substring(0, 2))));
-        preview.getStyleClass().add("rounded-label"); 
-        preview.setStyle("-fx-background-color: " + VennEntryHandler.getWebColor(picker.getValue()));
-        preview.getChildren().add(pLabel);
         
-        HBox hhh = new HBox(); 
-        hhh.getChildren().add(preview);
-        hhh.setAlignment(Pos.CENTER);
+        VennEntryPreview preview = new VennEntryPreview(picker.getValue(), new Font(fontSelector.getValue(), Integer.parseInt(size.getText().substring(0, 2))) , fontColorPicker.getValue()); 
         
         VBox designOptions = new VBox(10); 
         designOptions.getChildren().addAll(HColor, HFont, fontSizeBox, fontColorBox);
         
         VBox previewBox = new VBox(); 
-        previewBox.getChildren().add(hhh);
+        previewBox.getChildren().add(preview.getPreview());
         previewBox.setAlignment(Pos.CENTER);
-        
         
         HBox options = new HBox(50); 
         options.getChildren().add(designOptions);
@@ -281,19 +273,19 @@ public class VennEntryModalHandler {
         options.setTranslateX(50);
         
         fontSizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-        	pLabel.setFont(new Font(fontSelector.getValue(), Integer.parseInt(size.getText().substring(0, 2))));
+        	preview.getLabel().setFont(new Font(fontSelector.getValue(), Integer.parseInt(size.getText().substring(0, 2))));
         });
         
         picker.valueProperty().addListener((observable, oldValue, newValue) -> {
-        	preview.setStyle("-fx-background-color: " + VennEntryHandler.getWebColor(picker.getValue()));
+        	preview.getPreview().setStyle("-fx-background-color: " + VennEntryHandler.getWebColor(picker.getValue()));
         });
         
         fontSelector.valueProperty().addListener((observable, oldValue, newValue) -> {
-        	pLabel.setFont(new Font(fontSelector.getValue(), Integer.parseInt(size.getText().substring(0, 2))));
+        	preview.getLabel().setFont(new Font(fontSelector.getValue(), Integer.parseInt(size.getText().substring(0, 2))));
         });
         
         fontColorPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
-        	pLabel.setTextFill(fontColorPicker.getValue());
+        	preview.getLabel().setTextFill(fontColorPicker.getValue());
         });
         
         
