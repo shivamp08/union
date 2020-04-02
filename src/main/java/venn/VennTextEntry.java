@@ -49,7 +49,7 @@ public class VennTextEntry extends Region {
     @Expose
     String id;
 
-    @SerializedName("c")
+    @SerializedName("bgc")
     @Expose
     ObjectProperty<Color> draggableColor;
     
