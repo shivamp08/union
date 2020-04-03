@@ -13,6 +13,8 @@ public class VennIntersection extends VennSection {
 
         this.section = EntryLocations.Center;
         this.sectionName = new SimpleStringProperty("Intersection");
+        this.sectionInternationalizedBinding = VennInternationalization.createStringBinding("middle_title");
+        this.bindSectionNameTranslation();
 
         this.color = new SimpleObjectProperty<>(Color.GREY);
         this.bindColorCopy();
