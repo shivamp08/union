@@ -2,23 +2,13 @@ package venn;
 
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -27,8 +17,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import static venn.Main.changeHandler;
-
-import java.util.ArrayList;
 
 enum ModalType {
     Entry,
@@ -61,6 +49,9 @@ public class VennEntryModalHandler {
         handler.addEntry(entry, false);
         
         changeHandler.calculateChange();
+
+        // mm yes, booleans with strings
+        if (add[6].contentEquals("true")) add(handler);
     }
 
     public static void edit (StringProperty currTitle, StringProperty currDes, ObjectProperty<Color> draggableColor, ObjectProperty<Font> draggableFont, ObjectProperty<Color> fColor) {
@@ -119,7 +110,8 @@ public class VennEntryModalHandler {
 
     public static String[] create (ModalType type, StringBinding title, StringBinding prompt, StringBinding action, String current, String des, Color color, ObjectProperty<Font> font, Color fColor, int maxLength) {
     	Text text = new Text();
-        Text desText = new Text(); 
+        Text desText = new Text();
+        CheckBox addAnother = new CheckBox();
 
         Stage window = new Stage();
         window.titleProperty().bind(title);
@@ -155,7 +147,7 @@ public class VennEntryModalHandler {
         descriptionLabel.textProperty().bind(VennInternationalization.createStringBinding("modal_description"));
         
         Label entryColor = new Label();
-        entryColor.textProperty().bind(VennInternationalization.createStringBinding("modal_backgroundcolor"));
+        entryColor.textProperty().bind(VennInternationalization.createStringBinding("modal_background_color"));
         ColorPicker picker = new ColorPicker();
         HBox HColor = new HBox(5);
         HColor.setMaxWidth(300);
@@ -164,7 +156,7 @@ public class VennEntryModalHandler {
         if (color != null) picker.setValue(color);
         
         Label fontColorLabel = new Label();
-        fontColorLabel.textProperty().bind(VennInternationalization.createStringBinding("modal_fontColor"));
+        fontColorLabel.textProperty().bind(VennInternationalization.createStringBinding("modal_font_color"));
         ColorPicker fontColorPicker = new ColorPicker(); 
         HBox fontColorBox = new HBox(5);
         fontColorBox.setMaxWidth(300);
@@ -183,7 +175,7 @@ public class VennEntryModalHandler {
 //        HFont.setTranslateX(100);
         
         Label fontLabel = new Label();
-        fontLabel.textProperty().bind(VennInternationalization.createStringBinding("modal_fontFamily"));
+        fontLabel.textProperty().bind(VennInternationalization.createStringBinding("modal_font_family"));
         fontLabel.setTranslateY(4);
         ComboBox<String> fontSelector = new ComboBox<>();
         fontSelector.setItems(FXCollections.observableArrayList(Main.allFonts));
@@ -196,7 +188,7 @@ public class VennEntryModalHandler {
         Slider fontSizeSlider = new Slider();
         Text size = new Text("10px");
         Label fontSizeLabel = new Label();
-        fontSizeLabel.textProperty().bind(VennInternationalization.createStringBinding("modal_fontSize"));
+        fontSizeLabel.textProperty().bind(VennInternationalization.createStringBinding("modal_font_size"));
         HBox fontSizeBox = new HBox(5);
         fontSizeBox.getChildren().addAll(fontSizeLabel, size, fontSizeSlider);
         fontSizeSlider.setMax(32);
@@ -238,10 +230,24 @@ public class VennEntryModalHandler {
             window.close();
         });
 
+        // Add another button
+        Button addAnotherButton = new Button();
+        addAnotherButton.textProperty().bind(VennInternationalization.createStringBinding("add_another_action"));
+        addAnotherButton.setOnAction(e -> {
+            text.setText(data.getText());
+            desText.setText(description.getText());
+            addAnother.setSelected(true);
+            window.close();
+        });
+
         HBox allButtons = new HBox();
         allButtons.setPadding(new Insets(0, 10, 10, 10));
         allButtons.setSpacing(10);
-        allButtons.getChildren().addAll(addButton, closeButton);
+        allButtons.getChildren().addAll(addButton);
+        if (type == ModalType.Entry) {
+            allButtons.getChildren().add(addAnotherButton);
+        }
+        allButtons.getChildren().add(closeButton);
         allButtons.setAlignment(Pos.CENTER);
 
         VBox layout = new VBox(10);
@@ -300,11 +306,10 @@ public class VennEntryModalHandler {
         //layout.getChildren().add(pane);
         
         Scene scene = new Scene(layout,100,100);
+        scene.getStylesheets().add(VennEntryModalHandler.class.getResource("/styles.css").toExternalForm());
         window.setScene(scene);
         window.setResizable(false);
-        scene.getStylesheets().add(VennEntryModalHandler.class.getResource("/styles.css").toExternalForm());
         window.showAndWait();
-     
 
         String[] textContent = {
             text.getText(),
@@ -312,7 +317,8 @@ public class VennEntryModalHandler {
             picker.getValue().toString(),
             fontSelector.getValue(),
             size.getText().substring(0, 2),
-            fontColorPicker.getValue().toString()
+            fontColorPicker.getValue().toString(),
+            String.valueOf(addAnother.isSelected())
         };
         if (textContent[0].contentEquals("")) {
             return null;

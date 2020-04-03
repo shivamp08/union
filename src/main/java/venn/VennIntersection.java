@@ -35,9 +35,10 @@ public class VennIntersection extends VennSection {
         this.bindTitleEditing(title);
 
         // manually position it
-        title.setLayoutY(height * 2 - (height / 2.5));
+
+        title.layoutYProperty().bind(this.height.multiply(2).subtract(this.height.divide(2.5)));
         title.widthProperty().addListener((obs, oldVal, newVal) -> {
-            title.setLayoutX(width - (title.getWidth() / 2));
+            title.setLayoutX(width.getValue() - (title.getWidth() / 2));
         });
 
 //        title.layoutXProperty().bind(width);

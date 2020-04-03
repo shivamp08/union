@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -34,9 +35,9 @@ public abstract class VennSection {
     ObjectProperty<Color> color;
     ObjectProperty<Color> mutatingColor;
 
-    double radius;
-    double width;
-    double height;
+    SimpleIntegerProperty radius;
+    SimpleIntegerProperty width;
+    SimpleIntegerProperty height;
     int strokeWidth = 3;
 
     protected Shape shape;
@@ -68,9 +69,9 @@ public abstract class VennSection {
         this.elements = FXCollections.observableList(new ArrayList<>());
         this.app = app;
 
-        this.radius = 300;
-        this.width = 750;
-        this.height = 500;
+        this.radius = new SimpleIntegerProperty(300);
+        this.width = new SimpleIntegerProperty(750);
+        this.height = new SimpleIntegerProperty(500);
     }
 
     public void beginHover () {
@@ -100,7 +101,7 @@ public abstract class VennSection {
 
     private double getXPosition () {
         int multiplier = this.getMultiplier();
-        return width + (multiplier * (this.radius / 2));
+        return this.width.getValue() + (multiplier * ((double)this.radius.getValue() / 2));
     }
 
     protected void bindSectionNameTranslation () {
@@ -133,22 +134,24 @@ public abstract class VennSection {
 
     private void drawCircle () {
         Circle shape = new Circle();
-        double x = this.getXPosition();
 
         Label title = new Label();
         title.textProperty().bind(this.sectionName);
 
         this.bindTitleEditing(title);
 
-        title.setLayoutY(height / 3);
+        title.layoutYProperty().bind(this.height.divide(3));
         title.widthProperty().addListener((obs, oldVal, newVal) ->
-            title.setLayoutX(x - (title.getWidth() / 2) + (this.getMultiplier() * 20))
+            title.setLayoutX(this.getXPosition() - (title.getWidth() / 2) + (this.getMultiplier() * 20))
         );
 
-        shape.setCenterX(x);
-        shape.setCenterY(height);
+//        shape.setCenterX(x);
+        shape.centerXProperty().bind(
+            this.width.add(this.radius.divide(2).multiply(this.section == EntryLocations.Left ? -1 : 1))
+        );
+        shape.centerYProperty().bind(this.height);
 
-        shape.setRadius(this.radius);
+        shape.radiusProperty().bind(this.radius);
 
         shape.fillProperty().bind(this.mutatingColor);
         shape.setStroke(Color.BLACK);
