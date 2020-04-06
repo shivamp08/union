@@ -15,6 +15,7 @@ repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+    
 }
 
 dependencies {
@@ -26,7 +27,9 @@ dependencies {
 
     compile (
         'com.google.code.gson:gson:2.8.6',
-        'org.hildan.fxgson:fx-gson:3.1.2'
+        'org.hildan.fxgson:fx-gson:3.1.2',
+        'com.jfoenix:jfoenix:8.0.8',
+        'io.github.typhon0:AnimateFX:1.2.1'
     )
 
     // Use JUnit test framework

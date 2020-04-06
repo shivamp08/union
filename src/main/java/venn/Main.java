@@ -4,18 +4,16 @@ import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.input.*;
 
-import java.util.ArrayList;
-import java.util.Locale;
+
+import animatefx.animation.*;
 
 public class Main extends Application {
 
@@ -34,8 +32,6 @@ public class Main extends Application {
 	VennSectionLeft left;
 	VennSectionRight right;
 	VennIntersection intersection;
-	
-	static ArrayList<String> allFonts; 
 
 	public static VennChangeHandler changeHandler;
 
@@ -43,9 +39,9 @@ public class Main extends Application {
 		super();
 	}
 
-	public static void main(String[] args) {
-		launch(args);
-	}
+//	public static void main(String[] args) {
+//		launch(args);
+//	}
 	
 	private void drawVenn() {
 		this.left = new VennSectionLeft(scene, this);
@@ -80,28 +76,7 @@ public class Main extends Application {
 //			}
 //			zoomOperator.zoom(holder, zoomFactor, event.getSceneX(), event.getSceneY());
 //		});
-		
-//		allFonts = new ArrayList<Label>(); 
-//		for (String i: Font.getFamilies()) {
-//			Label fontName = new Label(i);
-//			fontName.setFont(Font.font(i));
-//			fontName.setTextFill(Color.BLACK);
-//			allFonts.add(fontName); 
-//		}
 
-		allFonts = new ArrayList<String>(); 
-		allFonts.add("Algerian");
-		allFonts.add("Arial");
-		allFonts.add("Arial Black");
-		allFonts.add("Calibri");
-		allFonts.add("Cambria");
-		allFonts.add("Comic Sans MS");
-		allFonts.add("Consolas");
-		allFonts.add("System");
-		allFonts.add("Tahoma");
-		allFonts.add("Times New Roman");
-	
-		//Setup Scroller
 		mainLayout.setCenter(vennScroller);
 		
 		Rectangle2D r = Screen.getPrimary().getBounds();
@@ -151,9 +126,11 @@ public class Main extends Application {
 		stage.setMaximized(true);
 //		stage.setMinWidth(width);
 //		stage.setResizable(false);
-		Image icon = new Image(getClass().getResource("/Iconlogo.png").toExternalForm());
+		Image icon = new Image(getClass().getResource("/logo.png").toExternalForm());
 		stage.getIcons().add(icon);
 		stage.show(); 
+		new ZoomInRight(mainLayout.getLeft()).setSpeed(1).play();
+		
 	}
 
 }
