@@ -33,22 +33,13 @@ public class VennStartUp  extends Application implements Initializable {
 	
 	 @FXML
 	 private AnchorPane root;
-	 
-	 @FXML
-	 private JFXButton beginButton;
-	 
-	 @FXML
-	 private Text closeText;
-	 
-	 @FXML
-	 private Pane beginButtonPane;
 	
     @Override
     public void start(Stage primaryStage) throws IOException{
     		
     		this.stage = primaryStage;
     		
-            Parent root = FXMLLoader.load(getClass().getResource("StartWindow.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/StartWindow.fxml"));
             Scene scene = new Scene(root);
             scene.setFill(Color.TRANSPARENT);
             stage.setScene(scene);
@@ -58,29 +49,19 @@ public class VennStartUp  extends Application implements Initializable {
     }
     
     @Override
-	public void initialize(URL url, ResourceBundle rb)
-	{	
-    	new ZoomIn(root).playOnFinished(new RubberBand(root)).play();
-	}
+	public void initialize(URL url, ResourceBundle rb) { }
 
     public static void main(String[] args) {
         launch(args);
     }
-    
-    
 
-    public void begin(ActionEvent actionEvent) throws InterruptedException {
-    	
+    public void begin() {
     	Main app = new Main();
     	Stage stage = new Stage();
     	app.start(stage);
-    	
-    	
-    	
     }
 
-    public void close(MouseEvent mouseEvent) throws InterruptedException {
-    	//new Hinge(this.beginButton).play();
+    public void close() {
     	root.getScene().getWindow().hide();
     }
 }

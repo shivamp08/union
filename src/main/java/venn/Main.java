@@ -15,6 +15,8 @@ import javafx.scene.input.*;
 
 import animatefx.animation.*;
 
+import java.util.ArrayList;
+
 public class Main extends Application {
 
 	// initial resolution, 720p
@@ -32,6 +34,8 @@ public class Main extends Application {
 	VennSectionLeft left;
 	VennSectionRight right;
 	VennIntersection intersection;
+
+	static ArrayList<String> allFonts;
 
 	public static VennChangeHandler changeHandler;
 
@@ -76,6 +80,18 @@ public class Main extends Application {
 //			}
 //			zoomOperator.zoom(holder, zoomFactor, event.getSceneX(), event.getSceneY());
 //		});
+
+		allFonts = new ArrayList<>();
+		allFonts.add("Algerian");
+		allFonts.add("Arial");
+		allFonts.add("Arial Black");
+		allFonts.add("Calibri");
+		allFonts.add("Cambria");
+		allFonts.add("Comic Sans MS");
+		allFonts.add("Consolas");
+		allFonts.add("System");
+		allFonts.add("Tahoma");
+		allFonts.add("Times New Roman");
 
 		mainLayout.setCenter(vennScroller);
 		
@@ -128,7 +144,8 @@ public class Main extends Application {
 //		stage.setResizable(false);
 		Image icon = new Image(getClass().getResource("/logo.png").toExternalForm());
 		stage.getIcons().add(icon);
-		stage.show(); 
+		stage.show();
+
 		new ZoomInRight(mainLayout.getLeft()).setSpeed(1).play();
 		
 	}

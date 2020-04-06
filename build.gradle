@@ -39,7 +39,7 @@ dependencies {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'venn.Main'
+        attributes 'Main-Class': 'venn.VennStartUp'
     }
 
     from {
