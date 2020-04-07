@@ -221,10 +221,10 @@ public class VennLeftColumn {
         // init the containers and it's padding
         HBox topContainer = new HBox(5);
         VBox top = new VBox(3);
-        topContainer.getChildren().add(top);
+
         HBox bottomContainer = new HBox(5);
         VBox bottom = new VBox(3);
-//        bottomContainer.getChildren().add(bottom);
+
         this.entries = bottom;
 
         top.prefHeightProperty().bind(root.heightProperty());
@@ -248,8 +248,10 @@ public class VennLeftColumn {
         HBox importExportHBox = this.getImportExportButtons();
         HBox undoRedoBox = this.getUndoRedoButtons();
 
+        VBox topControls = new VBox(5);
+
         // color pickers
-        top.getChildren().addAll(
+        topControls.getChildren().addAll(
             VennPanelTitle.create(VennInternationalization.createStringBinding("add_entry_title"), false, "left-column-title"),
             addButton,
             VennPanelTitle.create(VennInternationalization.createStringBinding("options_title"), false, "left-column-title"),
@@ -262,11 +264,16 @@ public class VennLeftColumn {
             undoRedoBox
         );
 
+        // top scrollpane
+        ScrollPane topScrollable = new ScrollPane(topControls);
+        topScrollable.setFitToHeight(true);
+        topScrollable.setFitToWidth(true);
+
         // trash can
         HBox trashCan = this.getTrashCan();
         Region filler = new Region();
         VBox.setVgrow(filler, Priority.ALWAYS);
-        top.getChildren().addAll(filler, trashCan);
+        top.getChildren().addAll(topScrollable, filler, trashCan);
 
         // bottom scrollpane
         ScrollPane bottomScrollable = new ScrollPane(bottom);
@@ -274,6 +281,8 @@ public class VennLeftColumn {
         bottomScrollable.fitToWidthProperty().set(true);
 //        bottom.getChildren().add(bottomScrollable);
         bottomContainer.getChildren().add(bottomScrollable);
+
+        topContainer.getChildren().add(top);
 
         root.getChildren().addAll(topContainer, bottomContainer);
 
