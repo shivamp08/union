@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Locale;
 
 import static venn.Main.changeHandler;
+import static venn.Main.gameModeHandler;
 
 public class VennLeftColumn {
     VBox root;
@@ -65,6 +66,9 @@ public class VennLeftColumn {
         add.textProperty().bind(VennInternationalization.createStringBinding("add_entry_button"));
         add.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(add, Priority.ALWAYS);
+
+        // no adding while running
+        add.disableProperty().bind(gameModeHandler.running);
 
         add.setOnAction(event -> VennEntryModalHandler.add(this.handler));
         Tooltip.install(add, CtrlN);
@@ -131,6 +135,9 @@ public class VennLeftColumn {
         exportButton.setOnAction(event -> {
             fileHandler.exportVenn();
         });
+
+        // no while running game mode
+        importButton.disableProperty().bind(gameModeHandler.running);
 
         importExportButtons.getChildren().addAll(importButton, exportButton);
         return importExportButtons;
@@ -203,6 +210,49 @@ public class VennLeftColumn {
         return file;
     }
 
+    private HBox getGameModeButtons() {
+        HBox gameModeButtons = new HBox(5);
+
+        Button actionButton = new Button();
+        actionButton.textProperty().bind(VennInternationalization.createStringBinding("gm_start"));
+        actionButton.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(actionButton, Priority.ALWAYS);
+
+        gameModeHandler.running.addListener((event, oldValue, newValue) -> {
+            // running, so cancel
+            if (newValue) {
+                actionButton.textProperty().bind(VennInternationalization.createStringBinding("gm_stop"));
+            } else {
+                // not running, so start
+                actionButton.textProperty().bind(VennInternationalization.createStringBinding("gm_start"));
+            }
+        });
+
+        actionButton.setOnAction(event -> {
+            if (gameModeHandler.running.get()) {
+                // reset and clear the board
+                gameModeHandler.reset(true);
+            } else {
+                gameModeHandler.initialize();
+            }
+        });
+        actionButton.setDisable(false);
+
+        Button verificationButton = new Button();
+        verificationButton.textProperty().bind(VennInternationalization.createStringBinding("gm_verify"));
+        verificationButton.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(verificationButton, Priority.ALWAYS);
+
+        verificationButton.setOnAction(event -> {
+            gameModeHandler.validate();
+        });
+        verificationButton.setDisable(true);
+        verificationButton.disableProperty().bind(gameModeHandler.running.not());
+
+        gameModeButtons.getChildren().addAll(actionButton, verificationButton);
+        return gameModeButtons;
+    }
+
     private HBox getTrashCan () {
         HBox box = new HBox();
         box.setAlignment(Pos.CENTER_RIGHT);
@@ -248,6 +298,8 @@ public class VennLeftColumn {
         HBox importExportHBox = this.getImportExportButtons();
         HBox undoRedoBox = this.getUndoRedoButtons();
 
+        HBox gameModeButtons = this.getGameModeButtons();
+
         VBox topControls = new VBox(5);
 
         // color pickers
@@ -261,7 +313,9 @@ public class VennLeftColumn {
             VennPanelTitle.create(VennInternationalization.createStringBinding("import_export_title"), false, "left-column-title"),
             importExportHBox,
             VennPanelTitle.create(VennInternationalization.createStringBinding("undo_redo_title"), false, "left-column-title"),
-            undoRedoBox
+            undoRedoBox,
+            VennPanelTitle.create(VennInternationalization.createStringBinding("gm_title"), false, "left-column-title"),
+            gameModeButtons
         );
 
         // top scrollpane

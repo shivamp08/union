@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static venn.Main.changeHandler;
+import static venn.Main.gameModeHandler;
 
 public abstract class VennSection {
     @SerializedName("c")
@@ -125,7 +126,8 @@ public abstract class VennSection {
         // double click to edit
         control.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)){
-                if (event.getClickCount() == 2){
+                // not while running
+                if (event.getClickCount() == 2 && !gameModeHandler.running.get()) {
                     VennEntryModalHandler.edit(this.sectionName, 25);
                 }
             }

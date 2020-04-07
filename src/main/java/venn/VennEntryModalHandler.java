@@ -17,6 +17,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import static venn.Main.changeHandler;
+import static venn.Main.gameModeHandler;
 
 enum ModalType {
     Entry,
@@ -26,6 +27,9 @@ enum ModalType {
 public class VennEntryModalHandler {
 	//Add
     public static void add (VennEntryHandler handler) {
+        // no adding while running game mode
+        if (gameModeHandler.running.get()) return;
+
         final int maxLength = 40;
         String[] add = VennEntryModalHandler.create(
             ModalType.Entry,

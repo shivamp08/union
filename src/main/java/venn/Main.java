@@ -39,6 +39,8 @@ public class Main extends Application {
 
 	public static VennChangeHandler changeHandler;
 
+	public static VennGameMode gameModeHandler;
+
 	public Main () {
 		super();
 	}
@@ -59,6 +61,7 @@ public class Main extends Application {
 		this.stage = stage;
 
 		changeHandler = new VennChangeHandler(this);
+		gameModeHandler = new VennGameMode(this);
 
 		BorderPane mainLayout = new BorderPane();
 

@@ -21,6 +21,9 @@ import javafx.scene.text.Font;
 
 import java.util.UUID;
 
+import static venn.Main.gameModeHandler;
+import static venn.VennEntryHandler.getWebColor;
+
 //import static venn.VennEntryHandler.getWebColor;
 
 public class VennTextEntry extends Region {
@@ -93,6 +96,17 @@ public class VennTextEntry extends Region {
         this.draw();
     }
 
+    public VennTextEntry(VennTextEntry entry) {
+        this(
+            entry.string.get(),
+            entry.description.get(),
+            getWebColor(entry.draggableColor.get()),
+            entry.draggableFont.get(),
+            entry.fontSize.get(),
+            getWebColor(entry.fontColor.get())
+        );
+    }
+
     public VennTextEntry(String string) {
         this(string, null, null, null, null, null);
     }
@@ -120,10 +134,10 @@ public class VennTextEntry extends Region {
 
         //if (this.draggableColor == null) this.draggableColor = VennEntryHandler.generateColour();
 
-        pane.setStyle("-fx-background-color: " + VennEntryHandler.getWebColor(draggableColor.getValue()));
+        pane.setStyle("-fx-background-color: " + getWebColor(draggableColor.getValue()));
         
         draggableColor.addListener((observable, oldValue, newValue) -> {
-        	pane.setStyle("-fx-background-color: " + VennEntryHandler.getWebColor(draggableColor.getValue()));
+        	pane.setStyle("-fx-background-color: " + getWebColor(draggableColor.getValue()));
         });
 
         Tooltip tooltip = new Tooltip();
@@ -151,7 +165,8 @@ public class VennTextEntry extends Region {
     private void initClickHandlers (Pane pane) {
         pane.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)){
-                if (event.getClickCount() == 2){
+                // not when running game mode
+                if (event.getClickCount() == 2 && !gameModeHandler.running.get()){
                     VennEntryModalHandler.edit(this.string, this.description, this.draggableColor, this.draggableFont, this.fontColor);
                 }
             }
