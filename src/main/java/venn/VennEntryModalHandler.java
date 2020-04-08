@@ -244,6 +244,9 @@ public class VennEntryModalHandler {
             window.close();
         });
 
+        addButton.disableProperty().bind(data.lengthProperty().isEqualTo(0));
+        addAnotherButton.disableProperty().bind(data.lengthProperty().isEqualTo(0));
+
         HBox allButtons = new HBox();
         allButtons.setPadding(new Insets(0, 10, 10, 10));
         allButtons.setSpacing(10);
