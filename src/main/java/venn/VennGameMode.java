@@ -10,6 +10,7 @@ import org.hildan.fxgson.FxGson;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -20,7 +21,8 @@ public class VennGameMode {
 
     BooleanProperty running;
     VennExport imported;
-    HashMap<String, EntryLocations> solutions;
+    HashMap<String, EntryLocations> solutions; 
+    File location; 
 
     public VennGameMode(Main app) {
         this.app = app;
@@ -28,9 +30,9 @@ public class VennGameMode {
         this.running = new SimpleBooleanProperty(false);
     }
 
-    public void initialize () {
+    public boolean initialize () {
         boolean canContinue = this.showAlerts();
-        if (!canContinue) return;
+        if (!canContinue) return false;
 
         clearDiagram(this.app);
 
@@ -48,6 +50,7 @@ public class VennGameMode {
 
             solutions.put(entry.id, entry.location);
         }
+        return true; 
     }
 
     public boolean showAlerts() {
@@ -66,7 +69,7 @@ public class VennGameMode {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             System.out.println(alert.getResult());
 
-            File location = VennLeftColumn.getFileLocationFromChooser(this.app.stage, "json", false);
+            location = VennLeftColumn.getFileLocationFromChooser(this.app.stage, "json", false);
             if (location == null) return false; // nothing selected
 
             Gson gson = FxGson.fullBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
@@ -102,11 +105,70 @@ public class VennGameMode {
 
         if (clean) clearDiagram(this.app);
     }
+    
+    public boolean reset() {
+    	clearDiagram(this.app); 
+    	
+        Gson gson = FxGson.fullBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
+
+        // imported object
+        try {
+            imported = gson.fromJson(new FileReader(location), VennExport.class);
+        } catch (IOException exception) {
+            return false;
+        }
+        
+        for (VennTextEntry entry : this.imported.elements.entries) {
+            entry.draw();
+            this.app.entries.initEntry(entry);
+
+            // update the location
+            entry.setLocation(entry.location);
+
+            this.app.entries.addEntry(entry, false);
+        }
+        
+        return true; 
+    }
 
     // validate with the solutions
     public void validate () {
+    	int marks = 0;
+    	ArrayList<String> corrections = new ArrayList<>(); 
+    	
         for (String vennEntryId : this.solutions.keySet()) {
-            System.out.println(vennEntryId + ", supposed to be at: " + this.solutions.get(vennEntryId));
+        	VennTextEntry entry = (VennTextEntry) this.app.entries.getEntryById(vennEntryId);
+        	
+        	if (entry.location.equals(this.solutions.get(vennEntryId))) {
+        		marks++;
+        	}
+        	else {
+        		corrections.add(entry.string.getValue() + ", should to be at: " + this.solutions.get(vennEntryId));
+        	}
+        }
+        ButtonType cont = new ButtonType("Continue");
+        ButtonType reveal = new ButtonType("Reveal Answer");
+        
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "", cont, reveal);
+        alert.setGraphic(null);
+        alert.setHeaderText("Result");
+          
+        StringBuilder result = new StringBuilder() ;
+        result.append("Score: " + marks + "/" + solutions.size() + "\n\n");
+        
+        for (String i : corrections) {
+        	result.append(i + "\n");
+        }
+        
+        alert.setContentText(result.toString());
+        Optional<ButtonType> option = alert.showAndWait();
+        if (option.isPresent() && option.get() == reveal) {
+        	Alert warning = new Alert(Alert.AlertType.WARNING, "Revealing the answer will end the game. \n Would you like to proceed?", ButtonType.YES, ButtonType.NO);
+        	if (warning.showAndWait().get() == ButtonType.YES) {
+            	VennLeftColumn.actionButton.fire();
+            	VennFileHandler importAnswer = new VennFileHandler(app, app.entries, app.right, app.left, app.intersection); 
+            	importAnswer.importVenn(location);
+        	}
         }
     }
 }

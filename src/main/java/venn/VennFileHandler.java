@@ -131,9 +131,16 @@ public class VennFileHandler {
         }
     }
 
-    public void importVenn () {
+    public void importVenn (File x) {
         System.out.println(this.handler.entries.size());
-        File location = VennLeftColumn.getFileLocationFromChooser(this.app.stage, "json", false);
+        
+        File location; 
+        if (x == null) {
+        	location = VennLeftColumn.getFileLocationFromChooser(this.app.stage, "json", false);
+        }
+        else {
+        	location = x; 
+        }
 
         if (location == null) return;
 

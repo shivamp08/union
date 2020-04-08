@@ -36,6 +36,9 @@ public class VennLeftColumn {
     VennIntersection intersection;
     VennOptions options;
     VennFileHandler fileHandler;
+    
+    static Button actionButton;
+    static HBox gameModeButtons; 
 
     public VennLeftColumn(VennEntryHandler handler) {
         this.handler = handler;
@@ -124,7 +127,7 @@ public class VennLeftColumn {
         HBox.setHgrow(importButton, Priority.ALWAYS);
 
         importButton.setOnAction(event -> {
-            fileHandler.importVenn();
+            fileHandler.importVenn(null);
         });
 
         Button exportButton = new Button();
@@ -211,9 +214,9 @@ public class VennLeftColumn {
     }
 
     private HBox getGameModeButtons() {
-        HBox gameModeButtons = new HBox(5);
+    	gameModeButtons = new HBox(5);
 
-        Button actionButton = new Button();
+        actionButton = new Button();
         actionButton.textProperty().bind(VennInternationalization.createStringBinding("gm_start"));
         actionButton.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(actionButton, Priority.ALWAYS);
@@ -232,8 +235,16 @@ public class VennLeftColumn {
             if (gameModeHandler.running.get()) {
                 // reset and clear the board
                 gameModeHandler.reset(true);
+                gameModeButtons.getChildren().remove(2);
             } else {
-                gameModeHandler.initialize();
+            	if (gameModeHandler.initialize()) {
+                    Button reset = new Button("Reset");
+                    gameModeButtons.getChildren().add(reset);
+                    
+                    reset.setOnAction(resetEvent -> {
+                    	gameModeHandler.reset(); 
+                    });
+            	}
             }
         });
         actionButton.setDisable(false);
@@ -244,7 +255,13 @@ public class VennLeftColumn {
         HBox.setHgrow(verificationButton, Priority.ALWAYS);
 
         verificationButton.setOnAction(event -> {
-            gameModeHandler.validate();
+            if (entries.getChildren().size() == 0) {
+            	gameModeHandler.validate();
+            }
+            else {
+            	Alert alert = new Alert(Alert.AlertType.ERROR, "Please place all entries on the Venn Diagram!");
+            	alert.showAndWait();
+            }
         });
         verificationButton.setDisable(true);
         verificationButton.disableProperty().bind(gameModeHandler.running.not());
