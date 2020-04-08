@@ -137,12 +137,11 @@ public class VennGameMode {
     	ArrayList<String> corrections = new ArrayList<>(); 
     	
         for (String vennEntryId : this.solutions.keySet()) {
-        	VennTextEntry entry = (VennTextEntry) this.app.entries.getEntryById(vennEntryId);
+        	VennTextEntry entry = this.app.entries.getEntryById(vennEntryId);
         	
         	if (entry.location.equals(this.solutions.get(vennEntryId))) {
         		marks++;
-        	}
-        	else {
+        	} else {
         		corrections.add(entry.string.getValue() + ", should to be at: " + this.solutions.get(vennEntryId));
         	}
         }

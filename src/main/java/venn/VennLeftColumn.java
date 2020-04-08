@@ -38,7 +38,7 @@ public class VennLeftColumn {
     VennFileHandler fileHandler;
     
     static Button actionButton;
-    static HBox gameModeButtons; 
+    static VBox gameModeButtons;
 
     public VennLeftColumn(VennEntryHandler handler) {
         this.handler = handler;
@@ -213,8 +213,9 @@ public class VennLeftColumn {
         return file;
     }
 
-    private HBox getGameModeButtons() {
-    	gameModeButtons = new HBox(5);
+    private VBox getGameModeButtons() {
+    	gameModeButtons = new VBox(5);
+    	HBox sideBySide = new HBox(5);
 
         actionButton = new Button();
         actionButton.textProperty().bind(VennInternationalization.createStringBinding("gm_start"));
@@ -238,10 +239,12 @@ public class VennLeftColumn {
                 gameModeButtons.getChildren().remove(2);
             } else {
             	if (gameModeHandler.initialize()) {
-                    Button reset = new Button("Reset");
-                    gameModeButtons.getChildren().add(reset);
+                    Button resetButton = new Button();
+                    resetButton.textProperty().bind(VennInternationalization.createStringBinding("gm_reset"));
+                    resetButton.setMaxWidth(Double.MAX_VALUE);
+                    gameModeButtons.getChildren().add(resetButton);
                     
-                    reset.setOnAction(resetEvent -> {
+                    resetButton.setOnAction(resetEvent -> {
                     	gameModeHandler.reset(); 
                     });
             	}
@@ -257,8 +260,7 @@ public class VennLeftColumn {
         verificationButton.setOnAction(event -> {
             if (entries.getChildren().size() == 0) {
             	gameModeHandler.validate();
-            }
-            else {
+            } else {
             	Alert alert = new Alert(Alert.AlertType.ERROR, "Please place all entries on the Venn Diagram!");
             	alert.showAndWait();
             }
@@ -266,7 +268,8 @@ public class VennLeftColumn {
         verificationButton.setDisable(true);
         verificationButton.disableProperty().bind(gameModeHandler.running.not());
 
-        gameModeButtons.getChildren().addAll(actionButton, verificationButton);
+        sideBySide.getChildren().addAll(actionButton, verificationButton);
+        gameModeButtons.getChildren().add(sideBySide);
         return gameModeButtons;
     }
 
@@ -315,7 +318,7 @@ public class VennLeftColumn {
         HBox importExportHBox = this.getImportExportButtons();
         HBox undoRedoBox = this.getUndoRedoButtons();
 
-        HBox gameModeButtons = this.getGameModeButtons();
+        VBox gameModeButtons = this.getGameModeButtons();
 
         VBox topControls = new VBox(5);
 
