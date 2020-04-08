@@ -148,15 +148,10 @@ public class VennGameMode {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "", cont, reveal);
         alert.setGraphic(null);
         alert.setHeaderText(VennInternationalization.get("gm_result"));
-          
-        StringBuilder result = new StringBuilder() ;
-        result.append(VennInternationalization.get("gm_msg_score", marks, solutions.size()));
-        
-        for (String i : corrections) {
-        	result.append(i + "\n");
-        }
-        
-        alert.setContentText(result.toString());
+
+        String result = VennInternationalization.get("gm_msg_score", marks, solutions.size()) + "\n\n" + String.join("\n", corrections);
+
+        alert.setContentText(result);
         Optional<ButtonType> option = alert.showAndWait();
         if (option.isPresent() && option.get() == reveal) {
         	Alert warning = new Alert(Alert.AlertType.WARNING, VennInternationalization.get("gm_msg_warning"), ButtonType.YES, ButtonType.NO);
