@@ -3,6 +3,7 @@ package venn;
 import com.google.gson.Gson;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -39,6 +40,10 @@ public class VennGameMode {
 
         // store the solutions (id: solution) in a hash map for verification
         this.solutions = new HashMap<>();
+        
+        this.app.left.sectionName.set(imported.left.sectionName.get()); 
+        this.app.right.sectionName.set(imported.right.sectionName.get()); 
+        this.app.intersection.sectionName.set(imported.intersection.sectionName.get()); 
 
         for (VennTextEntry entry : this.imported.elements.entries) {
             entry.draw();

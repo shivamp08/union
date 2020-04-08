@@ -244,11 +244,14 @@ public class VennLeftColumn {
             // running, so cancel
             if (newValue) {
                 actionButton.textProperty().bind(VennInternationalization.createStringBinding("gm_stop"));
-                gameModeButtons.getChildren().add(resetButton);
+                gameModeButtons.getChildren().add(resetButton); 
             } else {
                 // not running, so start
                 actionButton.textProperty().bind(VennInternationalization.createStringBinding("gm_start"));
                 gameModeButtons.getChildren().remove(resetButton);
+                this.app.left.sectionName.set(VennInternationalization.get("left_title"));
+                this.app.right.sectionName.set(VennInternationalization.get("right_title"));
+                this.app.intersection.sectionName.set(VennInternationalization.get("middle_title"));
             }
         });
 
