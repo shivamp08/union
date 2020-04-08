@@ -17,9 +17,11 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Optional;
 
 import static venn.Main.changeHandler;
 import static venn.Main.gameModeHandler;
+import static venn.VennFileHandler.clearDiagram;
 
 public class VennLeftColumn {
     VBox root;
@@ -76,15 +78,26 @@ public class VennLeftColumn {
         return add;
     }
 
-//    private Button getAddMultipleButton () {
-//        Button add = new Button("Add Multiple");
-//        add.setMaxWidth(Double.MAX_VALUE);
-//        HBox.setHgrow(add, Priority.ALWAYS);
-//
-////        add.setOnAction(event -> VennAddEntry.add(this.handler));
-//
-//        return add;
-//    }
+    private Button getDeleteAllButton() {
+        Button clearAll = new Button();
+        clearAll.textProperty().bind(VennInternationalization.createStringBinding("delete_all"));
+        clearAll.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(clearAll, Priority.ALWAYS);
+
+        // no clearing while running
+        clearAll.disableProperty().bind(gameModeHandler.running);
+
+        clearAll.setOnAction(event -> {
+            Alert alert = new Alert(Alert.AlertType.WARNING, VennInternationalization.get("delete_all_warning"));
+            Optional<ButtonType> result =  alert.showAndWait();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                clearDiagram(this.app);
+            }
+        });
+
+        return clearAll;
+    }
 
     private Button getOptionsButton () {
         Button optionsButton = new Button();
@@ -307,6 +320,7 @@ public class VennLeftColumn {
         Button addButton = this.getAddButton();
         Button optionsButton = this.getOptionsButton();
         Button screenshotButton = this.getScreenshotButton();
+        Button deleteAllButton = this.getDeleteAllButton();
 
         HBox importExportHBox = this.getImportExportButtons();
         HBox undoRedoBox = this.getUndoRedoButtons();
@@ -321,6 +335,7 @@ public class VennLeftColumn {
             addButton,
             VennPanelTitle.create(VennInternationalization.createStringBinding("options_title"), false, "left-column-title"),
             optionsButton,
+            deleteAllButton,
             VennPanelTitle.create(VennInternationalization.createStringBinding("screenshot_title"), false, "left-column-title"),
             screenshotButton,
             VennPanelTitle.create(VennInternationalization.createStringBinding("import_export_title"), false, "left-column-title"),
