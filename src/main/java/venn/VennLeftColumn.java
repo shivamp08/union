@@ -36,9 +36,6 @@ public class VennLeftColumn {
     VennIntersection intersection;
     VennOptions options;
     VennFileHandler fileHandler;
-    
-    static Button actionButton;
-    static VBox gameModeButtons;
 
     public VennLeftColumn(VennEntryHandler handler) {
         this.handler = handler;
@@ -214,41 +211,37 @@ public class VennLeftColumn {
     }
 
     private VBox getGameModeButtons() {
-    	gameModeButtons = new VBox(5);
+    	VBox gameModeButtons = new VBox(5);
     	HBox sideBySide = new HBox(5);
 
-        actionButton = new Button();
+    	Button actionButton = new Button();
         actionButton.textProperty().bind(VennInternationalization.createStringBinding("gm_start"));
         actionButton.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(actionButton, Priority.ALWAYS);
+
+        Button resetButton = new Button();
+        resetButton.textProperty().bind(VennInternationalization.createStringBinding("gm_reset"));
+        resetButton.setMaxWidth(Double.MAX_VALUE);
+
+        resetButton.setOnAction(resetEvent -> {
+            gameModeHandler.reset();
+        });
 
         gameModeHandler.running.addListener((event, oldValue, newValue) -> {
             // running, so cancel
             if (newValue) {
                 actionButton.textProperty().bind(VennInternationalization.createStringBinding("gm_stop"));
+                gameModeButtons.getChildren().add(resetButton);
             } else {
                 // not running, so start
                 actionButton.textProperty().bind(VennInternationalization.createStringBinding("gm_start"));
+                gameModeButtons.getChildren().remove(resetButton);
             }
         });
 
         actionButton.setOnAction(event -> {
-            if (gameModeHandler.running.get()) {
-                // reset and clear the board
-                gameModeHandler.reset(true);
-                gameModeButtons.getChildren().remove(2);
-            } else {
-            	if (gameModeHandler.initialize()) {
-                    Button resetButton = new Button();
-                    resetButton.textProperty().bind(VennInternationalization.createStringBinding("gm_reset"));
-                    resetButton.setMaxWidth(Double.MAX_VALUE);
-                    gameModeButtons.getChildren().add(resetButton);
-                    
-                    resetButton.setOnAction(resetEvent -> {
-                    	gameModeHandler.reset(); 
-                    });
-            	}
-            }
+            if (!gameModeHandler.running.get()) gameModeHandler.initialize();
+            else gameModeHandler.reset(true);
         });
         actionButton.setDisable(false);
 
@@ -261,7 +254,7 @@ public class VennLeftColumn {
             if (entries.getChildren().size() == 0) {
             	gameModeHandler.validate();
             } else {
-            	Alert alert = new Alert(Alert.AlertType.ERROR, "Please place all entries on the Venn Diagram!");
+            	Alert alert = new Alert(Alert.AlertType.ERROR, VennInternationalization.get("gm_msg_error_place_all"));
             	alert.showAndWait();
             }
         });
@@ -269,7 +262,7 @@ public class VennLeftColumn {
         verificationButton.disableProperty().bind(gameModeHandler.running.not());
 
         sideBySide.getChildren().addAll(actionButton, verificationButton);
-        gameModeButtons.getChildren().add(sideBySide);
+        gameModeButtons.getChildren().addAll(sideBySide);
         return gameModeButtons;
     }
 

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import org.hildan.fxgson.FxGson;
 
@@ -56,13 +57,9 @@ public class VennGameMode {
     public boolean showAlerts() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK, ButtonType.CANCEL);
         alert.setGraphic(null);
-        alert.setHeaderText("Information");
+        alert.setHeaderText(VennInternationalization.get("gm_information"));
 
-        alert.setContentText(
-            "Once you enable Game Mode, you will be asked to select a file. These are the expected answers. \n\n" +
-            "Once the file has been selected, you will no longer be able to create new entries for the diagram. \n\n" +
-            "You may click the button on the left to verify your response, or to close Game Mode."
-        );
+        alert.setContentText(VennInternationalization.get("gm_msg_why_did_i_choose_to_make_this_bilingual_help"));
 
         Optional<ButtonType> result = alert.showAndWait();
 
@@ -82,10 +79,10 @@ public class VennGameMode {
             }
 
             if (imported.elements.entries.size() == 0) {
-                alert = new Alert(Alert.AlertType.ERROR, "No entries provided!");
+                alert = new Alert(Alert.AlertType.ERROR, VennInternationalization.get("gm_msg_none_provided"));
                 alert.showAndWait();
             } else {
-                alert =  new Alert(Alert.AlertType.INFORMATION, "Game Mode beginning...");
+                alert =  new Alert(Alert.AlertType.INFORMATION, VennInternationalization.get("gm_msg_beginning"));
                 alert.showAndWait();
 
                 this.running.set(true);
@@ -142,18 +139,18 @@ public class VennGameMode {
         	if (entry.location.equals(this.solutions.get(vennEntryId))) {
         		marks++;
         	} else {
-        		corrections.add(entry.string.getValue() + ", should to be at: " + this.solutions.get(vennEntryId));
+                corrections.add(VennInternationalization.get("gm_msg_should_be_at", entry.string.getValue(), this.solutions.get(vennEntryId)));
         	}
         }
-        ButtonType cont = new ButtonType("Continue");
-        ButtonType reveal = new ButtonType("Reveal Answer");
+        ButtonType cont = new ButtonType(VennInternationalization.get("gm_btn_continue"));
+        ButtonType reveal = new ButtonType(VennInternationalization.get("gm_btn_reveal"));
         
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "", cont, reveal);
         alert.setGraphic(null);
-        alert.setHeaderText("Result");
+        alert.setHeaderText(VennInternationalization.get("gm_result"));
           
         StringBuilder result = new StringBuilder() ;
-        result.append("Score: " + marks + "/" + solutions.size() + "\n\n");
+        result.append(VennInternationalization.get("gm_msg_score", marks, solutions.size()));
         
         for (String i : corrections) {
         	result.append(i + "\n");
@@ -162,9 +159,11 @@ public class VennGameMode {
         alert.setContentText(result.toString());
         Optional<ButtonType> option = alert.showAndWait();
         if (option.isPresent() && option.get() == reveal) {
-        	Alert warning = new Alert(Alert.AlertType.WARNING, "Revealing the answer will end the game. \n Would you like to proceed?", ButtonType.YES, ButtonType.NO);
-        	if (warning.showAndWait().get() == ButtonType.YES) {
-            	VennLeftColumn.actionButton.fire();
+        	Alert warning = new Alert(Alert.AlertType.WARNING, VennInternationalization.get("gm_msg_warning"), ButtonType.YES, ButtonType.NO);
+
+        	Optional<ButtonType> warningResult = warning.showAndWait();
+        	if (warningResult.isPresent() && warningResult.get() == ButtonType.YES) {
+        	    this.reset(true);
             	VennFileHandler importAnswer = new VennFileHandler(app, app.entries, app.right, app.left, app.intersection); 
             	importAnswer.importVenn(location);
         	}
