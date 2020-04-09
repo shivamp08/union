@@ -40,6 +40,8 @@ public class Main extends Application {
 	public static VennChangeHandler changeHandler;
 
 	public static VennGameMode gameModeHandler;
+	
+	public static VennPrint vennPrinter; 
 
 	public Main () {
 		super();
@@ -62,6 +64,7 @@ public class Main extends Application {
 
 		changeHandler = new VennChangeHandler(this);
 		gameModeHandler = new VennGameMode(this);
+		vennPrinter = new VennPrint(this); 
 
 		BorderPane mainLayout = new BorderPane();
 

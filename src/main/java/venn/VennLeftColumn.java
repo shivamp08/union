@@ -37,7 +37,7 @@ public class VennLeftColumn {
     VennSectionRight right;
     VennIntersection intersection;
     VennOptions options;
-    VennFileHandler fileHandler;
+    VennFileHandler fileHandler; 
 
     public VennLeftColumn(VennEntryHandler handler) {
         this.handler = handler;
@@ -111,7 +111,9 @@ public class VennLeftColumn {
         return optionsButton;
     }
 
-    private Button getScreenshotButton () {
+    private HBox getScreenshotButton () {
+    	HBox screenshotButtons = new HBox(5); 
+    	
         Button saveScreenshotButton = new Button();
         saveScreenshotButton.textProperty().bind(VennInternationalization.createStringBinding("screenshot_button"));
         saveScreenshotButton.setMaxWidth(Double.MAX_VALUE);
@@ -124,8 +126,19 @@ public class VennLeftColumn {
                 System.out.println("Saved file: " + success);
             }
         });
-
-        return saveScreenshotButton;
+        
+    	Button printButton = new Button();
+    	printButton.textProperty().bind(VennInternationalization.createStringBinding("print_button"));
+    	printButton.setMaxWidth(Double.MAX_VALUE);
+    	HBox.setHgrow(printButton, Priority.ALWAYS);
+    	
+    	printButton.setOnAction(event -> {
+    		Main.vennPrinter.printImage();
+    	});
+    	
+    	screenshotButtons.getChildren().addAll(saveScreenshotButton, printButton);
+    	
+    	return screenshotButtons; 
     }
 
     private HBox getImportExportButtons () {
@@ -155,7 +168,7 @@ public class VennLeftColumn {
         importExportButtons.getChildren().addAll(importButton, exportButton);
         return importExportButtons;
     }
-
+    
     private HBox getUndoRedoButtons () {
         HBox undoRedoButtons = new HBox(5);
 
@@ -322,7 +335,7 @@ public class VennLeftColumn {
         // adding buttons
         Button addButton = this.getAddButton();
         Button optionsButton = this.getOptionsButton();
-        Button screenshotButton = this.getScreenshotButton();
+        HBox screenshotButtons = this.getScreenshotButton();
         Button deleteAllButton = this.getDeleteAllButton();
 
         HBox importExportHBox = this.getImportExportButtons();
@@ -340,7 +353,7 @@ public class VennLeftColumn {
             optionsButton,
             deleteAllButton,
             VennPanelTitle.create(VennInternationalization.createStringBinding("screenshot_title"), false, "left-column-title"),
-            screenshotButton,
+            screenshotButtons,
             VennPanelTitle.create(VennInternationalization.createStringBinding("import_export_title"), false, "left-column-title"),
             importExportHBox,
             VennPanelTitle.create(VennInternationalization.createStringBinding("undo_redo_title"), false, "left-column-title"),
