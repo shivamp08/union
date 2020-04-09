@@ -20,6 +20,7 @@ import javafx.scene.transform.Transform;
 public class VennPrint {
 	Main app; 
 	
+	//list
 	ChoiceDialog<Printer> printerList;
 	
 	public VennPrint(Main app) {
