@@ -108,7 +108,7 @@ public class VennTextEntry extends Region {
     }
 
     public VennTextEntry(String string) {
-        this(string, null, null, null, null, null);
+        this(string, null, "#ffffff", new Font("Arial", 12), "12", "#000000");
     }
     
     public void setLocation(EntryLocations location) {

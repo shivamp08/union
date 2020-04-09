@@ -1,0 +1,54 @@
+{
+  "e": {
+    "e": [
+      {
+        "s": "Left",
+        "l": "Left",
+        "d": "",
+        "x": 390.5,
+        "y": 458.5,
+        "i": "e877ec46-65e1-4da8-af1d-24e68c2747a6",
+        "bgc": "#ffffffff",
+        "f": "System,Regular,10.0",
+        "fs": "10",
+        "fc": "#000000ff"
+      },
+      {
+        "s": "Right",
+        "l": "Right",
+        "d": "",
+        "x": 1094.5,
+        "y": 525.5,
+        "i": "7b59b05b-5a68-49b6-a524-40b9db4b5697",
+        "bgc": "#ffffffff",
+        "f": "System,Regular,10.0",
+        "fs": "10",
+        "fc": "#000000ff"
+      },
+      {
+        "s": "Middle",
+        "l": "Center",
+        "d": "",
+        "x": 724.5,
+        "y": 464.5,
+        "i": "a04cdb9a-5e8b-426c-abc8-a1b96da652e6",
+        "bgc": "#ffffffff",
+        "f": "System,Regular,10.0",
+        "fs": "10",
+        "fc": "#000000ff"
+      }
+    ]
+  },
+  "r": {
+    "c": "#f08080ff",
+    "n": "Right Side"
+  },
+  "l": {
+    "c": "#add8e6ff",
+    "n": "Left Side"
+  },
+  "i": {
+    "c": "#808080ff",
+    "n": "Intersection"
+  }
+}
