@@ -3,14 +3,12 @@ package venn;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -72,11 +70,37 @@ public class VennOptions {
         return new VBox[]{ leftPickerBox, rightPickerBox, intersectionPickerBox };
     }
 
+//    private VBox getRadiusSlider () {
+//        VBox box = new VBox(5);
+//
+//        Label label = new Label();
+//        label.setText(VennInternationalization.get("gm_title"));
+//
+//        Slider slider = new Slider(100, 500, VennSection.radius.get());
+//        slider.setShowTickMarks(true);
+//        slider.setShowTickLabels(true);
+//
+//        box.setAlignment(Pos.CENTER);
+//        box.setMaxWidth(300);
+//
+//        slider.valueProperty().addListener((obs, oldValue, newValue) -> {
+//            if (newValue != null) {
+//                VennSection.radius.set((int) newValue.doubleValue());
+////                ((Circle) this.left.shape).setRadius(newValue.doubleValue());
+////                ((Circle) this.right.shape).setRadius(newValue.doubleValue());
+//            }
+//        });
+//
+//        box.getChildren().addAll(label, slider);
+//
+//        return box;
+//    }
+
     public void show () {
         Stage window = new Stage();
         window.setTitle("Options");
         window.setWidth(400);
-        window.setHeight(400);
+        window.setHeight(450);
 
         // prevents user to modify other window
         window.initModality(Modality.APPLICATION_MODAL);
@@ -127,6 +151,10 @@ public class VennOptions {
         for (VBox colorPicker : colorPickers) {
             layout.getChildren().add(colorPicker);
         }
+
+//        VBox radiusSlider = this.getRadiusSlider();
+//        layout.getChildren().addAll(radiusSlider);
+
         Region filler = new Region();
         VBox.setVgrow(filler, Priority.ALWAYS);
         layout.getChildren().addAll(filler, allButtons);

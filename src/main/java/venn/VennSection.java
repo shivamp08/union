@@ -36,7 +36,10 @@ public abstract class VennSection {
     ObjectProperty<Color> color;
     ObjectProperty<Color> mutatingColor;
 
-    SimpleIntegerProperty radius;
+    @SerializedName("r")
+    @Expose
+    static SimpleIntegerProperty radius = new SimpleIntegerProperty(100);
+
     SimpleIntegerProperty width;
     SimpleIntegerProperty height;
     int strokeWidth = 3;
@@ -70,7 +73,6 @@ public abstract class VennSection {
         this.elements = FXCollections.observableList(new ArrayList<>());
         this.app = app;
 
-        this.radius = new SimpleIntegerProperty(300);
         this.width = new SimpleIntegerProperty(750);
         this.height = new SimpleIntegerProperty(500);
     }
@@ -102,7 +104,7 @@ public abstract class VennSection {
 
     private double getXPosition () {
         int multiplier = this.getMultiplier();
-        return this.width.getValue() + (multiplier * ((double)this.radius.getValue() / 2));
+        return this.width.getValue() + (multiplier * ((double) radius.getValue() / 2));
     }
 
     protected void bindSectionNameTranslation () {
@@ -142,18 +144,21 @@ public abstract class VennSection {
 
         this.bindTitleEditing(title);
 
-        title.layoutYProperty().bind(this.height.divide(3));
+        title.layoutYProperty().bind(this.height.subtract(radius).subtract(title.heightProperty()).subtract(10));
+
         title.widthProperty().addListener((obs, oldVal, newVal) ->
             title.setLayoutX(this.getXPosition() - (title.getWidth() / 2) + (this.getMultiplier() * 20))
         );
+        radius.addListener((obs, oldVal, newVal) ->
+            title.setLayoutX(this.getXPosition() - (title.getWidth() / 2) + (this.getMultiplier() * 20))
+        );
 
-//        shape.setCenterX(x);
         shape.centerXProperty().bind(
-            this.width.add(this.radius.divide(2).multiply(this.section == EntryLocations.Left ? -1 : 1))
+            this.width.add(radius.divide(2).multiply(this.section == EntryLocations.Left ? -1 : 1))
         );
         shape.centerYProperty().bind(this.height);
 
-        shape.radiusProperty().bind(this.radius);
+        shape.radiusProperty().bind(radius);
 
         shape.fillProperty().bind(this.mutatingColor);
         shape.setStroke(Color.BLACK);

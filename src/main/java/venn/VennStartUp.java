@@ -6,33 +6,27 @@ import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXButton;
 
-import animatefx.animation.*;
-import javafx.animation.Animation;
+import com.jfoenix.controls.JFXSlider;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Duration;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
-
-
 public class VennStartUp  extends Application implements Initializable {
-    //Has a menu that fits entire screen
+    public JFXButton beginButton;
+    public Text closeText;
+
+    protected Stage stage;
 	
-	protected Stage stage;
-	
-	 @FXML
-	 private AnchorPane root;
+    @FXML
+    private AnchorPane root;
 	
     @Override
     public void start(Stage primaryStage) throws IOException{

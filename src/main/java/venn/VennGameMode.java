@@ -140,6 +140,28 @@ public class VennGameMode {
         return true; 
     }
 
+    private String getSectionString (EntryLocations location) {
+        String locationName = "";
+        switch (location) {
+            case Left: {
+                locationName = app.left.sectionName.get();
+                break;
+            }
+            case Right: {
+                locationName = app.right.sectionName.get();
+                break;
+            }
+            case Center: {
+                locationName = app.intersection.sectionName.get();
+                break;
+            }
+            case Draggable: {
+                break;
+            }
+        }
+        return locationName;
+    }
+
     // validate with the solutions
     public void validate () {
     	int marks = 0;
@@ -156,21 +178,6 @@ public class VennGameMode {
         	else {
         		corrections.add(vennEntryId); 
         	}
-//        	else {
-//                switch(this.solutions.get(vennEntryId)) {
-//                case Left:
-//                	corrections.add(VennInternationalization.get("gm_msg_should_be_at", entry.string.getValue(), app.left.sectionName.get()));
-//                	break; 
-//                case Right:
-//                	corrections.add(VennInternationalization.get("gm_msg_should_be_at", entry.string.getValue(), app.right.sectionName.get()));
-//                	break; 
-//                case Center:
-//                	corrections.add(VennInternationalization.get("gm_msg_should_be_at", entry.string.getValue(), app.intersection.sectionName.get()));
-//                	break; 
-//                case Draggable:
-//                	break; 
-//                }
-//        	}
         }
         ButtonType cont = new ButtonType(VennInternationalization.get("gm_btn_continue"));
         ButtonType reveal = new ButtonType(VennInternationalization.get("gm_btn_reveal"));
@@ -179,7 +186,8 @@ public class VennGameMode {
         alert.setGraphic(null);
         alert.setHeaderText(VennInternationalization.get("gm_result"));
 
-        String result = VennInternationalization.get("gm_msg_score", marks, solutions.size()) + "\n\n" + String.join("\n", corrections);
+        String result = VennInternationalization.get("gm_msg_score", marks, solutions.size());
+        if (corrections.size() > 0) result += "\n\n" + VennInternationalization.get("gm_msg_score_information");
 
         alert.setContentText(result);
         Optional<ButtonType> option = alert.showAndWait();
