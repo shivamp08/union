@@ -1,9 +1,12 @@
 package venn;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -73,19 +76,32 @@ public class Main extends Application {
 		// the holder is to center, and the scroller is to ensure that the
 		// entire venn is visible
 		StackPane holder = new StackPane(this.vennGroup);
-		ScrollPane vennScroller = new ScrollPane(holder);
+		StackPane holderHolder = new StackPane(holder);
+
+		ScrollPane vennScroller = new ScrollPane(holderHolder);
 		vennScroller.fitToHeightProperty().set(true);
 		vennScroller.fitToWidthProperty().set(true);
 
-//		VennAnimatedZoomHandler zoomOperator = new VennAnimatedZoomHandler();
-//		holder.setOnScroll(event -> {
-//			double zoomFactor = 1.5;
-//			if (event.getDeltaY() <= 0) {
-//				// zoom out
-//				zoomFactor = 1 / zoomFactor;
-//			}
-//			zoomOperator.zoom(holder, zoomFactor, event.getSceneX(), event.getSceneY());
-//		});
+		Button reset = new Button("Reset Zoom");
+		StackPane.setAlignment(reset, Pos.TOP_RIGHT);
+
+		holderHolder.getChildren().addAll(reset);
+
+		reset.visibleProperty().bind(holder.scaleXProperty().isNotEqualTo(1));
+
+		VennAnimatedZoomHandler zoomOperator = new VennAnimatedZoomHandler();
+		holder.setOnScroll(event -> {
+			double zoomFactor = 1.5;
+			if (event.getDeltaY() <= 0) {
+				// zoom out
+				zoomFactor = 1 / zoomFactor;
+			}
+			zoomOperator.zoom(holder, zoomFactor, event.getSceneX(), event.getSceneY());
+		});
+
+		reset.setOnAction(event -> {
+			zoomOperator.reset(holder);
+		});
 
 		allFonts = new ArrayList<>();
 		allFonts.add("Algerian");

@@ -38,7 +38,7 @@ public abstract class VennSection {
 
     @SerializedName("r")
     @Expose
-    static SimpleIntegerProperty radius = new SimpleIntegerProperty(100);
+    static SimpleIntegerProperty radius = new SimpleIntegerProperty(300);
 
     SimpleIntegerProperty width;
     SimpleIntegerProperty height;
