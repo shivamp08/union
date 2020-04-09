@@ -45,12 +45,6 @@ public class VennPrint {
 		
 		BufferedImage image = bufferedScreenshot();
 		
-		PageFormat pg = new PageFormat(); 
-		pg.setOrientation(PageFormat.LANDSCAPE);
-		System.out.println(pg.getImageableX() + " " + pg.getImageableY());
-		System.out.println(pg.getImageableWidth() + " " + pg.getImageableHeight());
-		System.out.println(image.getWidth() + " " + image.getHeight());
-		
 		if (printJob == null) {
 			return; 
 		}
