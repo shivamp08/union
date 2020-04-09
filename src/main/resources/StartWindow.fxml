@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+<?import com.jfoenix.controls.JFXButton?>
+
 <AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="535.0" prefWidth="571.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="venn.VennStartUp">
     <children>
         <ImageView fitHeight="535.0" fitWidth="707.0" layoutX="1.0" layoutY="-162.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="-57.0" AnchorPane.topAnchor="0.0">
             <image>
-                <Image url="./UnionAppLogo.png" />
+                <Image url="@UnionAppLogo.png" />
             </image>
         </ImageView>
         <JFXButton fx:id="beginButton" layoutX="208.0" layoutY="327.0" onAction="#begin" onMouseClicked="#close" prefHeight="33.0" prefWidth="156.0" style="-fx-background-color: #515757#515757;" text="Click Here To Begin!" textFill="#fffefe" />
