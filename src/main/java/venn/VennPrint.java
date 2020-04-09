@@ -45,12 +45,12 @@ public class VennPrint {
 		PrinterJob printJob = PrinterJob.getPrinterJob(); 
 		
 		BufferedImage image = bufferedScreenshot();
-		
+
 		if (printJob == null) {
 			return; 
 		}
 		
-		boolean proceed = printJob.printDialog(); 
+		boolean proceed = printJob.printDialog();
 		if (proceed) {
 		    printJob.setPrintable(new Printable() {
 				@Override
