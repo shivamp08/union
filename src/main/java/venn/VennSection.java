@@ -36,8 +36,6 @@ public abstract class VennSection {
     ObjectProperty<Color> color;
     ObjectProperty<Color> mutatingColor;
 
-    @SerializedName("r")
-    @Expose
     static SimpleIntegerProperty radius = new SimpleIntegerProperty(300);
 
     SimpleIntegerProperty width;
