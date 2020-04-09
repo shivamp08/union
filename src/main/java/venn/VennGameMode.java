@@ -7,6 +7,13 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
+
 import org.hildan.fxgson.FxGson;
 
 import java.io.File;
@@ -136,6 +143,8 @@ public class VennGameMode {
     // validate with the solutions
     public void validate () {
     	int marks = 0;
+    	 
+    	
     	ArrayList<String> corrections = new ArrayList<>(); 
     	
         for (String vennEntryId : this.solutions.keySet()) {
@@ -143,9 +152,25 @@ public class VennGameMode {
         	
         	if (entry.location.equals(this.solutions.get(vennEntryId))) {
         		marks++;
-        	} else {
-                corrections.add(VennInternationalization.get("gm_msg_should_be_at", entry.string.getValue(), this.solutions.get(vennEntryId)));
+        	} 
+        	else {
+        		corrections.add(vennEntryId); 
         	}
+//        	else {
+//                switch(this.solutions.get(vennEntryId)) {
+//                case Left:
+//                	corrections.add(VennInternationalization.get("gm_msg_should_be_at", entry.string.getValue(), app.left.sectionName.get()));
+//                	break; 
+//                case Right:
+//                	corrections.add(VennInternationalization.get("gm_msg_should_be_at", entry.string.getValue(), app.right.sectionName.get()));
+//                	break; 
+//                case Center:
+//                	corrections.add(VennInternationalization.get("gm_msg_should_be_at", entry.string.getValue(), app.intersection.sectionName.get()));
+//                	break; 
+//                case Draggable:
+//                	break; 
+//                }
+//        	}
         }
         ButtonType cont = new ButtonType(VennInternationalization.get("gm_btn_continue"));
         ButtonType reveal = new ButtonType(VennInternationalization.get("gm_btn_reveal"));
@@ -160,12 +185,20 @@ public class VennGameMode {
         Optional<ButtonType> option = alert.showAndWait();
         if (option.isPresent() && option.get() == reveal) {
         	Alert warning = new Alert(Alert.AlertType.WARNING, VennInternationalization.get("gm_msg_warning"), ButtonType.YES, ButtonType.NO);
-
         	Optional<ButtonType> warningResult = warning.showAndWait();
         	if (warningResult.isPresent() && warningResult.get() == ButtonType.YES) {
         	    this.reset(true);
             	VennFileHandler importAnswer = new VennFileHandler(app, app.entries, app.right, app.left, app.intersection); 
             	importAnswer.importVenn(location);
+        	}
+        }
+        else if (option.isPresent() && option.get() == cont) {
+        	for (String i : corrections) {
+        		this.app.entries.getEntryById(i).draggable.setBorder(new Border(new BorderStroke(Color.RED, 
+        	            BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(2))));
+        		this.app.entries.getEntryById(i).draggable.setOnDragDone(event -> {
+        			this.app.entries.getEntryById(i).draggable.setBorder(null);
+        		});
         	}
         }
     }
