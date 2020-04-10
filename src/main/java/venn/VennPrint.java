@@ -10,6 +10,8 @@ import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.util.Optional;
+
 import javafx.scene.Group;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.ChoiceDialog;
@@ -25,6 +27,19 @@ public class VennPrint {
 	
 	public VennPrint(Main app) {
 		this.app = app; 
+	}
+	
+	public Printer listPrinters() {
+		ChoiceDialog<Printer> dialog = new ChoiceDialog<Printer>(Printer.getDefaultPrinter(), Printer.getAllPrinters());
+		dialog.setHeaderText("Choose a Printer!");
+		dialog.setContentText("Available Printers:");
+		dialog.setTitle("Screenshot Print");
+		Optional<Printer> choice = dialog.showAndWait();
+		if (choice.isPresent()) {
+			Printer printer = choice.get(); 
+			return printer; 
+		}
+		return null;
 	}
 	
 	public BufferedImage bufferedScreenshot() {
@@ -49,9 +64,8 @@ public class VennPrint {
 		if (printJob == null) {
 			return; 
 		}
-		
-		boolean proceed = printJob.printDialog();
-		if (proceed) {
+		Printer printer = listPrinters(); 
+		if (printer != null) {
 		    printJob.setPrintable(new Printable() {
 				@Override
 				public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
