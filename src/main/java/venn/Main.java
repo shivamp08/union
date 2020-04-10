@@ -82,7 +82,8 @@ public class Main extends Application {
 		vennScroller.fitToHeightProperty().set(true);
 		vennScroller.fitToWidthProperty().set(true);
 
-		Button reset = new Button("Reset Zoom");
+		Button reset = new Button();
+		reset.textProperty().bind(VennInternationalization.createStringBinding("reset_zoom_button"));
 		StackPane.setAlignment(reset, Pos.TOP_RIGHT);
 
 		holderHolder.getChildren().addAll(reset);
