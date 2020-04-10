@@ -9,6 +9,13 @@ This application can be widely used in the applications of mathematics, statisti
 To create an application that allows its users to create digital venn diagrams with ease. 
 
 ## Changelog
+#### Version 1.5.0
+- Entry Customization (background color and font type/size/color) 
+- Game Mode
+- Print Screenshot
+- Zoom in/out
+- Delete All Button
+
 #### Version 1.2.0
 - Multiple languages (French, English)
 - Undo/Redo
@@ -30,10 +37,13 @@ To create an application that allows its users to create digital venn diagrams w
 Built with Java using JavaFX
 
 ## Features
-- New and Improved User Interface
+- Comfortable User Interface
 - Adding/Editing/Removing Entries, via Drag and Drop
-- Venn Diagram Color Selection
-- Exporting via Screenshot
+- Venn Diagram Customization
+- Entry Customization
+- Importing/Exporting Diagrams
+- Screenshot: Save and Print
+- Comparing Game Mode
 
 ### Installation
 System Requirements: Java Runtime Environment 1.8 
