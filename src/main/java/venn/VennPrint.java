@@ -77,8 +77,8 @@ public class VennPrint {
             Window window = alert.getDialogPane().getScene().getWindow();
             window.setOnCloseRequest(e -> alert.hide());
 	        
-			alert.setTitle("Print Warning");
-			alert.setContentText(VennInternationalization.get("print_warning_context") + " " + printer.getName() + "\n\n" + VennInternationalization.get("print_warning_question"));
+			alert.setTitle(VennInternationalization.get("print_warning_title"));
+			alert.setContentText(VennInternationalization.get("print_warning", printer.getName()));
 			Optional<ButtonType> choice = alert.showAndWait();
 			
 			if (choice.isPresent() && choice.get() == printButton) {
