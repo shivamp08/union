@@ -20,8 +20,9 @@ import static venn.Main.changeHandler;
 import static venn.Main.gameModeHandler;
 
 enum ModalType {
-    Entry,
-    Title,
+    AddEntry,
+    EditEntry,
+    EditTitle,
 }
 
 public class VennEntryModalHandler {
@@ -32,7 +33,7 @@ public class VennEntryModalHandler {
 
         final int maxLength = 40;
         String[] add = VennEntryModalHandler.create(
-            ModalType.Entry,
+            ModalType.AddEntry,
             VennInternationalization.createStringBinding("add_title"),
             VennInternationalization.createStringBinding("add_prompt", maxLength),
             VennInternationalization.createStringBinding("add_action"),
@@ -58,9 +59,9 @@ public class VennEntryModalHandler {
         if (add[6].contentEquals("true")) add(handler);
     }
 
-    public static void edit (StringProperty currTitle, StringProperty currDes, ObjectProperty<Color> draggableColor, ObjectProperty<Font> draggableFont, ObjectProperty<Color> fColor) {
+    public static void edit (ModalType type, StringProperty currTitle, StringProperty currDes, ObjectProperty<Color> draggableColor, ObjectProperty<Font> draggableFont, ObjectProperty<Color> fColor) {
         String[] edited = VennEntryModalHandler.create(
-            ModalType.Entry,
+            type,
             VennInternationalization.createStringBinding("edit_title"),
             VennInternationalization.createStringBinding("edit_prompt"),
             VennInternationalization.createStringBinding("edit_action"),
@@ -84,9 +85,9 @@ public class VennEntryModalHandler {
         fColor.set(Color.valueOf(edited[5]));
     }
 
-    public static void edit (StringProperty current, int maxLength) {
+    public static void edit (ModalType type, StringProperty current, int maxLength) {
         String[] edited = VennEntryModalHandler.create(
-            ModalType.Title,
+            type,
             VennInternationalization.createStringBinding("edit_title"),
             VennInternationalization.createStringBinding("edit_prompt_maxlength", maxLength),
             VennInternationalization.createStringBinding("edit_action"),
@@ -251,7 +252,7 @@ public class VennEntryModalHandler {
         allButtons.setPadding(new Insets(0, 10, 10, 10));
         allButtons.setSpacing(10);
         allButtons.getChildren().addAll(addButton);
-        if (type == ModalType.Entry) {
+        if (type == ModalType.AddEntry) {
             allButtons.getChildren().add(addAnotherButton);
         }
         allButtons.getChildren().add(closeButton);
@@ -306,7 +307,7 @@ public class VennEntryModalHandler {
             layout.getChildren().addAll(descriptionLabel, description);
         }
 
-        if (type == ModalType.Entry) {
+        if (type == ModalType.AddEntry || type == ModalType.EditEntry) {
             layout.getChildren().add(options);
         }
         layout.getChildren().add(allButtons);

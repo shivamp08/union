@@ -128,7 +128,7 @@ public abstract class VennSection {
             if (event.getButton().equals(MouseButton.PRIMARY)){
                 // not while running
                 if (event.getClickCount() == 2 && !gameModeHandler.running.get()) {
-                    VennEntryModalHandler.edit(this.sectionName, 25);
+                    VennEntryModalHandler.edit(ModalType.EditTitle, this.sectionName, 25);
                 }
             }
         });

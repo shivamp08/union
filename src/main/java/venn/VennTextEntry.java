@@ -167,7 +167,7 @@ public class VennTextEntry extends Region {
             if (event.getButton().equals(MouseButton.PRIMARY)){
                 // not when running game mode
                 if (event.getClickCount() == 2 && !gameModeHandler.running.get()){
-                    VennEntryModalHandler.edit(this.string, this.description, this.draggableColor, this.draggableFont, this.fontColor);
+                    VennEntryModalHandler.edit(ModalType.EditEntry, this.string, this.description, this.draggableColor, this.draggableFont, this.fontColor);
                 }
             }
         });
