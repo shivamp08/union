@@ -14,10 +14,13 @@ import java.util.Optional;
 
 import javafx.scene.Group;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.transform.Transform;
+import javafx.stage.Window;
 
 public class VennPrint {
 	Main app; 
@@ -31,9 +34,9 @@ public class VennPrint {
 	
 	public Printer listPrinters() {
 		ChoiceDialog<Printer> dialog = new ChoiceDialog<Printer>(Printer.getDefaultPrinter(), Printer.getAllPrinters());
-		dialog.setHeaderText("Choose a Printer!");
-		dialog.setContentText("Available Printers:");
-		dialog.setTitle("Screenshot Print");
+		dialog.setHeaderText(VennInternationalization.get("print_list_header"));
+		dialog.setContentText(VennInternationalization.get("print_list_context"));
+		dialog.setTitle(VennInternationalization.get("print_list_title"));
 		Optional<Printer> choice = dialog.showAndWait();
 		if (choice.isPresent()) {
 			Printer printer = choice.get(); 
@@ -64,31 +67,48 @@ public class VennPrint {
 		if (printJob == null) {
 			return; 
 		}
-		Printer printer = listPrinters(); 
+		Printer printer = listPrinters();
 		if (printer != null) {
-		    printJob.setPrintable(new Printable() {
-				@Override
-				public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
-			          pageFormat.setOrientation(PageFormat.LANDSCAPE);
-			          int x = (int) Math.ceil(pageFormat.getImageableX());
-			          int y = (int) Math.ceil(pageFormat.getImageableY());
-			          
-			          System.out.println(x  + " " + y);
-			          System.out.println(image.getWidth() + " " + image.getHeight());
-			          
-			          if (pageIndex != 0) {
-			            return NO_SUCH_PAGE;
-			          }
-			          graphics.drawImage(image, x, y, image.getHeight(), image.getWidth(), null);
-			          return PAGE_EXISTS;
-				}
-		    });
-	    	try {
-	    		printJob.setJobName("Screenshot");
-	    		printJob.print();
-	    	} catch (PrinterException e) {
-	    		e.printStackTrace();
-	    	}
+	        ButtonType printButton = new ButtonType(VennInternationalization.get("print_warning_proceed"));
+	        ButtonType cancel = new ButtonType(VennInternationalization.get("print_warning_cancel"));
+	        
+	        Alert alert = new Alert(Alert.AlertType.INFORMATION, "", printButton, cancel);
+	        
+            Window window = alert.getDialogPane().getScene().getWindow();
+            window.setOnCloseRequest(e -> alert.hide());
+	        
+			alert.setTitle("Print Warning");
+			alert.setContentText("The Screenshot of your venn diagram will be printed at " + printer.getName() + "\nWould you like to continue?");
+			Optional<ButtonType> choice = alert.showAndWait();
+			
+			if (choice.isPresent() && choice.get() == printButton) {
+			    printJob.setPrintable(new Printable() {
+					@Override
+					public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
+				          pageFormat.setOrientation(PageFormat.LANDSCAPE);
+				          int x = (int) Math.ceil(pageFormat.getImageableX());
+				          int y = (int) Math.ceil(pageFormat.getImageableY());
+				          
+				          System.out.println(x  + " " + y);
+				          System.out.println(image.getWidth() + " " + image.getHeight());
+				          
+				          if (pageIndex != 0) {
+				            return NO_SUCH_PAGE;
+				          }
+				          graphics.drawImage(image, x, y, image.getHeight(), image.getWidth(), null);
+				          return PAGE_EXISTS;
+					}
+			    });
+		    	try {
+		    		printJob.setJobName("Screenshot");
+		    		printJob.print();
+		    	} catch (PrinterException e) {
+		    		e.printStackTrace();
+		    	}
+			}
+			else if (choice.isPresent() && choice.get() == cancel) {
+				alert.hide();
+			}
 		}
 	}
 

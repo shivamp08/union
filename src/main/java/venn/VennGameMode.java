@@ -13,6 +13,7 @@ import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
+import javafx.stage.Window;
 
 import org.hildan.fxgson.FxGson;
 
@@ -183,6 +184,10 @@ public class VennGameMode {
         ButtonType reveal = new ButtonType(VennInternationalization.get("gm_btn_reveal"));
         
         Alert alert = new Alert(Alert.AlertType.INFORMATION, "", cont, reveal);
+        
+        Window window = alert.getDialogPane().getScene().getWindow();
+        window.setOnCloseRequest(e -> alert.hide());
+        
         alert.setGraphic(null);
         alert.setHeaderText(VennInternationalization.get("gm_result"));
 
