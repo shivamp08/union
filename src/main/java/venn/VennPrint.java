@@ -78,7 +78,7 @@ public class VennPrint {
             window.setOnCloseRequest(e -> alert.hide());
 	        
 			alert.setTitle("Print Warning");
-			alert.setContentText("The Screenshot of your venn diagram will be printed at " + printer.getName() + "\nWould you like to continue?");
+			alert.setContentText(VennInternationalization.get("print_warning_context") + " " + printer.getName() + "\n\n" + VennInternationalization.get("print_warning_question"));
 			Optional<ButtonType> choice = alert.showAndWait();
 			
 			if (choice.isPresent() && choice.get() == printButton) {
