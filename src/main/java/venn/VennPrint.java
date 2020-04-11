@@ -25,7 +25,7 @@ import javafx.stage.Window;
 public class VennPrint {
 	Main app; 
 	
-	//list
+	//list//
 	ChoiceDialog<Printer> printerList;
 	
 	public VennPrint(Main app) {
