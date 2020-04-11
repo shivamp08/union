@@ -3,8 +3,6 @@ package venn;
 import com.google.gson.Gson;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.scene.Group;
-import javafx.scene.layout.Pane;
 import org.hildan.fxgson.FxGson;
 
 import java.util.ArrayDeque;

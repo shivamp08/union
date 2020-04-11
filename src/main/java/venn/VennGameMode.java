@@ -3,9 +3,7 @@ package venn;
 import com.google.gson.Gson;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
@@ -141,7 +139,8 @@ public class VennGameMode {
         return true; 
     }
 
-    private String getSectionString (EntryLocations location) {
+    @SuppressWarnings("unused")
+	private String getSectionString (EntryLocations location) {
         String locationName = "";
         switch (location) {
             case Left: {

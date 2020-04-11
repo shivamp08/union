@@ -1,7 +1,6 @@
 package venn;
 
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -23,7 +22,6 @@ import java.util.ArrayList;
 public class Main extends Application {
 
 	// initial resolution, 720p
-	private static final int width = 1280;
 	private static final int height = 720;
 
 	protected Group vennGroup;

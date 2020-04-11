@@ -16,7 +16,6 @@ import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
 import java.util.Optional;
 
 import static venn.Main.changeHandler;

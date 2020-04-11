@@ -27,7 +27,6 @@ import javafx.scene.shape.Shape;
 import java.util.ArrayList;
 import java.util.List;
 
-import static venn.Main.changeHandler;
 import static venn.Main.gameModeHandler;
 
 public abstract class VennSection {
@@ -171,7 +170,7 @@ public abstract class VennSection {
         this.elements.addListener(new ListChangeListener<Object>() {
             @SuppressWarnings({ "unchecked" })
 			@Override
-            public void onChanged(ListChangeListener.Change c) {
+            public void onChanged(@SuppressWarnings("rawtypes") ListChangeListener.Change c) {
                 c.next();
                 List<VennTextEntry> added = c.getAddedSubList();
                 List<VennTextEntry> removed = c.getRemoved();
@@ -181,7 +180,8 @@ public abstract class VennSection {
                     
                     entry.setLocation(section);
                 } else if (removed.size() == 1) {
-                	VennTextEntry entry = removed.get(0);
+                	@SuppressWarnings("unused")
+					VennTextEntry entry = removed.get(0);
                 	
 //                	System.out.println("removed from " + entry.location);
                 }
@@ -200,7 +200,8 @@ public abstract class VennSection {
         this.initChangeHandler();
     }
 
-    private boolean hasNoCollision(Region dragged, double x, double y) {
+    @SuppressWarnings("unused")
+	private boolean hasNoCollision(Region dragged, double x, double y) {
         // For each node
         for (VennTextEntry entry : this.elements) {
             Node n = entry.draggable;
@@ -224,7 +225,8 @@ public abstract class VennSection {
         });
 
         shape.setOnDragOver(event -> {
-            VennTextEntry entry = this.handler.getEntryById(event.getDragboard().getString());
+            @SuppressWarnings("unused")
+			VennTextEntry entry = this.handler.getEntryById(event.getDragboard().getString());
 
 //            boolean collides =
 //                !this.hasNoCollision(

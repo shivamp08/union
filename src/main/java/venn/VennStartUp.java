@@ -6,7 +6,6 @@ import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXButton;
 
-import com.jfoenix.controls.JFXSlider;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

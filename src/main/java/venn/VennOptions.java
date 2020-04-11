@@ -8,7 +8,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -17,7 +16,6 @@ import java.util.Locale;
 
 import com.jfoenix.controls.JFXColorPicker;
 
-import static venn.Main.changeHandler;
 
 public class VennOptions {
     VennSectionLeft left;

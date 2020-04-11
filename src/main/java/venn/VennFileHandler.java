@@ -6,7 +6,6 @@ import javafx.scene.Group;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import org.hildan.fxgson.FxGson;
 
 import java.io.File;
