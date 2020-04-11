@@ -6,12 +6,8 @@ import javafx.stage.Stage;
 
 import org.junit.Test;
 
-import org.junit.jupiter.api.*;
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.awt.AWTException;
 import java.awt.Robot;
-import java.awt.event.InputEvent;
 import java.util.concurrent.CountDownLatch;
 
 import org.junit.*;
