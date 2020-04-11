@@ -140,9 +140,24 @@ public class VennTextEntry extends Region {
         	pane.setStyle("-fx-background-color: " + getWebColor(draggableColor.getValue()));
         });
 
-        Tooltip tooltip = new Tooltip();
-        tooltip.textProperty().bind(this.string);
-        Tooltip.install(label, tooltip);
+        if (this.description.length().get() > 0) {
+            Tooltip tooltip = new Tooltip();
+            tooltip.textProperty().bind(this.description);
+            tooltip.setWrapText(true);
+            Tooltip.install(label, tooltip);
+        }
+        
+        description.addListener((observable, oldValue, newValue) -> {
+            if (newValue.length() > 0) {
+                Tooltip tooltip = new Tooltip();
+                tooltip.textProperty().bind(this.description);
+                tooltip.setWrapText(true);
+                Tooltip.install(label, tooltip);
+            }
+            else if (newValue.length() == 0) {
+            	Tooltip.install(label, null);
+            }
+        });
 
         pane.getChildren().add(label);
 
@@ -202,9 +217,12 @@ public class VennTextEntry extends Region {
 
         this.pane.setUserData(this);
         
-        Tooltip tooltip = new Tooltip();
-        tooltip.textProperty().bind(this.string);
-        Tooltip.install(this.pane, tooltip);
+        if (this.description.length().get() > 0) {
+            Tooltip tooltip = new Tooltip();
+            tooltip.textProperty().bind(this.description);
+            tooltip.setWrapText(true);
+            Tooltip.install(this.pane, tooltip);
+        }
 
         return this.pane;
     }
