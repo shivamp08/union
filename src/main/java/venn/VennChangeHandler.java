@@ -9,6 +9,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 import static venn.VennFileHandler.clearDiagram;
+import static venn.VennFileHandler.VennExport;
 
 public class VennChangeHandler {
     Main app;
@@ -110,7 +111,7 @@ public class VennChangeHandler {
                 next = redo.pop();
             }
 
-            System.out.println(next);
+//            System.out.println(next);
 
             this.importAndClear(next);
             if (!undo.contains(next)) undo.push(next);

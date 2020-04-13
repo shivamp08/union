@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Optional;
 
 import static venn.VennFileHandler.clearDiagram;
+import static venn.VennFileHandler.VennExport;
 
 public class VennGameMode {
     Main app;
