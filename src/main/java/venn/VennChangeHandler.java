@@ -110,7 +110,7 @@ public class VennChangeHandler {
                 next = redo.pop();
             }
 
-            System.out.println(next);
+//            System.out.println(next);
 
             this.importAndClear(next);
             if (!undo.contains(next)) undo.push(next);
