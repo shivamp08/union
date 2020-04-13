@@ -1,9 +1,11 @@
 package venn;
 
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -12,12 +14,14 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.input.*;
 
-import java.util.Locale;
+
+import animatefx.animation.*;
+
+import java.util.ArrayList;
 
 public class Main extends Application {
 
 	// initial resolution, 720p
-	private static final int width = 1280;
 	private static final int height = 720;
 
 	protected Group vennGroup;
@@ -32,15 +36,21 @@ public class Main extends Application {
 	VennSectionRight right;
 	VennIntersection intersection;
 
+	static ArrayList<String> allFonts;
+
 	public static VennChangeHandler changeHandler;
+
+	public static VennGameMode gameModeHandler;
+	
+	public static VennPrint vennPrinter; 
 
 	public Main () {
 		super();
 	}
 
-	public static void main(String[] args) {
-		launch(args);
-	}
+//	public static void main(String[] args) {
+//		launch(args);
+//	}
 	
 	private void drawVenn() {
 		this.left = new VennSectionLeft(scene, this);
@@ -54,6 +64,8 @@ public class Main extends Application {
 		this.stage = stage;
 
 		changeHandler = new VennChangeHandler(this);
+		gameModeHandler = new VennGameMode(this);
+		vennPrinter = new VennPrint(this); 
 
 		BorderPane mainLayout = new BorderPane();
 
@@ -62,19 +74,45 @@ public class Main extends Application {
 		// the holder is to center, and the scroller is to ensure that the
 		// entire venn is visible
 		StackPane holder = new StackPane(this.vennGroup);
-		ScrollPane vennScroller = new ScrollPane(holder);
+		StackPane holderHolder = new StackPane(holder);
+
+		ScrollPane vennScroller = new ScrollPane(holderHolder);
 		vennScroller.fitToHeightProperty().set(true);
 		vennScroller.fitToWidthProperty().set(true);
 
-//		VennAnimatedZoomHandler zoomOperator = new VennAnimatedZoomHandler();
-//		holder.setOnScroll(event -> {
-//			double zoomFactor = 1.5;
-//			if (event.getDeltaY() <= 0) {
-//				// zoom out
-//				zoomFactor = 1 / zoomFactor;
-//			}
-//			zoomOperator.zoom(holder, zoomFactor, event.getSceneX(), event.getSceneY());
-//		});
+		Button reset = new Button();
+		reset.textProperty().bind(VennInternationalization.createStringBinding("reset_zoom_button"));
+		StackPane.setAlignment(reset, Pos.TOP_RIGHT);
+
+		holderHolder.getChildren().addAll(reset);
+
+		reset.visibleProperty().bind(holder.scaleXProperty().isNotEqualTo(1));
+
+		VennAnimatedZoomHandler zoomOperator = new VennAnimatedZoomHandler();
+		holder.setOnScroll(event -> {
+			double zoomFactor = 1.5;
+			if (event.getDeltaY() <= 0) {
+				// zoom out
+				zoomFactor = 1 / zoomFactor;
+			}
+			zoomOperator.zoom(holder, zoomFactor, event.getSceneX(), event.getSceneY());
+		});
+
+		reset.setOnAction(event -> {
+			zoomOperator.reset(holder);
+		});
+
+		allFonts = new ArrayList<>();
+		allFonts.add("Algerian");
+		allFonts.add("Arial");
+		allFonts.add("Arial Black");
+		allFonts.add("Calibri");
+		allFonts.add("Cambria");
+		allFonts.add("Comic Sans MS");
+		allFonts.add("Consolas");
+		allFonts.add("System");
+		allFonts.add("Tahoma");
+		allFonts.add("Times New Roman");
 
 		mainLayout.setCenter(vennScroller);
 		
@@ -125,9 +163,12 @@ public class Main extends Application {
 		stage.setMaximized(true);
 //		stage.setMinWidth(width);
 //		stage.setResizable(false);
-		Image icon = new Image(getClass().getResource("/Iconlogo.png").toExternalForm());
+		Image icon = new Image(getClass().getResource("/logo.png").toExternalForm());
 		stage.getIcons().add(icon);
-		stage.show(); 
+		stage.show();
+
+		new ZoomInRight(mainLayout.getLeft()).setSpeed(1).play();
+		
 	}
 
 }

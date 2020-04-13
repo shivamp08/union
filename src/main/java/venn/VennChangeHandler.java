@@ -3,12 +3,12 @@ package venn;
 import com.google.gson.Gson;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.scene.Group;
-import javafx.scene.layout.Pane;
 import org.hildan.fxgson.FxGson;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+
+import static venn.VennFileHandler.clearDiagram;
 
 public class VennChangeHandler {
     Main app;
@@ -45,6 +45,13 @@ public class VennChangeHandler {
         else canRedo.set(true);
     }
 
+    public void reset() {
+        undo.clear();
+        redo.clear();
+        canRedo.set(false);
+        canUndo.set(false);
+    }
+
     public void calculateChange() {
         if(sizeMax > 0) {
             if(undo.size() == sizeMax) {
@@ -70,19 +77,7 @@ public class VennChangeHandler {
         Gson gson = FxGson.fullBuilder().excludeFieldsWithoutExposeAnnotation().create();
         VennExport change = gson.fromJson(importString, VennExport.class);
 
-        Object[] elements = app.entries.entries.toArray();
-
-        for (Object element : elements) {
-            VennTextEntry entry = (VennTextEntry) element;
-
-            this.app.entries.deleteEntry(entry, false);
-            if (entry.draggable.getParent() != null) {
-                ((Group) entry.draggable.getParent()).getChildren().remove(entry.draggable);
-            }
-            if (entry.pane.getParent() != null) {
-                ((Pane) entry.pane.getParent()).getChildren().remove(entry.pane);
-            }
-        }
+        clearDiagram(this.app);
 
         app.leftColumn.fileHandler.importFromObject(change, false);
     }

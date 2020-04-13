@@ -16,9 +16,11 @@ import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
+import java.util.Optional;
 
 import static venn.Main.changeHandler;
+import static venn.Main.gameModeHandler;
+import static venn.VennFileHandler.clearDiagram;
 
 public class VennLeftColumn {
     VBox root;
@@ -34,7 +36,7 @@ public class VennLeftColumn {
     VennSectionRight right;
     VennIntersection intersection;
     VennOptions options;
-    VennFileHandler fileHandler;
+    VennFileHandler fileHandler; 
 
     public VennLeftColumn(VennEntryHandler handler) {
         this.handler = handler;
@@ -66,21 +68,35 @@ public class VennLeftColumn {
         add.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(add, Priority.ALWAYS);
 
+        // no adding while running
+        add.disableProperty().bind(gameModeHandler.running);
+
         add.setOnAction(event -> VennEntryModalHandler.add(this.handler));
         Tooltip.install(add, CtrlN);
 
         return add;
     }
 
-//    private Button getAddMultipleButton () {
-//        Button add = new Button("Add Multiple");
-//        add.setMaxWidth(Double.MAX_VALUE);
-//        HBox.setHgrow(add, Priority.ALWAYS);
-//
-////        add.setOnAction(event -> VennAddEntry.add(this.handler));
-//
-//        return add;
-//    }
+    private Button getDeleteAllButton() {
+        Button clearAll = new Button();
+        clearAll.textProperty().bind(VennInternationalization.createStringBinding("delete_all"));
+        clearAll.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(clearAll, Priority.ALWAYS);
+
+        // no clearing while running
+        clearAll.disableProperty().bind(gameModeHandler.running);
+
+        clearAll.setOnAction(event -> {
+            Alert alert = new Alert(Alert.AlertType.WARNING, VennInternationalization.get("delete_all_warning"));
+            Optional<ButtonType> result =  alert.showAndWait();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                clearDiagram(this.app);
+            }
+        });
+
+        return clearAll;
+    }
 
     private Button getOptionsButton () {
         Button optionsButton = new Button();
@@ -94,7 +110,9 @@ public class VennLeftColumn {
         return optionsButton;
     }
 
-    private Button getScreenshotButton () {
+    private HBox getScreenshotButton () {
+    	HBox screenshotButtons = new HBox(5); 
+    	
         Button saveScreenshotButton = new Button();
         saveScreenshotButton.textProperty().bind(VennInternationalization.createStringBinding("screenshot_button"));
         saveScreenshotButton.setMaxWidth(Double.MAX_VALUE);
@@ -107,8 +125,19 @@ public class VennLeftColumn {
                 System.out.println("Saved file: " + success);
             }
         });
-
-        return saveScreenshotButton;
+        
+    	Button printButton = new Button();
+    	printButton.textProperty().bind(VennInternationalization.createStringBinding("print_button"));
+    	printButton.setMaxWidth(Double.MAX_VALUE);
+    	HBox.setHgrow(printButton, Priority.ALWAYS);
+    	
+    	printButton.setOnAction(event -> {
+    		Main.vennPrinter.printImage();
+    	});
+    	
+    	screenshotButtons.getChildren().addAll(saveScreenshotButton, printButton);
+    	
+    	return screenshotButtons; 
     }
 
     private HBox getImportExportButtons () {
@@ -120,7 +149,7 @@ public class VennLeftColumn {
         HBox.setHgrow(importButton, Priority.ALWAYS);
 
         importButton.setOnAction(event -> {
-            fileHandler.importVenn();
+            fileHandler.importVenn(null);
         });
 
         Button exportButton = new Button();
@@ -132,10 +161,13 @@ public class VennLeftColumn {
             fileHandler.exportVenn();
         });
 
+        // no while running game mode
+        importButton.disableProperty().bind(gameModeHandler.running);
+
         importExportButtons.getChildren().addAll(importButton, exportButton);
         return importExportButtons;
     }
-
+    
     private HBox getUndoRedoButtons () {
         HBox undoRedoButtons = new HBox(5);
 
@@ -203,6 +235,65 @@ public class VennLeftColumn {
         return file;
     }
 
+    private VBox getGameModeButtons() {
+    	VBox gameModeButtons = new VBox(5);
+    	HBox sideBySide = new HBox(5);
+
+    	Button actionButton = new Button();
+        actionButton.textProperty().bind(VennInternationalization.createStringBinding("gm_start"));
+        actionButton.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(actionButton, Priority.ALWAYS);
+
+        Button resetButton = new Button();
+        resetButton.textProperty().bind(VennInternationalization.createStringBinding("gm_reset"));
+        resetButton.setMaxWidth(Double.MAX_VALUE);
+
+        resetButton.setOnAction(resetEvent -> {
+            gameModeHandler.reset();
+        });
+
+        gameModeHandler.running.addListener((event, oldValue, newValue) -> {
+            // running, so cancel
+            if (newValue) {
+                actionButton.textProperty().bind(VennInternationalization.createStringBinding("gm_stop"));
+                gameModeButtons.getChildren().add(resetButton); 
+            } else {
+                // not running, so start
+                actionButton.textProperty().bind(VennInternationalization.createStringBinding("gm_start"));
+                gameModeButtons.getChildren().remove(resetButton);
+                this.app.left.sectionName.set(VennInternationalization.get("left_title"));
+                this.app.right.sectionName.set(VennInternationalization.get("right_title"));
+                this.app.intersection.sectionName.set(VennInternationalization.get("middle_title"));
+            }
+        });
+
+        actionButton.setOnAction(event -> {
+            if (!gameModeHandler.running.get()) gameModeHandler.initialize();
+            else gameModeHandler.reset(true);
+        });
+        actionButton.setDisable(false);
+
+        Button verificationButton = new Button();
+        verificationButton.textProperty().bind(VennInternationalization.createStringBinding("gm_verify"));
+        verificationButton.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(verificationButton, Priority.ALWAYS);
+
+        verificationButton.setOnAction(event -> {
+            if (entries.getChildren().size() == 0) {
+            	gameModeHandler.validate();
+            } else {
+            	Alert alert = new Alert(Alert.AlertType.ERROR, VennInternationalization.get("gm_msg_error_place_all"));
+            	alert.showAndWait();
+            }
+        });
+        verificationButton.setDisable(true);
+        verificationButton.disableProperty().bind(gameModeHandler.running.not());
+
+        sideBySide.getChildren().addAll(actionButton, verificationButton);
+        gameModeButtons.getChildren().addAll(sideBySide);
+        return gameModeButtons;
+    }
+
     private HBox getTrashCan () {
         HBox box = new HBox();
         box.setAlignment(Pos.CENTER_RIGHT);
@@ -221,10 +312,10 @@ public class VennLeftColumn {
         // init the containers and it's padding
         HBox topContainer = new HBox(5);
         VBox top = new VBox(3);
-        topContainer.getChildren().add(top);
+
         HBox bottomContainer = new HBox(5);
         VBox bottom = new VBox(3);
-//        bottomContainer.getChildren().add(bottom);
+
         this.entries = bottom;
 
         top.prefHeightProperty().bind(root.heightProperty());
@@ -243,30 +334,43 @@ public class VennLeftColumn {
         // adding buttons
         Button addButton = this.getAddButton();
         Button optionsButton = this.getOptionsButton();
-        Button screenshotButton = this.getScreenshotButton();
+        HBox screenshotButtons = this.getScreenshotButton();
+        Button deleteAllButton = this.getDeleteAllButton();
 
         HBox importExportHBox = this.getImportExportButtons();
         HBox undoRedoBox = this.getUndoRedoButtons();
 
+        VBox gameModeButtons = this.getGameModeButtons();
+
+        VBox topControls = new VBox(5);
+
         // color pickers
-        top.getChildren().addAll(
+        topControls.getChildren().addAll(
             VennPanelTitle.create(VennInternationalization.createStringBinding("add_entry_title"), false, "left-column-title"),
             addButton,
             VennPanelTitle.create(VennInternationalization.createStringBinding("options_title"), false, "left-column-title"),
             optionsButton,
+            deleteAllButton,
             VennPanelTitle.create(VennInternationalization.createStringBinding("screenshot_title"), false, "left-column-title"),
-            screenshotButton,
+            screenshotButtons,
             VennPanelTitle.create(VennInternationalization.createStringBinding("import_export_title"), false, "left-column-title"),
             importExportHBox,
             VennPanelTitle.create(VennInternationalization.createStringBinding("undo_redo_title"), false, "left-column-title"),
-            undoRedoBox
+            undoRedoBox,
+            VennPanelTitle.create(VennInternationalization.createStringBinding("gm_title"), false, "left-column-title"),
+            gameModeButtons
         );
+
+        // top scrollpane
+        ScrollPane topScrollable = new ScrollPane(topControls);
+        topScrollable.setFitToHeight(true);
+        topScrollable.setFitToWidth(true);
 
         // trash can
         HBox trashCan = this.getTrashCan();
         Region filler = new Region();
         VBox.setVgrow(filler, Priority.ALWAYS);
-        top.getChildren().addAll(filler, trashCan);
+        top.getChildren().addAll(topScrollable, filler, trashCan);
 
         // bottom scrollpane
         ScrollPane bottomScrollable = new ScrollPane(bottom);
@@ -274,6 +378,8 @@ public class VennLeftColumn {
         bottomScrollable.fitToWidthProperty().set(true);
 //        bottom.getChildren().add(bottomScrollable);
         bottomContainer.getChildren().add(bottomScrollable);
+
+        topContainer.getChildren().add(top);
 
         root.getChildren().addAll(topContainer, bottomContainer);
 

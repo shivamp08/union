@@ -2,6 +2,9 @@ package venn;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
@@ -14,10 +17,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import java.util.UUID;
 
+import static venn.Main.gameModeHandler;
 import static venn.VennEntryHandler.getWebColor;
+
+//import static venn.VennEntryHandler.getWebColor;
 
 public class VennTextEntry extends Region {
     @SerializedName("s")
@@ -45,17 +52,34 @@ public class VennTextEntry extends Region {
     @Expose
     String id;
 
-    @SerializedName("c")
+    @SerializedName("bgc")
     @Expose
-    Color draggableColor;
+    ObjectProperty<Color> draggableColor;
+    
+    @SerializedName("f")
+    @Expose
+    ObjectProperty<Font> draggableFont;
+    
+    @SerializedName("fs")
+    @Expose
+    StringProperty fontSize; 
+    
+    @SerializedName("fc")
+    @Expose
+    ObjectProperty<Color> fontColor; 
 
-    public VennTextEntry(String string, String description) {
+    public VennTextEntry(String string, String description, String color, Font font, String size, String fColor) {
         super();
         this.string = new SimpleStringProperty(string);
         this.description = new SimpleStringProperty();
         if (description != null) {
             this.description.set(description);
         }
+        
+        draggableColor =  new SimpleObjectProperty<>(Color.valueOf(color));
+        fontColor = new SimpleObjectProperty<>(Color.valueOf(fColor));
+        draggableFont = new SimpleObjectProperty<>(font);
+        fontSize = new SimpleStringProperty(size);
 
         this.id = UUID.randomUUID().toString();
 
@@ -72,8 +96,19 @@ public class VennTextEntry extends Region {
         this.draw();
     }
 
+    public VennTextEntry(VennTextEntry entry) {
+        this(
+            entry.string.get(),
+            entry.description.get(),
+            getWebColor(entry.draggableColor.get()),
+            entry.draggableFont.get(),
+            entry.fontSize.get(),
+            getWebColor(entry.fontColor.get())
+        );
+    }
+
     public VennTextEntry(String string) {
-        this(string, null);
+        this(string, null, "#ffffff", new Font("Arial", 12), "12", "#000000");
     }
     
     public void setLocation(EntryLocations location) {
@@ -84,18 +119,45 @@ public class VennTextEntry extends Region {
         StackPane pane = new StackPane();
         Label label = new Label("");
         label.textProperty().bind(this.string);
-        label.setTextFill(Color.BLACK);
-        label.setStyle("-fx-font-weight: bold;");
+        label.setTextFill(fontColor.getValue());
+        label.setFont(draggableFont.getValue());
+        
+        fontColor.addListener((observable, oldValue, newValue) -> {
+        	label.setTextFill(fontColor.getValue());
+        });
+        draggableFont.addListener((observable, oldValue, newValue) -> {
+        	label.setFont(draggableFont.getValue());
+        });
+        
 
         pane.getStyleClass().add("rounded-label");
 
-        if (this.draggableColor == null) this.draggableColor = VennEntryHandler.generateColour();
+        //if (this.draggableColor == null) this.draggableColor = VennEntryHandler.generateColour();
 
-        pane.setStyle("-fx-background-color: " + getWebColor(this.draggableColor));
+        pane.setStyle("-fx-background-color: " + getWebColor(draggableColor.getValue()));
+        
+        draggableColor.addListener((observable, oldValue, newValue) -> {
+        	pane.setStyle("-fx-background-color: " + getWebColor(draggableColor.getValue()));
+        });
 
-        Tooltip tooltip = new Tooltip();
-        tooltip.textProperty().bind(this.string);
-        Tooltip.install(label, tooltip);
+        if (this.description.length().get() > 0) {
+            Tooltip tooltip = new Tooltip();
+            tooltip.textProperty().bind(this.description);
+            tooltip.setWrapText(true);
+            Tooltip.install(label, tooltip);
+        }
+        
+        description.addListener((observable, oldValue, newValue) -> {
+            if (newValue.length() > 0) {
+                Tooltip tooltip = new Tooltip();
+                tooltip.textProperty().bind(this.description);
+                tooltip.setWrapText(true);
+                Tooltip.install(label, tooltip);
+            }
+            else if (newValue.length() == 0) {
+            	Tooltip.install(label, null);
+            }
+        });
 
         pane.getChildren().add(label);
 
@@ -118,8 +180,9 @@ public class VennTextEntry extends Region {
     private void initClickHandlers (Pane pane) {
         pane.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)){
-                if (event.getClickCount() == 2){
-                    VennEntryModalHandler.edit(this.string, this.description);
+                // not when running game mode
+                if (event.getClickCount() == 2 && !gameModeHandler.running.get()){
+                    VennEntryModalHandler.edit(ModalType.EditEntry, this.string, this.description, this.draggableColor, this.draggableFont, this.fontColor);
                 }
             }
         });
@@ -154,9 +217,12 @@ public class VennTextEntry extends Region {
 
         this.pane.setUserData(this);
         
-        Tooltip tooltip = new Tooltip();
-        tooltip.textProperty().bind(this.string);
-        Tooltip.install(this.pane, tooltip);
+        if (this.description.length().get() > 0) {
+            Tooltip tooltip = new Tooltip();
+            tooltip.textProperty().bind(this.description);
+            tooltip.setWrapText(true);
+            Tooltip.install(this.pane, tooltip);
+        }
 
         return this.pane;
     }

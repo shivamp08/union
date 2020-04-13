@@ -6,12 +6,8 @@ import javafx.stage.Stage;
 
 import org.junit.Test;
 
-import org.junit.jupiter.api.*;
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.awt.AWTException;
 import java.awt.Robot;
-import java.awt.event.InputEvent;
 import java.util.concurrent.CountDownLatch;
 
 import org.junit.*;
@@ -51,15 +47,15 @@ public class VennTest {
     @Test
     public void manualTest() throws InterruptedException {
     	Platform.runLater(() -> {
-//    		frame.entries.addEntry(
-//    			new VennTextEntry("manual test")
-//    		);
-//    		frame.entries.addEntry(
-//    			new VennTextEntry("drag me 1")
-//    		);
-//    		frame.entries.addEntry(
-//    			new VennTextEntry("drag me 2")
-//    		);
+    		frame.entries.addEntry(
+    			new VennTextEntry("manual test"), false
+    		);
+    		frame.entries.addEntry(
+    			new VennTextEntry("drag me 1"), false
+    		);
+    		frame.entries.addEntry(
+    			new VennTextEntry("drag me 2"), false
+    		);
     	});
     	Thread.sleep(60000);
     }
@@ -68,9 +64,9 @@ public class VennTest {
     public void testAddEntry() throws InterruptedException {
     	Thread.sleep(1000);
     	Platform.runLater(() -> {
-//    		frame.entries.addEntry(
-//    			new VennTextEntry("hello")
-//    		);
+    		frame.entries.addEntry(
+    			new VennTextEntry("hello"), false
+    		);
     	});
         Thread.sleep(1000);
     }
@@ -80,9 +76,9 @@ public class VennTest {
     	Thread.sleep(1000);
     	Platform.runLater(() -> {
     		for (int i = 0; i < 100; i++) {
-//    			frame.entries.addEntry(
-//	    			new VennTextEntry("entry #" + i)
-//	    		);
+    			frame.entries.addEntry(
+	    			new VennTextEntry("entry #" + i), false
+	    		);
     		}
     	});
         Thread.sleep(1000);

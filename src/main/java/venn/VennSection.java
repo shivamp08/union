@@ -2,7 +2,9 @@ package venn;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -25,7 +27,7 @@ import javafx.scene.shape.Shape;
 import java.util.ArrayList;
 import java.util.List;
 
-import static venn.Main.changeHandler;
+import static venn.Main.gameModeHandler;
 
 public abstract class VennSection {
     @SerializedName("c")
@@ -33,9 +35,10 @@ public abstract class VennSection {
     ObjectProperty<Color> color;
     ObjectProperty<Color> mutatingColor;
 
-    double radius;
-    double width;
-    double height;
+    static SimpleIntegerProperty radius = new SimpleIntegerProperty(300);
+
+    SimpleIntegerProperty width;
+    SimpleIntegerProperty height;
     int strokeWidth = 3;
 
     protected Shape shape;
@@ -47,6 +50,7 @@ public abstract class VennSection {
     @SerializedName("n")
     @Expose
     protected StringProperty sectionName;
+    protected StringBinding sectionInternationalizedBinding;
 
     VennEntryHandler handler;
 
@@ -66,9 +70,8 @@ public abstract class VennSection {
         this.elements = FXCollections.observableList(new ArrayList<>());
         this.app = app;
 
-        this.radius = 300;
-        this.width = 750;
-        this.height = 500;
+        this.width = new SimpleIntegerProperty(750);
+        this.height = new SimpleIntegerProperty(500);
     }
 
     public void beginHover () {
@@ -98,7 +101,14 @@ public abstract class VennSection {
 
     private double getXPosition () {
         int multiplier = this.getMultiplier();
-        return width + (multiplier * (this.radius / 2));
+        return this.width.getValue() + (multiplier * ((double) radius.getValue() / 2));
+    }
+
+    protected void bindSectionNameTranslation () {
+        // conditionally update iff the value has not changed from the translations
+        this.sectionInternationalizedBinding.addListener((observable, oldValue, newValue) -> {
+            if (this.sectionName.getValue().contentEquals(oldValue)) this.sectionName.set(newValue);
+        });
     }
 
     protected void bindColorCopy () {
@@ -115,8 +125,9 @@ public abstract class VennSection {
         // double click to edit
         control.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)){
-                if (event.getClickCount() == 2){
-                    VennEntryModalHandler.edit(this.sectionName, 25);
+                // not while running
+                if (event.getClickCount() == 2 && !gameModeHandler.running.get()) {
+                    VennEntryModalHandler.edit(ModalType.EditTitle, this.sectionName, 25);
                 }
             }
         });
@@ -124,22 +135,27 @@ public abstract class VennSection {
 
     private void drawCircle () {
         Circle shape = new Circle();
-        double x = this.getXPosition();
 
         Label title = new Label();
         title.textProperty().bind(this.sectionName);
 
         this.bindTitleEditing(title);
 
-        title.setLayoutY(height / 3);
+        title.layoutYProperty().bind(this.height.subtract(radius).subtract(title.heightProperty()).subtract(10));
+
         title.widthProperty().addListener((obs, oldVal, newVal) ->
-            title.setLayoutX(x - (title.getWidth() / 2) + (this.getMultiplier() * 20))
+            title.setLayoutX(this.getXPosition() - (title.getWidth() / 2) + (this.getMultiplier() * 20))
+        );
+        radius.addListener((obs, oldVal, newVal) ->
+            title.setLayoutX(this.getXPosition() - (title.getWidth() / 2) + (this.getMultiplier() * 20))
         );
 
-        shape.setCenterX(x);
-        shape.setCenterY(height);
+        shape.centerXProperty().bind(
+            this.width.add(radius.divide(2).multiply(this.section == EntryLocations.Left ? -1 : 1))
+        );
+        shape.centerYProperty().bind(this.height);
 
-        shape.setRadius(this.radius);
+        shape.radiusProperty().bind(radius);
 
         shape.fillProperty().bind(this.mutatingColor);
         shape.setStroke(Color.BLACK);
@@ -154,7 +170,7 @@ public abstract class VennSection {
         this.elements.addListener(new ListChangeListener<Object>() {
             @SuppressWarnings({ "unchecked" })
 			@Override
-            public void onChanged(ListChangeListener.Change c) {
+            public void onChanged(@SuppressWarnings("rawtypes") ListChangeListener.Change c) {
                 c.next();
                 List<VennTextEntry> added = c.getAddedSubList();
                 List<VennTextEntry> removed = c.getRemoved();
@@ -164,7 +180,8 @@ public abstract class VennSection {
                     
                     entry.setLocation(section);
                 } else if (removed.size() == 1) {
-                	VennTextEntry entry = removed.get(0);
+                	@SuppressWarnings("unused")
+					VennTextEntry entry = removed.get(0);
                 	
 //                	System.out.println("removed from " + entry.location);
                 }
@@ -183,7 +200,8 @@ public abstract class VennSection {
         this.initChangeHandler();
     }
 
-    private boolean hasNoCollision(Region dragged, double x, double y) {
+    @SuppressWarnings("unused")
+	private boolean hasNoCollision(Region dragged, double x, double y) {
         // For each node
         for (VennTextEntry entry : this.elements) {
             Node n = entry.draggable;
@@ -207,7 +225,8 @@ public abstract class VennSection {
         });
 
         shape.setOnDragOver(event -> {
-            VennTextEntry entry = this.handler.getEntryById(event.getDragboard().getString());
+            @SuppressWarnings("unused")
+			VennTextEntry entry = this.handler.getEntryById(event.getDragboard().getString());
 
 //            boolean collides =
 //                !this.hasNoCollision(

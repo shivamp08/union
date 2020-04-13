@@ -11,6 +11,8 @@ public class VennSectionRight extends VennSection {
 
         this.section = EntryLocations.Right;
         this.sectionName = new SimpleStringProperty("Right");
+        this.sectionInternationalizedBinding = VennInternationalization.createStringBinding("right_title");
+        this.bindSectionNameTranslation();
 
         this.color = new SimpleObjectProperty<>(Color.LIGHTCORAL);
 

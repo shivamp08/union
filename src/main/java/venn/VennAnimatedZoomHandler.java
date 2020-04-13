@@ -36,4 +36,12 @@ public class VennAnimatedZoomHandler {
         );
         timeline.play();
     }
+
+    // reset zoom
+    public void reset (Node node) {
+        node.translateXProperty().set(0);
+        node.translateYProperty().set(0);
+        node.scaleXProperty().set(1);
+        node.scaleYProperty().set(1);
+    }
 }

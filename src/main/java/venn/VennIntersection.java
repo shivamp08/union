@@ -13,6 +13,8 @@ public class VennIntersection extends VennSection {
 
         this.section = EntryLocations.Center;
         this.sectionName = new SimpleStringProperty("Intersection");
+        this.sectionInternationalizedBinding = VennInternationalization.createStringBinding("middle_title");
+        this.bindSectionNameTranslation();
 
         this.color = new SimpleObjectProperty<>(Color.GREY);
         this.bindColorCopy();
@@ -33,12 +35,11 @@ public class VennIntersection extends VennSection {
         this.bindTitleEditing(title);
 
         // manually position it
-        title.setLayoutY(height * 2 - (height / 2.5));
-        title.widthProperty().addListener((obs, oldVal, newVal) -> {
-            title.setLayoutX(width - (title.getWidth() / 2));
-        });
 
-//        title.layoutXProperty().bind(width);
+        title.layoutYProperty().bind(this.height.add(radius).add(title.heightProperty().divide(2)).subtract(10));
+        title.widthProperty().addListener((obs, oldVal, newVal) -> {
+            title.setLayoutX(width.getValue() - (title.getWidth() / 2));
+        });
 
         this.element.getChildren().addAll(shape, title);
         this.element.setOpacity(50);

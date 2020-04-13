@@ -7,6 +7,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.StackPane;
 
 import static venn.Main.changeHandler;
+import static venn.Main.gameModeHandler;
 
 public class VennDeleteEntry {
     VennEntryHandler handler;
@@ -22,11 +23,16 @@ public class VennDeleteEntry {
 
     protected void initHandlers () {
         pane.setOnDragOver(event -> {
+            // no removing when in game mode
+            if (gameModeHandler.running.get()) return;
+
             event.acceptTransferModes(TransferMode.ANY);
             event.consume();
         });
 
         pane.setOnDragDropped(event -> {
+            if (gameModeHandler.running.get()) return;
+
             VennTextEntry entry = this.handler.getEntryById(event.getDragboard().getString());
 
             System.out.println("change from deletion");
