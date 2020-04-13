@@ -9,6 +9,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 import static venn.VennFileHandler.clearDiagram;
+import static venn.VennFileHandler.VennExport;
 
 public class VennChangeHandler {
     Main app;

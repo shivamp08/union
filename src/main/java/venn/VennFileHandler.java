@@ -2,6 +2,8 @@ package venn;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -21,6 +23,31 @@ public class VennFileHandler {
     VennSectionRight right;
     VennSectionLeft left;
     VennIntersection intersection;
+
+    /**
+     * The class for Gson to import and export, for easy handling
+     */
+    static public class VennExport {
+        @SerializedName("e")
+        @Expose
+        VennEntryHandler elements;
+        @SerializedName("r")
+        @Expose
+        VennSectionRight right;
+        @SerializedName("l")
+        @Expose
+        VennSectionLeft left;
+        @SerializedName("i")
+        @Expose
+        VennIntersection intersection;
+
+        public VennExport (VennEntryHandler handler, VennSectionRight right, VennSectionLeft left, VennIntersection intersection) {
+            this.elements = handler;
+            this.right = right;
+            this.left = left;
+            this.intersection = intersection;
+        }
+    }
 
     public VennFileHandler (Main app, VennEntryHandler handler, VennSectionRight right, VennSectionLeft left, VennIntersection intersection) {
         this.app = app;
