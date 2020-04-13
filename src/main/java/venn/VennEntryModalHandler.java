@@ -83,6 +83,8 @@ public class VennEntryModalHandler {
         draggableColor.set(Color.valueOf(edited[2]));
         draggableFont.set(new Font(edited[3], Integer.parseInt(edited[4])));
         fColor.set(Color.valueOf(edited[5]));
+        
+        changeHandler.calculateChange();
     }
 
     public static void edit (ModalType type, StringProperty current, int maxLength) {
