@@ -1,4 +1,4 @@
-## Union App
+## Union
 The Union App allows users to display ideas and data in a visual way, through the use of Venn Diagrams. 
 
 It fulfills all basic functionality of a digital venn diagram, with a comfortable user interface. 
